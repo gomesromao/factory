@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Coconut LP Factory — Page Builder</title>
+<style>
+  :root { --green:#2E9B58; --green-dark:#0F7B3F; --mint:#B8EDC8; --ink:#111; --border:#e2e2dc; --bg:#FAFAF7; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:'Inter Tight','Helvetica Neue',Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); font-size:14px; }
+  .topbar { display:flex; align-items:center; gap:16px; padding:12px 20px; background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
+  .topbar h1 { font-size:16px; margin:0; font-weight:800; }
+  .topbar .spacer { flex:1; }
+  .layout { display:grid; grid-template-columns: 460px 1fr; height: calc(100vh - 53px); }
+  .editor { overflow-y:auto; padding:16px 20px 80px; background:#fff; border-right:1px solid var(--border); }
+  .preview-pane { display:flex; flex-direction:column; }
+  .preview-bar { padding:8px 16px; font-size:12px; color:#666; background:#f2f2ee; border-bottom:1px solid var(--border); display:flex; gap:12px; align-items:center; }
+  iframe { flex:1; width:100%; border:0; background:#fff; }
+  fieldset { border:1px solid var(--border); border-radius:10px; margin:0 0 16px; padding:12px 14px; }
+  legend { font-weight:800; font-size:13px; padding:0 6px; }
+  label { display:block; font-size:12px; font-weight:600; margin:10px 0 4px; color:#333; }
+  input[type=text], textarea, select { width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-family:inherit; font-size:13px; }
+  textarea { resize:vertical; }
+  .hintline { font-size:11px; color:#888; margin-top:3px; }
+  button { font-family:inherit; cursor:pointer; border-radius:8px; border:1px solid var(--border); background:#fff; padding:8px 14px; font-weight:600; font-size:13px; }
+  button.primary { background:var(--ink); color:#fff; border-color:var(--ink); }
+  button.primary:disabled { opacity:.5; cursor:not-allowed; }
+  button.small { padding:4px 9px; font-size:12px; }
+  .row-item { display:flex; gap:6px; align-items:flex-start; margin-bottom:6px; }
+  .row-item textarea, .row-item input { flex:1; }
+  .logo-grid { display:flex; flex-wrap:wrap; gap:6px; }
+  .logo-grid label { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--border); border-radius:8px; padding:6px 10px; margin:0; cursor:pointer; font-weight:500; background:#fff; }
+  .logo-grid label.on { border-color:var(--green); background:#EAF7EF; }
+  .logo-grid img { height:20px; width:auto; max-width:70px; object-fit:contain; }
+  .status { font-size:12px; padding:8px 12px; border-radius:8px; margin:10px 0; display:none; }
+  .status.ok { display:block; background:#EAF7EF; color:var(--green-dark); }
+  .status.err { display:block; background:#fdecea; color:#c0392b; }
+  .login { max-width:340px; margin:120px auto; background:#fff; border:1px solid var(--border); border-radius:14px; padding:28px; }
+  .login h2 { margin:0 0 14px; }
+  .hidden { display:none !important; }
+  .wyg-item, .faq-item { border:1px dashed var(--border); border-radius:8px; padding:8px; margin-bottom:8px; }
+  .pill-row { display:flex; gap:8px; align-items:center; }
+  .featured-toggle { display:flex; align-items:center; gap:5px; font-size:11px; white-space:nowrap; }
+</style>
+</head>
+<body>
+
+<div class="login" id="login">
+  <h2>LP Factory</h2>
+  <label>Admin password</label>
+  <input type="password" id="pw" autocomplete="current-password" />
+  <div class="status err" id="loginErr"></div>
+  <div style="margin-top:12px"><button class="primary" id="loginBtn">Enter</button></div>
+</div>
+
+<div id="app" class="hidden">
+  <div class="topbar">
+    <h1>🥥 LP Factory</h1>
+    <select id="pageSelect" style="width:260px"></select>
+    <button id="dupBtn">Duplicate as new page…</button>
+    <span class="spacer"></span>
+    <span id="deployNote" style="font-size:12px;color:#888"></span>
+    <button class="primary" id="publishBtn">Publish</button>
+  </div>
+  <div class="layout">
+    <div class="editor" id="editor">
+      <div class="status" id="status"></div>
+
+      <fieldset><legend>Page identity</legend>
+        <label>Slug (URL path + variant + config filename)</label>
+        <input type="text" id="f_slug" placeholder="trades-dispatcher" />
+        <div class="hintline">lowercase-with-dashes. Page URL becomes /&lt;slug&gt;/. Locked after first publish.</div>
+        <label>Ads name (Coconut OS contacts.ads_name + Meta content_name)</label>
+        <input type="text" id="f_adsName" placeholder="Dispatcher" />
+        <label>Page label (Slack headers: "New lead — &lt;label&gt;")</label>
+        <input type="text" id="f_pageLabel" placeholder="Trades Dispatcher" />
+        <label>Subdomain (optional — Daniel wires it after publish)</label>
+        <input type="text" id="f_subdomain" placeholder="dispatch.coconutva.com" />
+      </fieldset>
+
+      <fieldset><legend>Meta / SEO</legend>
+        <label>Title tag</label><input type="text" id="f_title" />
+        <label>Meta description</label><textarea id="f_desc" rows="2"></textarea>
+        <label>OG/Twitter description</label><textarea id="f_ogdesc" rows="2"></textarea>
+      </fieldset>
+
+      <fieldset><legend>Hero</legend>
+        <label>Eyebrow</label><input type="text" id="f_eyebrow" />
+        <label>Headline (use &lt;br&gt; for the line break)</label><textarea id="f_h1" rows="2"></textarea>
+        <label>Accent line</label><input type="text" id="f_accent" />
+        <label>Lead paragraph (HTML allowed: &lt;strong&gt;)</label><textarea id="f_lead" rows="4"></textarea>
+      </fieldset>
+
+      <fieldset><legend>Form — step 1</legend>
+        <label>Button text</label><input type="text" id="f_step1btn" />
+      </fieldset>
+
+      <fieldset><legend>Form — step 2</legend>
+        <label>Subtitle</label><textarea id="f_step2sub" rows="2"></textarea>
+        <label>Dropdown label</label><input type="text" id="f_needLabel" />
+        <label>Dropdown options (one per line — must match what leads pick; feeds the CRM)</label>
+        <textarea id="f_needOptions" rows="7"></textarea>
+      </fieldset>
+
+      <fieldset><legend>Form — step 2: hours dropdown (optional)</legend>
+        <div class="hintline" style="margin-bottom:6px">Leave empty to skip this field (like Office Admin). If filled, the answer shows in Slack as "Hours needed".</div>
+        <label>Label</label><input type="text" id="f_hoursLabel" placeholder="How much help do you need?" />
+        <label>Options (one per line)</label><textarea id="f_hoursOptions" rows="4"></textarea>
+      </fieldset>
+
+      <fieldset><legend>Form — success</legend>
+        <label>Success text</label><textarea id="f_successText" rows="2"></textarea>
+        <label>"Browse example profiles" URL</label><input type="text" id="f_browseUrl" />
+      </fieldset>
+
+      <fieldset><legend>Roles we fill (one per line)</legend>
+        <textarea id="f_roles" rows="6"></textarea>
+      </fieldset>
+
+      <fieldset><legend>Works in your stack</legend>
+        <div class="hintline" style="margin-bottom:8px">Pick from the logo library. New logo? Send the file to Daniel first (transparent PNG, uniform height) — uploads are manual for now.</div>
+        <div class="logo-grid" id="logoGrid"></div>
+      </fieldset>
+
+      <fieldset><legend>What You Get</legend>
+        <div id="wygList"></div>
+        <button class="small" id="addWyg">+ Add row</button>
+      </fieldset>
+
+      <fieldset><legend>CTA banner</legend>
+        <label>Heading</label><input type="text" id="f_ctaH" />
+        <label>Subtext</label><input type="text" id="f_ctaP" />
+      </fieldset>
+
+      <fieldset><legend>FAQ</legend>
+        <div id="faqList"></div>
+        <button class="small" id="addFaq">+ Add question</button>
+      </fieldset>
+
+      <fieldset><legend>Links</legend>
+        <label>Calendly URL (FAQ footer)</label><input type="text" id="f_calendly" />
+        <label>Redirect URL (success button)</label><input type="text" id="f_redirect" />
+      </fieldset>
+    </div>
+
+    <div class="preview-pane">
+      <div class="preview-bar">
+        <strong>Live preview</strong>
+        <span>updates as you type — exact same renderer as the deployed pages</span>
+      </div>
+      <iframe id="preview" sandbox="allow-same-origin"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>/*__RENDER_JS__*/</script>
+<script>
+(function () {
+  var TEMPLATE = "__TEMPLATE__";
+  var TESTIMONIALS = "__TESTIMONIALS__";
+  var LOGOS = "__LOGOS__";
+
+  var pages = [];       // all configs from /api/pages
+  var current = null;   // working copy
+  var isNew = false;
+  var pw = sessionStorage.getItem('lp_pw') || '';
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  /* ---------- auth ---------- */
+  function tryLogin(p) {
+    return fetch('/api/pages', { headers: { 'x-admin-password': p } })
+      .then(function (r) { if (!r.ok) throw new Error('auth'); return r.json(); });
+  }
+  $('loginBtn').addEventListener('click', function () {
+    var p = $('pw').value;
+    tryLogin(p).then(function (data) {
+      pw = p; sessionStorage.setItem('lp_pw', p);
+      boot(data.pages);
+    }).catch(function () { var e = $('loginErr'); e.textContent = 'Wrong password.'; e.className = 'status err'; });
+  });
+  $('pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('loginBtn').click(); });
+  if (pw) tryLogin(pw).then(function (d) { boot(d.pages); }).catch(function () { sessionStorage.removeItem('lp_pw'); });
+
+  function boot(list) {
+    pages = list;
+    $('login').classList.add('hidden');
+    $('app').classList.remove('hidden');
+    var sel = $('pageSelect');
+    sel.innerHTML = pages.map(function (p) { return '<option value="' + p.slug + '">' + p.slug + '</option>'; }).join('');
+    sel.addEventListener('change', function () { load(sel.value); });
+    load(pages[0].slug);
+  }
+
+  /* ---------- load / duplicate ---------- */
+  function load(slug) {
+    var src = pages.find(function (p) { return p.slug === slug; });
+    current = JSON.parse(JSON.stringify(src));
+    isNew = false;
+    $('f_slug').disabled = true;
+    fillForm();
+    renderPreview();
+  }
+  $('dupBtn').addEventListener('click', function () {
+    var name = prompt('New page slug (lowercase-with-dashes, e.g. trades-dispatcher):');
+    if (!name) return;
+    name = name.trim().toLowerCase();
+    if (!/^[a-z0-9-]{3,60}$/.test(name)) return alert('Invalid slug.');
+    if (pages.some(function (p) { return p.slug === name; })) return alert('That slug already exists.');
+    current = JSON.parse(JSON.stringify(current));
+    current.slug = name; current.variant = name; current.subdomain = '';
+    isNew = true;
+    $('f_slug').disabled = false;
+    fillForm();
+    setStatus('ok', 'Duplicated. Edit the copy, then Publish to create pages/' + name + '.json.');
+    renderPreview();
+  });
+
+  /* ---------- form <-> config ---------- */
+  function fillForm() {
+    $('f_slug').value = current.slug;
+    $('f_adsName').value = current.adsName;
+    $('f_pageLabel').value = current.pageLabel;
+    $('f_subdomain').value = current.subdomain || '';
+    $('f_title').value = current.meta.title;
+    $('f_desc').value = current.meta.description;
+    $('f_ogdesc').value = current.meta.ogDescription;
+    $('f_eyebrow').value = current.hero.eyebrow;
+    $('f_h1').value = current.hero.h1;
+    $('f_accent').value = current.hero.accent;
+    $('f_lead').value = current.hero.lead;
+    $('f_step1btn').value = current.form.step1Button;
+    $('f_step2sub').value = current.form.step2Sub;
+    $('f_needLabel').value = current.form.needLabel;
+    $('f_needOptions').value = current.form.needOptions.join('\n');
+    $('f_hoursLabel').value = (current.form.hours && current.form.hours.label) || '';
+    $('f_hoursOptions').value = (current.form.hours && current.form.hours.options || []).join('\n');
+    $('f_successText').value = current.form.successText;
+    $('f_browseUrl').value = current.form.browseUrl;
+    $('f_roles').value = current.roles.join('\n');
+    $('f_ctaH').value = current.ctaBanner.heading;
+    $('f_ctaP').value = current.ctaBanner.sub;
+    $('f_calendly').value = current.calendlyUrl;
+    $('f_redirect').value = current.redirectUrl;
+    buildLogoGrid();
+    buildWyg();
+    buildFaq();
+  }
+
+  function harvest() {
+    current.slug = $('f_slug').value.trim();
+    current.variant = current.slug;
+    current.adsName = $('f_adsName').value.trim();
+    current.pageLabel = $('f_pageLabel').value.trim();
+    current.subdomain = $('f_subdomain').value.trim();
+    current.meta.title = $('f_title').value;
+    current.meta.description = $('f_desc').value;
+    current.meta.ogDescription = $('f_ogdesc').value;
+    current.hero.eyebrow = $('f_eyebrow').value;
+    current.hero.h1 = $('f_h1').value;
+    current.hero.accent = $('f_accent').value;
+    current.hero.lead = $('f_lead').value;
+    current.form.step1Button = $('f_step1btn').value;
+    current.form.step2Sub = $('f_step2sub').value;
+    current.form.needLabel = $('f_needLabel').value;
+    current.form.needOptions = lines($('f_needOptions').value);
+    var hl = $('f_hoursLabel').value.trim(), ho = lines($('f_hoursOptions').value);
+    if (hl && ho.length) current.form.hours = { label: hl, options: ho }; else delete current.form.hours;
+    current.form.successText = $('f_successText').value;
+    current.form.browseUrl = $('f_browseUrl').value.trim();
+    current.roles = lines($('f_roles').value);
+    current.ctaBanner.heading = $('f_ctaH').value;
+    current.ctaBanner.sub = $('f_ctaP').value;
+    current.calendlyUrl = $('f_calendly').value.trim();
+    current.redirectUrl = $('f_redirect').value.trim();
+    // tools from grid
+    current.tools.items = Array.prototype.slice.call(document.querySelectorAll('#logoGrid input:checked'))
+      .map(function (cb) { return { file: cb.value, alt: cb.dataset.alt }; });
+    // wyg + faq harvested live by their own handlers (arrays mutated in place)
+  }
+  function lines(v) { return v.split('\n').map(function (s) { return s.trim(); }).filter(Boolean); }
+
+  /* ---------- tools grid ---------- */
+  var ALT_NAMES = { 'servicetitan.png':'ServiceTitan','jobber.png':'Jobber','housecallpro.png':'Housecall Pro','buildertrend.png':'Buildertrend','companycam.png':'CompanyCam','quickbooks.png':'QuickBooks','xero.png':'Xero','billcom.png':'Bill.com' };
+  function buildLogoGrid() {
+    var g = $('logoGrid'); g.innerHTML = '';
+    LOGOS.forEach(function (file) {
+      var alt = ALT_NAMES[file] || file.replace(/\.(png|webp)$/, '');
+      var on = current.tools.items.some(function (t) { return t.file === file; });
+      var l = document.createElement('label');
+      l.className = on ? 'on' : '';
+      l.innerHTML = '<input type="checkbox" value="' + file + '" data-alt="' + alt + '"' + (on ? ' checked' : '') + ' style="display:none">' +
+                    '<img src="/public/logos/' + file + '" alt=""><span>' + alt + '</span>';
+      l.querySelector('input').addEventListener('change', function (e) {
+        l.className = e.target.checked ? 'on' : '';
+        onChange();
+      });
+      g.appendChild(l);
+    });
+  }
+
+  /* ---------- WYG rows ---------- */
+  function buildWyg() {
+    var box = $('wygList'); box.innerHTML = '';
+    current.wyg.forEach(function (row, i) {
+      var d = document.createElement('div');
+      d.className = 'wyg-item';
+      d.innerHTML = '<div class="pill-row"><input type="text" value="" placeholder="Title"><span class="featured-toggle"><input type="checkbox"' + (row.featured ? ' checked' : '') + '> dark</span><button class="small">✕</button></div>' +
+                    '<textarea rows="2" placeholder="Text"></textarea>';
+      d.querySelector('input[type=text]').value = row.title;
+      d.querySelector('textarea').value = row.text;
+      d.querySelector('input[type=text]').addEventListener('input', function (e) { row.title = e.target.value; onChange(); });
+      d.querySelector('textarea').addEventListener('input', function (e) { row.text = e.target.value; onChange(); });
+      d.querySelector('input[type=checkbox]').addEventListener('change', function (e) { row.featured = e.target.checked; onChange(); });
+      d.querySelector('button').addEventListener('click', function () { current.wyg.splice(i, 1); buildWyg(); onChange(); });
+      box.appendChild(d);
+    });
+  }
+  $('addWyg').addEventListener('click', function () {
+    current.wyg.push({ featured: false, title: 'New benefit', text: 'Describe it.' });
+    buildWyg(); onChange();
+  });
+
+  /* ---------- FAQ ---------- */
+  function buildFaq() {
+    var box = $('faqList'); box.innerHTML = '';
+    current.faq.forEach(function (f, i) {
+      var d = document.createElement('div');
+      d.className = 'faq-item';
+      d.innerHTML = '<div class="pill-row"><input type="text" placeholder="Question"><button class="small">✕</button></div>' +
+                    '<textarea rows="2" placeholder="Answer (HTML allowed: <strong>, <a>)"></textarea>';
+      d.querySelector('input').value = f.q;
+      d.querySelector('textarea').value = f.a;
+      d.querySelector('input').addEventListener('input', function (e) { f.q = e.target.value; onChange(); });
+      d.querySelector('textarea').addEventListener('input', function (e) { f.a = e.target.value; onChange(); });
+      d.querySelector('button').addEventListener('click', function () { current.faq.splice(i, 1); buildFaq(); onChange(); });
+      box.appendChild(d);
+    });
+  }
+  $('addFaq').addEventListener('click', function () {
+    current.faq.push({ q: 'New question?', a: 'Answer.' });
+    buildFaq(); onChange();
+  });
+
+  /* ---------- preview ---------- */
+  var t;
+  function onChange() { clearTimeout(t); t = setTimeout(renderPreview, 250); }
+  Array.prototype.slice.call(document.querySelectorAll('#editor input, #editor textarea')).forEach(function (el) {
+    el.addEventListener('input', onChange);
+  });
+  function renderPreview() {
+    try {
+      harvest();
+      var html = LPRender.render(TEMPLATE, current, TESTIMONIALS);
+      // base tag so /public/* resolves against this deployment inside srcdoc
+      html = html.replace('<head>', '<head><base href="/">');
+      $('preview').srcdoc = html;
+      setStatus('', '');
+    } catch (e) {
+      setStatus('err', 'Preview error: ' + e.message);
+    }
+  }
+
+  /* ---------- publish ---------- */
+  $('publishBtn').addEventListener('click', function () {
+    harvest();
+    var btn = $('publishBtn');
+    btn.disabled = true; btn.textContent = 'Publishing…';
+    fetch('/api/publish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw, slug: current.slug, config: current })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      btn.disabled = false; btn.textContent = 'Publish';
+      if (res.ok) {
+        setStatus('ok', (res.created ? 'Created ' : 'Updated ') + res.slug + '. Vercel is deploying (~2 min). Page: ' + res.pageUrl +
+          (current.subdomain ? ' — Daniel was emailed to wire ' + current.subdomain + '.' : ''));
+        if (isNew) { pages.push(JSON.parse(JSON.stringify(current))); boot(pages); }
+      } else {
+        setStatus('err', 'Publish failed: ' + (res.error || 'unknown'));
+      }
+    }).catch(function () {
+      btn.disabled = false; btn.textContent = 'Publish';
+      setStatus('err', 'Network error.');
+    });
+  });
+
+  function setStatus(kind, msg) {
+    var s = $('status');
+    s.className = 'status' + (kind ? ' ' + kind : '');
+    s.textContent = msg;
+    if (kind) s.scrollIntoView({ block: 'nearest' });
+  }
+})();
+</script>
+</body>
+</html>

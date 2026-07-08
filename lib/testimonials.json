@@ -1,0 +1,44 @@
+{
+  "VJ Gandhi": {
+    "text": "Coconut VA sent me a list of qualified people to interview. We chose Mike, who's now essential to our team. He handles logistics, manages customer service, and takes on high-level projects, all with professionalism and constant follow-up. Highly recommend.",
+    "title": "Owner - <strong>Kascadia</strong>",
+    "logoFile": "kascadia.webp",
+    "logoAlt": "Kascadia",
+    "photoFile": "vj-gandhi.png"
+  },
+  "Kat Weaver": {
+    "text": "The Coconut VA team is extremely diligent in helping us find the right talent. The VA they found us has gone above and beyond, and it's amazing that she works our hours, too. We went from thinking part-time to hiring her full-time. 10/10.",
+    "title": "Founder - <strong>Power To Pitch</strong>",
+    "logoFile": "power-to-pitch.png",
+    "logoAlt": "Power To Pitch",
+    "photoFile": "kat-weaver.png"
+  },
+  "Stephanie Acker": {
+    "text": "Coconut VA moved our back office forward. Recruiting and sourcing the right candidate was easy and smooth. Our VA handles CRM reconciliation, vendor management, and inbound inquiries, and she has surpassed all of our expectations.",
+    "title": "Executive Director - <strong>PGN Nationals</strong>",
+    "logoFile": "pgn-nationals.webp",
+    "logoAlt": "PGN Nationals",
+    "photoFile": "stephanie-acker.png"
+  },
+  "Phil Kirkeiner": {
+    "text": "We hired our first three virtual assistants through Coconut VA, including two of our best ever, and we have 30+ now. They do a great job finding top notch candidates. If you're new to the VA world, I'd recommend them.",
+    "title": "Founder - <strong>Baton</strong>",
+    "logoFile": "baton.png",
+    "logoAlt": "Baton",
+    "photoFile": "phil-kirkeiner.png"
+  },
+  "Liz Germain": {
+    "text": "Coconut VA handles recruiting, onboarding, HR, performance, and payments. Our VA has been incredible and helps our business run more smoothly. The agency makes everything so easy. Highly recommend.",
+    "title": "Founder - <strong>Vidfluence</strong>",
+    "logoFile": "vidfluence.png",
+    "logoAlt": "Vidfluence",
+    "photoFile": "liz-germain.png"
+  },
+  "Bruce Hymas": {
+    "text": "I've always had positive experiences with Coconut VA. Flexible and accommodating. I've worked with my VA for 3 years and he's a very valuable asset to our team. I recommend them to anyone who wants to buy back their time.",
+    "title": "COO - <strong>Werkt</strong>",
+    "logoFile": "werkt.png",
+    "logoAlt": "Werkt",
+    "photoFile": "bruce-hymas.png"
+  }
+}

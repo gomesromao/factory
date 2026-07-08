@@ -1,0 +1,182 @@
+{
+  "slug": "trades-office-admin",
+  "variant": "trades-office-admin",
+  "adsName": "Office Admin",
+  "pageLabel": "Trades Office Admin",
+  "subdomain": "office.coconutva.com",
+  "meta": {
+    "title": "Get the office off your plate | Coconut for Trades",
+    "description": "For roofers, electricians, plumbers and HVAC pros: a dedicated remote admin who answers calls, schedules and dispatches jobs, and chases invoices. Vetted, senior, matched in days.",
+    "ogDescription": "A dedicated remote admin who answers calls, schedules jobs, chases invoices, and keeps the paperwork moving. Vetted, senior, matched in days."
+  },
+  "hero": {
+    "eyebrow": "For roofers, electricians, plumbers & HVAC pros",
+    "h1": "Get the office<br>off your plate.",
+    "accent": "First 40 hours free",
+    "lead": "You're at your best out on the job, not stuck behind the desk. Get a dedicated admin who answers every call, keeps the schedule tight, and chases the invoices, so nothing slips and you get back to the work you're great at. Vetted, senior, and live in days."
+  },
+  "form": {
+    "step1Button": "Show me available admins",
+    "step2Sub": "We match you with an admin who already knows how a busy trades office runs.",
+    "needLabel": "What do you need help with most?",
+    "needOptions": [
+      "Missed calls",
+      "Scheduling & dispatch",
+      "Estimate follow-up",
+      "Invoice follow-up / collections",
+      "Permits, COIs, and paperwork",
+      "Inbox/calendar cleanup",
+      "Not sure yet"
+    ],
+    "successText": "Keep your phone handy, we'll text you today with the admin profiles we matched to your shop.",
+    "browseUrl": "https://talent.coconutva.com?role=office-admin"
+  },
+  "roles": [
+    "Office Admin",
+    "Dispatcher",
+    "Scheduler",
+    "CSR / Customer Support",
+    "Invoicing Assistant",
+    "Operations Coordinator"
+  ],
+  "tools": {
+    "wrapMaxWidth": 670,
+    "chipHeight": 70,
+    "imgHeight": 70,
+    "imgMaxWidth": 160,
+    "items": [
+      {
+        "file": "servicetitan.png",
+        "alt": "ServiceTitan"
+      },
+      {
+        "file": "jobber.png",
+        "alt": "Jobber"
+      },
+      {
+        "file": "housecallpro.png",
+        "alt": "Housecall Pro"
+      },
+      {
+        "file": "buildertrend.png",
+        "alt": "Buildertrend"
+      },
+      {
+        "file": "companycam.png",
+        "alt": "CompanyCam"
+      },
+      {
+        "file": "quickbooks.png",
+        "alt": "QuickBooks"
+      }
+    ]
+  },
+  "wyg": [
+    {
+      "featured": false,
+      "title": "A senior admin, matched to your shop",
+      "text": "Not a generalist pulled off a job board. Someone who already knows dispatch, scheduling, and how a busy trades office runs."
+    },
+    {
+      "featured": false,
+      "title": "Vetted profiles this week. You pick who to meet.",
+      "text": "No cattle call resumes. No agency warm bodies. A real slate of pre-vetted candidates, and you choose who to interview."
+    },
+    {
+      "featured": false,
+      "title": "Co led interview with your Client Success Manager",
+      "text": "Your CSM runs it with you. We know what to listen for when hiring senior operators."
+    },
+    {
+      "featured": true,
+      "title": "40 hours of real work, free. Before you commit.",
+      "text": "Not a test project. Not a demo. Real output from your matched admin, on us, for the first 40 hours."
+    },
+    {
+      "featured": false,
+      "title": "Managed Talent (month to month) or Direct Hire (one time flat fee)",
+      "text": "Your call. Switch models anytime. No long term contracts, no hidden percentages."
+    },
+    {
+      "featured": false,
+      "title": "Not a fit? We re match, no hassle.",
+      "text": "You walk away clean, or we find the right person. Either way, you're not stuck."
+    }
+  ],
+  "ctaBanner": {
+    "heading": "Get your evenings back.",
+    "sub": "Back on the job by day, home for dinner by night. See who fits, then decide."
+  },
+  "faq": [
+    {
+      "q": "What can an office admin actually take off my plate?",
+      "a": "Whether you run a roofing, HVAC, electrical, or plumbing shop, your admin covers it: answering and returning calls, scheduling and confirming jobs, coordinating your crews, chasing invoices and payments, handling permits and paperwork, updating your field-service software, and keeping your inbox and calendar under control. If it is office work that keeps you off the job, it is fair game."
+    },
+    {
+      "q": "How much does Managed Talent cost?",
+      "a": "Plans start at <strong>$900 per month</strong>. Pricing depends on the role, experience level, and hours. Each plan includes management, payroll, benefits, and support."
+    },
+    {
+      "q": "How does the 40 hour free trial work?",
+      "a": "Once you pick who to meet and interview them, your matched admin does 40 hours of real work for you, on us. Not a test project or a demo. If it clicks, you keep them. If it does not, you walk away clean."
+    },
+    {
+      "q": "What types of roles can I hire?",
+      "a": "We fill roles in office and admin, operations, bookkeeping, marketing, and sales development. If the work can be done remotely, we can find the right fit."
+    },
+    {
+      "q": "Can they answer my phones during my hours?",
+      "a": "Yes. Your admin works an overlap shift on US business hours, so calls get answered live during your day, not overnight. English fluency is a requirement, not a nice to have."
+    },
+    {
+      "q": "How is this different from hiring on Upwork or OnlineJobs.ph?",
+      "a": "Those are databases. You filter by price, pick from whoever applied, and manage the risk yourself, which is exactly why most bad offshore hires go sideways. We headhunt and vet for your specific role, then manage payroll, benefits, and backups. Our placements hold a <strong>98% retention rate</strong>, and if a fit is not right we re-match you at no cost."
+    },
+    {
+      "q": "Will I have to train and manage them?",
+      "a": "A dedicated Client Success Manager runs onboarding and monitors performance, so you are not building an offshore HR function. You will still hand off your way of doing things up front, the same as any new hire, and from there they take ownership."
+    },
+    {
+      "q": "How long does it take to get matched?",
+      "a": "You'll receive your shortlist within 5 to 10 days. Specialized or niche roles may take longer. Once you've chosen a candidate and completed interviews, you can get started right away."
+    },
+    {
+      "q": "Can I change or replace my talent later on?",
+      "a": "Yes. If your needs change or performance dips, we'll replace your talent at no additional cost."
+    },
+    {
+      "q": "Do you provide ongoing support after hiring?",
+      "a": "Yes. A dedicated Client and VA Success Manager monitors performance, facilitates feedback, and ensures both sides are supported long term."
+    },
+    {
+      "q": "What's included in your management and payroll service?",
+      "a": "We handle contracts, payments, compliance, productivity tracking, and full suite benefits. You get one monthly invoice for everything."
+    },
+    {
+      "q": "Can I switch between part time and full time hours?",
+      "a": "Yes. You can adjust your talent's schedule as your needs evolve, with a minimum of 20 hours per week to maintain stability for the talent."
+    },
+    {
+      "q": "Can I buy out my talent?",
+      "a": "Yes. Buyouts are allowed as long as the talent agrees. The buyout fee starts at <strong>$3,500</strong> with flexibility based on hours, tenure, and subscription tier."
+    },
+    {
+      "q": "Where is your talent based?",
+      "a": "In the Philippines. Senior, college-educated, English-fluent professionals who work an overlap shift on US business hours and are vetted before you ever meet them."
+    },
+    {
+      "q": "Is there a minimum commitment?",
+      "a": "No long term contracts. Managed Talent is a month to month subscription designed for flexibility and scale."
+    }
+  ],
+  "calendlyUrl": "https://calendly.com/adell-coconutva/coconut-discovery-call-bill-com?utm_source=lp-timeback",
+  "redirectUrl": "https://talent.coconutva.com?role=office-admin",
+  "testimonialOrder": [
+    "VJ Gandhi",
+    "Kat Weaver",
+    "Stephanie Acker",
+    "Phil Kirkeiner",
+    "Liz Germain",
+    "Bruce Hymas"
+  ]
+}

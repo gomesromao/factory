@@ -1,0 +1,12 @@
+{
+  "buildCommand": "node scripts/build.js",
+  "outputDirectory": "dist",
+  "functions": {
+    "api/lead.js": { "includeFiles": "pages/**" },
+    "api/pages.js": { "includeFiles": "pages/**" }
+  },
+  "rewrites": [
+    { "source": "/", "has": [{ "type": "host", "value": "office.coconutva.com" }], "destination": "/trades-office-admin/" },
+    { "source": "/", "has": [{ "type": "host", "value": "books.coconutva.com" }], "destination": "/trades-bookkeeper/" }
+  ]
+}
