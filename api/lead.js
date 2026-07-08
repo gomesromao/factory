@@ -122,7 +122,7 @@ export default async function handler(req, res) {
           'Content-Type': 'application/json',
           Prefer: 'return=minimal'
         },
-        body: JSON.stringify({ ads_name: page.adsName })
+        body: JSON.stringify({ ads_name: page.adsName, ...(helpHours ? { help_hours: helpHours } : {}) })
       });
       if (!r.ok) {
         console.error('ads_name PATCH failed (column missing? run: ALTER TABLE public.contacts ADD COLUMN IF NOT EXISTS ads_name text;)', r.status, await r.text());

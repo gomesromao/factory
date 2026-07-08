@@ -2,11 +2,39 @@
   "buildCommand": "node scripts/build.js",
   "outputDirectory": "dist",
   "functions": {
-    "api/lead.js": { "includeFiles": "pages/**" },
-    "api/pages.js": { "includeFiles": "pages/**" }
+    "api/lead.js": {
+      "includeFiles": "pages/**"
+    },
+    "api/pages.js": {
+      "includeFiles": "pages/**"
+    },
+    "api/health.js": {
+      "includeFiles": "pages/**"
+    },
+    "api/publish.js": {
+      "includeFiles": "{pages/**,lib/testimonials.json,shared/public/logos/**}"
+    }
   },
   "rewrites": [
-    { "source": "/", "has": [{ "type": "host", "value": "office.coconutva.com" }], "destination": "/trades-office-admin/" },
-    { "source": "/", "has": [{ "type": "host", "value": "books.coconutva.com" }], "destination": "/trades-bookkeeper/" }
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "office.coconutva.com"
+        }
+      ],
+      "destination": "/trades-office-admin/"
+    },
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "books.coconutva.com"
+        }
+      ],
+      "destination": "/trades-bookkeeper/"
+    }
   ]
 }

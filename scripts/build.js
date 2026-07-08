@@ -16,12 +16,23 @@ fs.mkdirSync(DIST, { recursive: true });
 // 1. shared assets -> dist/public
 fs.cpSync(path.join(ROOT, 'shared/public'), path.join(DIST, 'public'), { recursive: true });
 
+// Guard: a forgotten META_TEST_EVENT_CODE in production silently stops Lead events from
+// feeding campaigns (the expense-recon zero-conversions bug). Fail the build instead.
+if (process.env.VERCEL_ENV === 'production' && process.env.META_TEST_EVENT_CODE && !process.env.ALLOW_TEST_EVENT_CODE_IN_PROD) {
+  throw new Error('META_TEST_EVENT_CODE is set in production. Remove it (or set ALLOW_TEST_EVENT_CODE_IN_PROD=1 for an intentional live test).');
+}
+
+const logoLibrary = new Set(fs.readdirSync(path.join(ROOT, 'shared/public/logos')));
+
 // 2. pages
 const slugs = [];
 for (const f of fs.readdirSync(path.join(ROOT, 'pages')).filter(f => f.endsWith('.json'))) {
   const cfg = JSON.parse(fs.readFileSync(path.join(ROOT, 'pages', f), 'utf8'));
   if (!/^[a-z0-9-]{3,60}$/.test(cfg.slug)) throw new Error('bad slug in ' + f);
   if (cfg.slug !== path.basename(f, '.json')) throw new Error('slug must match filename: ' + f);
+  for (const t of cfg.tools.items) {
+    if (!logoLibrary.has(t.file)) throw new Error(`Missing logo file: ${t.file} (page ${cfg.slug}) — not in shared/public/logos/`);
+  }
   const html = render(template, cfg, testimonials);
   fs.mkdirSync(path.join(DIST, cfg.slug), { recursive: true });
   fs.writeFileSync(path.join(DIST, cfg.slug, 'index.html'), html);

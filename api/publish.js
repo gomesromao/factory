@@ -4,6 +4,8 @@
 //      GITHUB_BRANCH (default "main"), PROD_BASE_URL (e.g. "https://go.coconutva.com"),
 //      RESEND_API_KEY + ADMIN_EMAILS (optional — comma-separated; enables the notification email).
 import crypto from 'node:crypto';
+import { readFile, readdir } from 'node:fs/promises';
+import path from 'node:path';
 
 const REQUIRED_STRINGS = [
   ['meta', 'title'], ['meta', 'description'], ['meta', 'ogDescription'],
@@ -24,7 +26,7 @@ export default async function handler(req, res) {
 
   const slug = body && body.slug;
   const cfg = body && body.config;
-  const err = validate(slug, cfg);
+  const err = await validate(slug, cfg);
   if (err) return res.status(400).json({ ok: false, error: err });
 
   const token = process.env.GITHUB_TOKEN;
@@ -76,7 +78,7 @@ export default async function handler(req, res) {
 
 /* ---------------- validation ---------------- */
 
-function validate(slug, cfg) {
+async function validate(slug, cfg) {
   if (!/^[a-z0-9-]{3,60}$/.test(slug || '')) return 'bad_slug';
   if (!cfg || typeof cfg !== 'object') return 'missing_config';
   if (cfg.slug !== slug || cfg.variant !== slug) return 'slug_variant_mismatch';
@@ -88,12 +90,27 @@ function validate(slug, cfg) {
   if (!Array.isArray(cfg.form.needOptions) || cfg.form.needOptions.length < 2) return 'need_at_least_2_options';
   if (!Array.isArray(cfg.roles) || !cfg.roles.length) return 'missing_roles';
   if (!cfg.tools || !Array.isArray(cfg.tools.items) || !cfg.tools.items.length) return 'missing_tools';
+  let logoLibrary;
+  try { logoLibrary = new Set(await readdir(path.join(process.cwd(), 'shared/public/logos'))); } catch { logoLibrary = null; }
   for (const t of cfg.tools.items) {
     if (!/^[\w-]+\.(png|webp)$/.test(t.file || '')) return 'bad_tool_file';
+    if (logoLibrary && !logoLibrary.has(t.file)) return `unknown_logo:${t.file}`;
   }
+  // adsName is the CRM filter + Meta content_name — must be unique across pages
+  try {
+    const dir = path.join(process.cwd(), 'pages');
+    for (const f of (await readdir(dir)).filter(x => x.endsWith('.json'))) {
+      const other = JSON.parse(await readFile(path.join(dir, f), 'utf8'));
+      if (other.slug !== slug && other.adsName === cfg.adsName) return `adsName_taken_by:${other.slug}`;
+    }
+  } catch { /* pages dir missing in bundle would already break /api/lead — health catches it */ }
   if (!Array.isArray(cfg.wyg) || !cfg.wyg.length) return 'missing_wyg';
   if (!Array.isArray(cfg.faq) || !cfg.faq.length) return 'missing_faq';
-  if (!Array.isArray(cfg.testimonialOrder) || cfg.testimonialOrder.length !== 6) return 'testimonialOrder_must_have_6';
+  if (!Array.isArray(cfg.testimonialOrder) || cfg.testimonialOrder.length < 4 || cfg.testimonialOrder.length > 10) return 'testimonialOrder_must_have_4_to_10';
+  try {
+    const lib = JSON.parse(await readFile(path.join(process.cwd(), 'lib/testimonials.json'), 'utf8'));
+    for (const n of cfg.testimonialOrder) if (!lib[n]) return `unknown_testimonial:${n}`;
+  } catch { /* same note as above */ }
   if (!/^https:\/\//.test(cfg.redirectUrl || '')) return 'bad_redirectUrl';
   if (!/^https:\/\//.test(cfg.calendlyUrl || '')) return 'bad_calendlyUrl';
   return null;

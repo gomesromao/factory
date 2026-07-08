@@ -88,6 +88,18 @@ commit. It appears as a checkbox in the builder after the next deploy.
 - `scripts/extract.js` and `scripts/verify.js` were used to bootstrap from the live
   ads5/ads6 repos and prove fidelity; they're kept for reference/re-verification.
 
+## Editing the template safely (blast radius = every live page)
+
+A template change rebuilds ALL pages on deploy. Never edit `template/page.template.html`
+directly on `main`:
+1. Branch + PR — Vercel automatically creates a **preview deployment** for the PR.
+2. On the preview URL: open every page visually, then hit `GET /api/health` — it proves the
+   serverless bundle can read `pages/*.json` at runtime (the classic silent-breakage mode).
+3. Optionally submit the form on one preview page with a test email and check Slack/OS/Meta.
+4. Merge. Production deploys the exact commit you previewed.
+
+`/api/health` is also the 10-second post-deploy check for ANY production deploy.
+
 ## Migrating office/books into the factory (when ready)
 
 The two configs already produce identical pages. To retire ads5/ads6:

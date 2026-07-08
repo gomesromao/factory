@@ -156,6 +156,9 @@ sub('            <div class="field">\n              <label for="f-need">', '{{HO
 sub("  var state = { name:'', email:'', company:'', primaryNeed:'', phone:'', hiringTimeline:'' };", '  var state = {{STATE_LINE}};');
 sub("        primaryNeed: state.primaryNeed, phone: state.phone, hiringTimeline: state.hiringTimeline,", '        {{PAYLOAD_LINE}}');
 sub("    state.company     = document.getElementById('f-company').value.trim();\n    state.primaryNeed = document.getElementById('f-need').value;\n    if (!state.company)     { err2.textContent = 'Please enter your company.'; return; }\n    if (!state.primaryNeed) { err2.textContent = 'Please pick one.'; return; }", '{{CONTINUE_COLLECT}}');
+// paid ad destinations must not be indexed (nor compete with coconutva.com organically)
+T = T.replace('<meta name="description" content="{{meta.description}}" />',
+  '<meta name="description" content="{{meta.description}}" />\n  <meta name="robots" content="noindex, nofollow" />');
 fs.writeFileSync('template/page.template.html', T);
 console.log('extracted: 2 page configs, testimonials lib, template (' + T.length + ' bytes)');
 console.log('office options:', office.form.needOptions.length, '| books options:', books.form.needOptions.length);

@@ -18,6 +18,8 @@ function stripFaq(html) {
   return html.replace(/var faqs = \[[\s\S]*?\];\s*\n(\s*var list)/, 'var faqs = FAQS;\n$1');
 }
 function norm(html) {
+  html = html.replace(/utm_source=[\w-]+/g, 'utm_source=X'); // utm now derives from slug (intentional fix vs prod)
+  html = html.replace(/\s*<meta name="robots" content="noindex, nofollow" \/>/, ''); // factory-only addition
   return stripFaq(html).split('\n').map(l => l.trim()).filter(Boolean).join('\n');
 }
 
