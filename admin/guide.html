@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>How to use — Coconut LP Factory</title>
+<style>
+  :root { --green:#2E9B58; --green-dark:#0F7B3F; --ink:#111; --border:#e2e2dc; --bg:#FAFAF7; --soft:#EAF7EF; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Inter Tight','Helvetica Neue',Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.55; font-size:15px; }
+  .wrap { max-width:820px; margin:0 auto; padding:40px 24px 100px; }
+  h1 { font-size:32px; margin:0 0 6px; font-weight:800; }
+  .sub { color:#555; margin:0 0 34px; font-size:16px; }
+  h2 { font-size:21px; margin:42px 0 10px; font-weight:800; border-bottom:2px solid var(--green); display:inline-block; padding-bottom:2px; }
+  h3 { font-size:15px; margin:22px 0 4px; font-weight:800; }
+  p { margin:8px 0; }
+  ol.steps { counter-reset:s; list-style:none; padding:0; margin:14px 0; }
+  ol.steps li { counter-increment:s; position:relative; padding:0 0 18px 52px; }
+  ol.steps li::before { content:counter(s); position:absolute; left:0; top:0; width:34px; height:34px; border-radius:50%; background:var(--ink); color:#fff; font-weight:800; display:flex; align-items:center; justify-content:center; }
+  .tip { background:var(--soft); border-left:4px solid var(--green); border-radius:8px; padding:10px 14px; margin:14px 0; }
+  .warn { background:#FDF6EC; border-left:4px solid #E8A33D; border-radius:8px; padding:10px 14px; margin:14px 0; }
+  code { background:#f0f0ea; border-radius:5px; padding:1px 6px; font-size:13px; }
+  table { border-collapse:collapse; width:100%; margin:12px 0; font-size:14px; }
+  th, td { border:1px solid var(--border); padding:8px 10px; text-align:left; vertical-align:top; }
+  th { background:#f4f4ef; }
+  .back { display:inline-block; margin-bottom:26px; color:var(--green-dark); font-weight:700; text-decoration:none; }
+  .back:hover { text-decoration:underline; }
+  .pill { display:inline-block; background:var(--ink); color:#fff; border-radius:99px; padding:2px 12px; font-size:12px; font-weight:700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="/admin/">← Back to the builder</a>
+  <h1>🥥 How to use the LP Factory</h1>
+  <p class="sub">Create a new ad landing page in ~10 minutes. No code, no developer, no deploy steps — you edit, you publish, it's live.</p>
+
+  <h2>The big picture</h2>
+  <p>Every landing page is just a <strong>set of text fields</strong> (headline, form options, FAQ…) poured into the same proven design — the one already converting for Office Admin and Bookkeeper. The backend (CRM, Slack alerts, Meta tracking) is wired automatically for every page. When you hit <span class="pill">Publish</span>, the page goes live on the internet about <strong>2 minutes</strong> later at <code>get.coconutva.com/&lt;your-slug&gt;/</code>.</p>
+
+  <h2>Creating a page, start to finish</h2>
+  <ol class="steps">
+    <li><strong>Pick your starting point.</strong> In the dropdown (top-left), select the existing page closest to your new niche — e.g. duplicate the Bookkeeper page to make an Accounting Bookkeeper page.</li>
+    <li><strong>Click "Duplicate as new page…"</strong> and give it a slug: lowercase-with-dashes, like <code>accounting-bookkeeper</code>. This becomes the URL. Choose carefully — it's locked after the first publish.</li>
+    <li><strong>Work through the editor top to bottom</strong> (section guide below). The preview on the right updates as you type and is pixel-identical to the real page.</li>
+    <li><strong>Hit Publish.</strong> Green message = done. You and Daniel get an email with the page link.</li>
+    <li><strong>Wait ~2 minutes</strong>, then open <code>get.coconutva.com/&lt;slug&gt;/</code> and click through your page like a visitor would.</li>
+    <li><strong>Point the Meta ad at that URL.</strong> That's it — tracking (PageView + Lead with dedup), Slack alerts, and CRM capture are already on.</li>
+  </ol>
+  <div class="tip"><strong>Editing an existing page</strong> is the same, minus step 2: pick it in the dropdown, change the fields, Publish. The live page updates ~2 minutes later.</div>
+
+  <h2>Section-by-section guide</h2>
+
+  <h3>Page identity</h3>
+  <table>
+    <tr><th>Field</th><th>What it does</th><th>Rules</th></tr>
+    <tr><td><strong>Slug</strong></td><td>The URL: <code>get.coconutva.com/&lt;slug&gt;/</code></td><td>lowercase-with-dashes. <strong>Must be unique.</strong> Locked after first publish.</td></tr>
+    <tr><td><strong>Ads name</strong></td><td>How leads from this page are labeled in the CRM, and the Meta <code>content_name</code></td><td><strong>Must be unique across ALL pages</strong> — "Bookkeeper" and "Accounting Bookkeeper" are different labels for a reason. Don't change it after the page has leads.</td></tr>
+    <tr><td><strong>Page label</strong></td><td>The Slack alert header: "🥥 New lead — &lt;label&gt;"</td><td>Make it instantly recognizable for the team.</td></tr>
+    <tr><td><strong>Subdomain</strong></td><td>Optional vanity URL (e.g. <code>dispatch.coconutva.com</code>)</td><td>Leave empty in doubt — the page works on its slug URL immediately. If filled, Daniel gets an email and wires it (~1 min on his side).</td></tr>
+  </table>
+
+  <h3>Meta / SEO</h3>
+  <p><strong>Title tag</strong> shows in the browser tab and link previews — house pattern: <code>&lt;Benefit&gt; | Coconut for Trades</code>. <strong>Meta description</strong> (~150 chars) and <strong>OG/Twitter description</strong> (shorter) show when the link is shared. Pages are hidden from Google on purpose (they're paid destinations), so write these for humans clicking a shared link, not for SEO.</p>
+
+  <h3>Hero</h3>
+  <p>The first screen. <strong>Eyebrow</strong> = the small audience pill ("For roofers, electricians…"). <strong>Headline</strong> = the big promise; put <code>&lt;br&gt;</code> where you want the line to break. <strong>Accent</strong> = the green line under it ("First 40 hours free"). <strong>Lead</strong> = the paragraph; you can bold with <code>&lt;strong&gt;…&lt;/strong&gt;</code>.</p>
+
+  <h3>Form — step 1, step 2, hours, success</h3>
+  <p><strong>Step 1 button:</strong> pattern "Show me available &lt;role&gt;s". <strong>Step 2 subtitle + dropdown:</strong> the dropdown label asks the pain question; the options (one per line) are what the visitor picks — <em>and exactly what appears on the lead in the CRM</em>. 5–7 concrete pains + a "Not sure yet" works best. <strong>Hours dropdown (optional):</strong> fill label + options to ask "how much help do you need?" — great qualifier, shows in Slack; leave both empty to skip the question entirely. <strong>Success:</strong> the "You're in!" text and the URL of the "Browse example profiles" button.</p>
+
+  <h3>Roles we fill</h3>
+  <p>One role per line → the black pills. Order here = order on the page.</p>
+
+  <h3>Works in your stack (tool logos)</h3>
+  <p>Tick the tools your audience actually uses. Only logos already in the library appear as checkboxes.</p>
+  <div class="warn"><strong>Need a logo we don't have</strong> (Karbon, EZLynx, Boulevard…)? Don't guess — message Daniel with the tool name. He adds it to the library (takes minutes) and it becomes a checkbox for every page. Publishing with a made-up logo name is blocked automatically.</div>
+
+  <h3>What You Get</h3>
+  <p>The numbered benefit rows. Numbers (01, 02…) are automatic from the order — never type them. Tick <strong>dark</strong> on exactly one row: the highlighted "star" benefit. 6–7 rows is the house pattern. ✕ removes a row, "+ Add row" appends one.</p>
+
+  <h3>CTA banner</h3>
+  <p>The green band before the FAQ — a short emotional close ("Get your evenings back") plus one supporting line.</p>
+
+  <h3>FAQ</h3>
+  <p>Question/answer pairs; answers can use <code>&lt;strong&gt;</code> and links. Keep the evergreen company answers (pricing, trial, cancellation, security, time zones) from the page you duplicated and swap only the role-specific ones. 14–16 questions is the pattern.</p>
+
+  <h3>Links</h3>
+  <p><strong>Calendly URL:</strong> the booking link in the FAQ footer. Attribution (<code>utm_source</code>) is set automatically to your slug — you can't get it wrong. <strong>Redirect URL:</strong> where the success-screen button goes.</p>
+
+  <h2>If Publish shows a red error</h2>
+  <table>
+    <tr><th>Error</th><th>Meaning / fix</th></tr>
+    <tr><td><code>adsName_taken_by:&lt;page&gt;</code></td><td>Another page already uses that Ads name. Pick a unique one.</td></tr>
+    <tr><td><code>unknown_logo:&lt;file&gt;</code></td><td>That logo isn't in the library. Ask Daniel to add it.</td></tr>
+    <tr><td><code>missing_…</code> / <code>bad_…</code></td><td>A required field is empty or malformed (URLs must start with <code>https://</code>). The name tells you which one.</td></tr>
+    <tr><td><code>need_at_least_2_options</code></td><td>The step-2 dropdown needs at least two lines.</td></tr>
+    <tr><td><code>bad_password</code></td><td>Log out/in with the current admin password.</td></tr>
+  </table>
+  <p>Errors only ever block <em>your</em> publish — they can never break the live pages.</p>
+
+  <h2>When to involve Daniel</h2>
+  <p>Only three things: <strong>a new tool logo</strong>, <strong>a subdomain</strong>, or <strong>a layout/structure change</strong> (new section, different design — that's template work). Everything else is yours, end to end.</p>
+
+  <div class="tip"><strong>Golden rule:</strong> duplicate the page closest to your niche, change the words, keep the structure. The layout is already proven — your job is audience, positioning, and copy.</div>
+</div>
+</body>
+</html>
