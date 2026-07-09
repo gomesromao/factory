@@ -8,11 +8,12 @@
 <style>
   :root { --green:#2E9B58; --green-dark:#0F7B3F; --mint:#B8EDC8; --ink:#111; --border:#e2e2dc; --bg:#FAFAF7; }
   * { box-sizing: border-box; }
-  body { margin:0; font-family:'Inter Tight','Helvetica Neue',Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); font-size:14px; }
-  .topbar { display:flex; align-items:center; gap:16px; padding:12px 20px; background:#fff; border-bottom:1px solid var(--border); position:sticky; top:0; z-index:10; }
+  html, body { height:100%; }
+  body { margin:0; font-family:'Inter Tight','Helvetica Neue',Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); font-size:14px; display:flex; flex-direction:column; overflow:hidden; }
+  .topbar { display:flex; align-items:center; gap:16px; padding:12px 20px; background:#fff; border-bottom:1px solid var(--border); flex:0 0 auto; z-index:10; flex-wrap:wrap; }
   .topbar h1 { font-size:16px; margin:0; font-weight:800; }
   .topbar .spacer { flex:1; }
-  .layout { display:grid; grid-template-columns: 460px 1fr; height: calc(100vh - 53px); }
+  .layout { display:grid; grid-template-columns: 460px 1fr; flex:1 1 auto; min-height:0; }
   .editor { overflow-y:auto; padding:16px 20px 80px; background:#fff; border-right:1px solid var(--border); }
   .preview-pane { display:flex; flex-direction:column; }
   .preview-bar { padding:8px 16px; font-size:12px; color:#666; background:#f2f2ee; border-bottom:1px solid var(--border); display:flex; gap:12px; align-items:center; }
@@ -36,7 +37,7 @@
   .status { font-size:12px; padding:8px 12px; border-radius:8px; margin:10px 0; display:none; }
   .status.ok { display:block; background:#EAF7EF; color:var(--green-dark); }
   .status.err { display:block; background:#fdecea; color:#c0392b; }
-  .login { max-width:340px; margin:120px auto; background:#fff; border:1px solid var(--border); border-radius:14px; padding:28px; }
+  .login { max-width:340px; margin:120px auto; background:#fff; border:1px solid var(--border); border-radius:14px; padding:28px; overflow:auto; }
   .login h2 { margin:0 0 14px; }
   .hidden { display:none !important; }
   .wyg-item, .faq-item { border:1px dashed var(--border); border-radius:8px; padding:8px; margin-bottom:8px; }
@@ -202,6 +203,7 @@
     var src = pages.find(function (p) { return p.slug === slug; });
     current = JSON.parse(JSON.stringify(src));
     isNew = false;
+    resetPreviewScroll();
     $('f_slug').disabled = true;
     fillForm();
     renderPreview();
@@ -250,6 +252,7 @@
       cfg.tools.wrapMaxWidth = cfg.tools.wrapMaxWidth || 760;
       var exists = pages.some(function (p) { return p.slug === cfg.slug; });
       current = cfg; isNew = !exists;
+      resetPreviewScroll();
       $('f_slug').disabled = exists;
       try { fillForm(); renderPreview(); } catch (err) { return setStatus('err', 'Import failed — ' + err.message); }
       setStatus('ok', exists
@@ -412,13 +415,29 @@
   Array.prototype.slice.call(document.querySelectorAll('#editor input, #editor textarea')).forEach(function (el) {
     el.addEventListener('input', onChange);
   });
+  function resetPreviewScroll() { $('preview').dataset.ready = ''; }
   function renderPreview() {
     try {
       harvest();
       var html = LPRender.render(TEMPLATE, current, TESTIMONIALS);
-      // base tag so /public/* resolves against this deployment inside srcdoc
+      // base tag so /public/* resolves against this deployment inside the frame
       html = html.replace('<head>', '<head><base href="/">');
-      $('preview').srcdoc = html;
+      var iframe = $('preview');
+      var doc = null;
+      try { doc = iframe.contentDocument; } catch (err) { doc = null; }
+      if (doc && doc.documentElement && iframe.dataset.ready === '1') {
+        // Live update: swap the document's markup in place — no reload, no flash,
+        // and the preview stays scrolled exactly where you are (e.g. at the logo strip).
+        var sx = 0, sy = 0;
+        try { sx = iframe.contentWindow.scrollX || 0; sy = iframe.contentWindow.scrollY || 0; } catch (err) {}
+        var inner = html.replace(/^\s*<!DOCTYPE html>\s*/i, '').replace(/^\s*<html[^>]*>/i, '').replace(/<\/html>\s*$/i, '');
+        doc.documentElement.innerHTML = inner;
+        try { iframe.contentWindow.scrollTo(sx, sy); } catch (err) {}
+      } else {
+        // First render (or page switch): full load, starting at the top.
+        iframe.onload = function () { iframe.dataset.ready = '1'; };
+        iframe.srcdoc = html;
+      }
       setStatus('', '');
     } catch (e) {
       setStatus('err', 'Preview error: ' + e.message);
