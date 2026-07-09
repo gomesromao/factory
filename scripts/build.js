@@ -57,6 +57,7 @@ admin = admin
   .replace('"__LOGOS__"', () => inlineJson(logos));
 fs.mkdirSync(path.join(DIST, 'admin'), { recursive: true });
 fs.writeFileSync(path.join(DIST, 'admin', 'index.html'), admin);
+fs.copyFileSync(path.join(ROOT, 'admin/guide.html'), path.join(DIST, 'admin', 'guide.html'));
 
 // 4. root index: plain list of built pages (handy sanity page)
 fs.writeFileSync(path.join(DIST, 'index.html'),
