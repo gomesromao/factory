@@ -13,6 +13,9 @@
     },
     "api/publish.js": {
       "includeFiles": "{pages/**,lib/testimonials.json,shared/public/logos/**}"
+    },
+    "api/logo.js": {
+      "includeFiles": "pages/**"
     }
   },
   "rewrites": [
