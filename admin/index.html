@@ -408,7 +408,7 @@
       }).then(function (r) {
         return r.json().catch(function () { return { ok: false, error: 'HTTP ' + r.status + ' \u2014 is api/logo.js deployed?' }; });
       }).then(function (resp) {
-        if (!resp.ok) return setStatus('err', 'Upload failed: ' + (resp.error || 'unknown'));
+        if (!resp.ok) return setStatus('err', 'Upload failed: ' + ghErrMsg(resp));
         pendingLogos[filename] = dataUrl;
         if (LOGOS.indexOf(filename) === -1) LOGOS.push(filename);
         LOGOS.sort();
@@ -419,6 +419,12 @@
     };
     reader.readAsDataURL(f);
   });
+  function ghErrMsg(resp) {
+    var m = (resp.error || 'unknown') + (resp.detail ? ' (HTTP ' + resp.detail + ')' : '');
+    if (resp.detail === 401) m += ' \u2014 the GITHUB_TOKEN is invalid or was revoked. Update it in Vercel env vars and redeploy.';
+    if (resp.detail === 403) m += ' \u2014 the token lacks Contents read/write on this repo (or rate limit). Check the fine-grained token permissions.';
+    return m;
+  }
   function deleteLogo(file) {
     if (!confirm('Delete "' + file + '" from the shared library?\n\nThis affects every page. Pages currently using it will block the deletion.')) return;
     fetch('/api/logo', {
@@ -429,7 +435,7 @@
     }).then(function (resp) {
       if (!resp.ok) {
         if (resp.error === 'logo_in_use') return setStatus('err', 'Cannot delete ' + file + ' — still used by: ' + resp.pages.join(', ') + '. Untick it on those pages (and Publish them) first.');
-        return setStatus('err', 'Delete failed: ' + (resp.error || 'unknown'));
+        return setStatus('err', 'Delete failed: ' + ghErrMsg(resp));
       }
       delete pendingLogos[file];
       var i = LOGOS.indexOf(file); if (i !== -1) LOGOS.splice(i, 1);
