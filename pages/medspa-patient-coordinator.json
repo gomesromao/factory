@@ -1,0 +1,179 @@
+{
+  "slug": "medspa-patient-coordinator",
+  "variant": "medspa-patient-coordinator",
+  "adsName": "MedSpa Patient Coordinator",
+  "pageLabel": "Med Spa Patient Coordinator",
+  "subdomain": "",
+  "meta": {
+    "title": "Stop losing bookings to voicemail | Coconut for Med Spas",
+    "description": "For med spa owners: a dedicated remote patient coordinator who answers calls, works your DMs, confirms appointments, chases every lead, and keeps your book full. Vetted, senior, matched in days.",
+    "ogDescription": "A dedicated remote patient coordinator who answers your calls, works your DMs, confirms appointments, and keeps your book full. Vetted, senior, matched in days."
+  },
+  "hero": {
+    "eyebrow": "For med spa owners & practice managers",
+    "h1": "You can't inject<br>and answer the phone.",
+    "accent": "First 40 hours free",
+    "lead": "Every call that rings out while you're with a patient is a booking walking to the med spa down the street. Get a dedicated patient coordinator who answers the phones, works the DMs, confirms every appointment, and follows up on every lead until it books. Vetted, senior, and live in days."
+  },
+  "form": {
+    "step1Button": "Show me available coordinators",
+    "step2Sub": "We match you with a patient coordinator who already knows med spa scheduling, confirmations, and lead follow-up.",
+    "needLabel": "What's costing you the most bookings?",
+    "needOptions": [
+      "Calls going to voicemail",
+      "Unanswered DMs and web leads",
+      "No-shows and empty slots",
+      "Lead follow-up falls through",
+      "Rebooking and reactivation",
+      "Front desk keeps turning over"
+    ],
+    "successText": "Keep your phone handy, we'll text you today with the coordinator profiles we matched to your practice.",
+    "browseUrl": "https://talent.coconutva.com?role=patient-coordinator",
+    "hours": {
+      "label": "How much help do you need?",
+      "options": [
+        "Less than 10 hrs/week",
+        "10 to 20 hrs/week",
+        "20+ hrs/week",
+        "Full-time"
+      ]
+    }
+  },
+  "roles": [
+    "Patient Coordinator",
+    "Appointment Scheduling",
+    "Lead Follow-Up",
+    "Social Media Manager",
+    "Rebooking & Reactivation",
+    "Admin & Inbox Support"
+  ],
+  "tools": {
+    "wrapMaxWidth": 760,
+    "chipHeight": 80,
+    "imgHeight": 80,
+    "imgMaxWidth": 130,
+    "items": [
+      {
+        "file": "quickbooks.png",
+        "alt": "QuickBooks"
+      }
+    ]
+  },
+  "wyg": [
+    {
+      "featured": false,
+      "title": "A senior patient coordinator, matched to your practice",
+      "text": "Not a generalist pulled off a job board. Someone who already knows med spa booking flow, confirmations, memberships, and the difference between a new-patient consult and a touch-up."
+    },
+    {
+      "featured": false,
+      "title": "Vetted profiles this week. You pick who to meet.",
+      "text": "No cattle call resumes. No agency warm bodies. A real slate of pre-vetted candidates, and you choose who to interview."
+    },
+    {
+      "featured": false,
+      "title": "Co-led interview with your Client Success Manager",
+      "text": "Your CSM runs it with you. We know what to listen for when hiring people who represent your brand on the phone."
+    },
+    {
+      "featured": false,
+      "title": "40 hours of real work, free. Before you commit.",
+      "text": "Not a test project. Not a demo. Real answered calls, confirmed appointments, and worked leads from your matched coordinator, on us, for the first 40 hours."
+    },
+    {
+      "featured": true,
+      "title": "They work your schedule and inbox. They never touch clinical records.",
+      "text": "Charts, photos, and treatment notes stay with your licensed team. Your coordinator lives in scheduling and communication, with only the access you grant, and you can pull it anytime."
+    },
+    {
+      "featured": false,
+      "title": "Managed Talent (month to month) or Direct Hire (one time flat fee)",
+      "text": "Your call. Switch models anytime. No long term contracts, no hidden percentages."
+    },
+    {
+      "featured": false,
+      "title": "Not a fit? We re-match, no hassle.",
+      "text": "You walk away clean, or we find the right person. Either way, you're not stuck."
+    }
+  ],
+  "ctaBanner": {
+    "heading": "Stop leaking bookings.",
+    "sub": "You take care of the patient in the chair. Your coordinator takes care of everyone trying to get in it."
+  },
+  "faq": [
+    {
+      "q": "What about HIPAA and patient privacy?",
+      "a": "Your coordinator works in scheduling and communication, not clinical care. Charts, photos, and treatment notes stay with your licensed team. Every operator signs a confidentiality agreement, is background checked before you meet them, and works only inside the tools and access <strong>you grant</strong>. You can revoke that access anytime, and your Client Success Manager helps you scope the role so it stays on the admin side of the line."
+    },
+    {
+      "q": "Can they actually answer our phones during business hours?",
+      "a": "Yes. Your coordinator works an overlap shift on <strong>US business hours</strong>, so calls, texts, and DMs get answered live while your providers are in treatment rooms, not returned from voicemail the next morning."
+    },
+    {
+      "q": "What booking software do they know?",
+      "a": "We match for your stack. Coordinators come with experience across med spa and aesthetics platforms like Boulevard, Zenoti, Vagaro, Aesthetic Record, and Mangomint, plus the Instagram and Facebook inboxes where your leads actually live."
+    },
+    {
+      "q": "How much does Managed Talent cost?",
+      "a": "Plans start at <strong>$900 per month</strong>. Pricing depends on the role, experience level, and hours. Each plan includes management, payroll, benefits, and support."
+    },
+    {
+      "q": "How does the 40 hour free trial work?",
+      "a": "Once you pick who to meet and interview them, your matched coordinator does 40 hours of real work for you, on us. Not a test project or a demo. If it clicks, you keep them. If it does not, you walk away clean."
+    },
+    {
+      "q": "How is this different from an AI receptionist or answering service?",
+      "a": "An answering service takes a message. An AI bot reads a script. A dedicated coordinator learns your treatment menu, your providers, your pricing, and your tone, then actually books the appointment, chases the no-show, and rebooks the patient who went quiet. One person, accountable to you, managed by us."
+    },
+    {
+      "q": "How is this different from hiring on Upwork or OnlineJobs.ph?",
+      "a": "Those are databases. You filter by price, pick from whoever applied, and manage the risk yourself, which is exactly why most bad offshore hires go sideways. We headhunt and vet for your specific role, then manage payroll, benefits, and backups. Our placements hold a <strong>98% retention rate</strong>, and if a fit is not right we re-match you at no cost."
+    },
+    {
+      "q": "Will I have to manage them?",
+      "a": "No. A dedicated Client Success Manager runs onboarding, monitors performance, and handles the day to day. You delegate the work and review the output. You are not building an offshore HR function."
+    },
+    {
+      "q": "How long does it take to get matched?",
+      "a": "You'll receive your shortlist within 5 to 10 days. Specialized or niche roles may take longer. Once you've chosen a candidate and completed interviews, you can get started right away."
+    },
+    {
+      "q": "Can I change or replace my talent later on?",
+      "a": "Yes. If your needs change or performance dips, we'll replace your talent at no additional cost."
+    },
+    {
+      "q": "Do you provide ongoing support after hiring?",
+      "a": "Yes. A dedicated Client and VA Success Manager monitors performance, facilitates feedback, and ensures both sides are supported long term."
+    },
+    {
+      "q": "What's included in your management and payroll service?",
+      "a": "We handle contracts, payments, compliance, productivity tracking, and full suite benefits. You get one monthly invoice for everything."
+    },
+    {
+      "q": "Can I switch between part time and full time hours?",
+      "a": "Yes. You can adjust your talent's schedule as your needs evolve, with a minimum of 20 hours per week to maintain stability for the talent."
+    },
+    {
+      "q": "Can I buy out my talent?",
+      "a": "Yes. Buyouts are allowed as long as the talent agrees. The buyout fee starts at <strong>$3,500</strong> with flexibility based on hours, tenure, and subscription tier."
+    },
+    {
+      "q": "Where is your talent based?",
+      "a": "In the Philippines. Senior, college-educated, English-fluent professionals who work an overlap shift on US business hours and are vetted before you ever meet them."
+    },
+    {
+      "q": "Is there a minimum commitment?",
+      "a": "No long term contracts. Managed Talent is a month to month subscription designed for flexibility and scale."
+    }
+  ],
+  "calendlyUrl": "https://calendly.com/adell-coconutva/coconut-discovery-call-bill-com?utm_source=medspa-patient-coordinator",
+  "redirectUrl": "https://talent.coconutva.com?role=patient-coordinator",
+  "testimonialOrder": [
+    "Kat Weaver",
+    "Liz Germain",
+    "Stephanie Acker",
+    "VJ Gandhi",
+    "Phil Kirkeiner",
+    "Bruce Hymas"
+  ]
+}
