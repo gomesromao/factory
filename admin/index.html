@@ -405,7 +405,9 @@
       fetch('/api/logo', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password: pw, filename: filename, contentBase64: b64 })
-      }).then(function (r) { return r.json(); }).then(function (resp) {
+      }).then(function (r) {
+        return r.json().catch(function () { return { ok: false, error: 'HTTP ' + r.status + ' \u2014 is api/logo.js deployed?' }; });
+      }).then(function (resp) {
         if (!resp.ok) return setStatus('err', 'Upload failed: ' + (resp.error || 'unknown'));
         pendingLogos[filename] = dataUrl;
         if (LOGOS.indexOf(filename) === -1) LOGOS.push(filename);
@@ -422,7 +424,9 @@
     fetch('/api/logo', {
       method: 'DELETE', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password: pw, filename: file })
-    }).then(function (r) { return r.json(); }).then(function (resp) {
+    }).then(function (r) {
+      return r.json().catch(function () { return { ok: false, error: 'HTTP ' + r.status + ' \u2014 is api/logo.js deployed?' }; });
+    }).then(function (resp) {
       if (!resp.ok) {
         if (resp.error === 'logo_in_use') return setStatus('err', 'Cannot delete ' + file + ' — still used by: ' + resp.pages.join(', ') + '. Untick it on those pages (and Publish them) first.');
         return setStatus('err', 'Delete failed: ' + (resp.error || 'unknown'));
@@ -482,7 +486,7 @@
   /* ---------- preview ---------- */
   var t;
   function onChange() { clearTimeout(t); t = setTimeout(renderPreview, 250); }
-  Array.prototype.slice.call(document.querySelectorAll('#editor input, #editor textarea')).forEach(function (el) {
+  Array.prototype.slice.call(document.querySelectorAll('#editor input:not([type=file]), #editor textarea')).forEach(function (el) {
     el.addEventListener('input', onChange);
   });
   function resetPreviewScroll() { $('preview').dataset.ready = ''; }
@@ -511,7 +515,6 @@
         iframe.onload = function () { iframe.dataset.ready = '1'; };
         iframe.srcdoc = html;
       }
-      setStatus('', '');
     } catch (e) {
       setStatus('err', 'Preview error: ' + e.message);
     }
