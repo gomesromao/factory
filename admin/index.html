@@ -35,6 +35,9 @@
   .logo-grid label { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--border); border-radius:8px; padding:6px 10px; margin:0; cursor:pointer; font-weight:500; background:#fff; }
   .logo-grid label.on { border-color:var(--green); background:#EAF7EF; }
   .logo-grid img { height:20px; width:auto; max-width:70px; object-fit:contain; }
+  .logo-grid .logo-del { border:none; background:transparent; color:#b55; font-weight:800; font-size:12px; padding:0 2px; cursor:pointer; line-height:1; }
+  .logo-grid .logo-del:hover { color:#c0392b; }
+  .logo-upload-hint { font-size:11px; color:#888; margin-top:6px; }
   .status { font-size:12px; padding:8px 12px; border-radius:8px; margin:10px 0; display:none; }
   .status.ok { display:block; background:#EAF7EF; color:var(--green-dark); }
   .status.err { display:block; background:#fdecea; color:#c0392b; }
@@ -127,6 +130,11 @@
       <fieldset><legend>Works in your stack</legend>
         <div class="hintline" style="margin-bottom:8px">Pick from the logo library. New logo? Send the file to Daniel first (transparent PNG, uniform height) — uploads are manual for now.</div>
         <div class="logo-grid" id="logoGrid"></div>
+        <div style="margin-top:10px">
+          <button class="small" id="logoUploadBtn">Upload logo (PNG/WebP)…</button>
+          <input type="file" id="logoFile" accept=".png,.webp,image/png,image/webp" style="display:none" />
+          <div class="logo-upload-hint">Transparent background, trimmed. Wide wordmarks and square icons both work — aim for a file under ~150&nbsp;KB (512&nbsp;KB hard limit). It appears in the preview instantly and goes live with the next deploy (~2&nbsp;min).</div>
+        </div>
       </fieldset>
 
       <fieldset><legend>What You Get</legend>
@@ -350,24 +358,85 @@
 
   /* ---------- tools grid ---------- */
   var ALT_NAMES = { 'servicetitan.png':'ServiceTitan','jobber.png':'Jobber','housecallpro.png':'Housecall Pro','buildertrend.png':'Buildertrend','companycam.png':'CompanyCam','quickbooks.png':'QuickBooks','xero.png':'Xero','billcom.png':'Bill.com' };
+  var pendingLogos = {};   // filename -> dataURL, for logos committed but not yet deployed
+  function prettyAlt(file) {
+    var base = file.replace(/\.(png|webp)$/, '');
+    return ALT_NAMES[file] || base.replace(/[-_]/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+  }
+  function logoSrc(file) { return pendingLogos[file] || ('/public/logos/' + file); }
   function buildLogoGrid() {
     var g = $('logoGrid'); g.innerHTML = '';
     LOGOS.forEach(function (file) {
-      var alt = ALT_NAMES[file] || file.replace(/\.(png|webp)$/, '');
+      var alt = prettyAlt(file);
       var on = current.tools.items.some(function (t) { return t.file === file; });
       var l = document.createElement('label');
       l.className = on ? 'on' : '';
       l.innerHTML = '<input type="checkbox" value="' + file + '" data-alt="' + alt + '"' + (on ? ' checked' : '') + ' style="display:none">' +
-                    '<img src="/public/logos/' + file + '" alt=""><span>' + alt + '</span>';
+                    '<img src="' + logoSrc(file) + '" alt=""><span>' + alt + '</span>' +
+                    '<button type="button" class="logo-del" title="Delete from library">✕</button>';
       l.querySelector('input').addEventListener('change', function (e) {
         l.className = e.target.checked ? 'on' : '';
         onChange();
+      });
+      l.querySelector('.logo-del').addEventListener('click', function (ev) {
+        ev.preventDefault(); ev.stopPropagation();
+        deleteLogo(file);
       });
       g.appendChild(l);
     });
   }
 
-  /* ---------- WYG rows ---------- */
+  /* ---------- logo upload / delete ---------- */
+  $('logoUploadBtn').addEventListener('click', function (e) { e.preventDefault(); $('logoFile').click(); });
+  $('logoFile').addEventListener('change', function (e) {
+    var f = e.target.files[0]; e.target.value = '';
+    if (!f) return;
+    var ext = /\.webp$/i.test(f.name) ? 'webp' : /\.png$/i.test(f.name) ? 'png' : null;
+    if (!ext) return setStatus('err', 'Only PNG or WebP files.');
+    if (f.size > 512 * 1024) return setStatus('err', 'File is ' + Math.round(f.size / 1024) + ' KB — the limit is 512 KB. Compress it (tinypng.com works well).');
+    var filename = f.name.toLowerCase().replace(/\.(png|webp)$/i, '').replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') + '.' + ext;
+    if (!/^[a-z0-9][a-z0-9-]{1,50}\.(png|webp)$/.test(filename)) return setStatus('err', 'Could not derive a clean filename from "' + f.name + '" — rename the file (letters, numbers, dashes) and retry.');
+    if (LOGOS.indexOf(filename) !== -1 && !confirm('"' + filename + '" already exists in the library. Replace it everywhere?')) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      var dataUrl = reader.result;
+      var b64 = String(dataUrl).split(',')[1];
+      setStatus('ok', 'Uploading ' + filename + '…');
+      fetch('/api/logo', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: pw, filename: filename, contentBase64: b64 })
+      }).then(function (r) { return r.json(); }).then(function (resp) {
+        if (!resp.ok) return setStatus('err', 'Upload failed: ' + (resp.error || 'unknown'));
+        pendingLogos[filename] = dataUrl;
+        if (LOGOS.indexOf(filename) === -1) LOGOS.push(filename);
+        LOGOS.sort();
+        buildLogoGrid();
+        renderPreview();
+        setStatus('ok', (resp.replaced ? 'Replaced ' : 'Added ') + filename + '. It\u2019s previewing here already; the file itself goes live with the next deploy (~2 min). Tick it to add the chip to this page.');
+      }).catch(function () { setStatus('err', 'Network error during upload.'); });
+    };
+    reader.readAsDataURL(f);
+  });
+  function deleteLogo(file) {
+    if (!confirm('Delete "' + file + '" from the shared library?\n\nThis affects every page. Pages currently using it will block the deletion.')) return;
+    fetch('/api/logo', {
+      method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw, filename: file })
+    }).then(function (r) { return r.json(); }).then(function (resp) {
+      if (!resp.ok) {
+        if (resp.error === 'logo_in_use') return setStatus('err', 'Cannot delete ' + file + ' — still used by: ' + resp.pages.join(', ') + '. Untick it on those pages (and Publish them) first.');
+        return setStatus('err', 'Delete failed: ' + (resp.error || 'unknown'));
+      }
+      delete pendingLogos[file];
+      var i = LOGOS.indexOf(file); if (i !== -1) LOGOS.splice(i, 1);
+      current.tools.items = current.tools.items.filter(function (t) { return t.file !== file; });
+      buildLogoGrid();
+      renderPreview();
+      setStatus('ok', 'Deleted ' + file + ' from the library.');
+    }).catch(function () { setStatus('err', 'Network error during delete.'); });
+  }
+
+    /* ---------- WYG rows ---------- */
   function buildWyg() {
     var box = $('wygList'); box.innerHTML = '';
     current.wyg.forEach(function (row, i) {
@@ -423,6 +492,9 @@
       var html = LPRender.render(TEMPLATE, current, TESTIMONIALS);
       // base tag so /public/* resolves against this deployment inside the frame
       html = html.replace('<head>', '<head><base href="/">');
+      for (var pf in pendingLogos) {
+        html = html.split('/public/logos/' + pf).join(pendingLogos[pf]);
+      }
       var iframe = $('preview');
       var doc = null;
       try { doc = iframe.contentDocument; } catch (err) { doc = null; }
