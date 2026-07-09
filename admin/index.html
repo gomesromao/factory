@@ -59,6 +59,9 @@
     <h1>🥥 LP Factory</h1>
     <select id="pageSelect" style="width:260px"></select>
     <button id="dupBtn">Duplicate as new page…</button>
+    <button id="importBtn">Import JSON…</button>
+    <button id="exportBtn">Download JSON</button>
+    <input type="file" id="importFile" accept=".json,application/json" style="display:none" />
     <span class="spacer"></span>
     <a href="/admin/guide.html" target="_blank" style="color:#0F7B3F;font-weight:700;text-decoration:none;font-size:13px;margin-right:6px">How to use ↗</a>
     <span id="deployNote" style="font-size:12px;color:#888"></span>
@@ -216,6 +219,56 @@
     fillForm();
     setStatus('ok', 'Duplicated. Edit the copy, then Publish to create pages/' + name + '.json.');
     renderPreview();
+  });
+
+  /* ---------- import JSON (Tyler's Claude workflow) ---------- */
+  var REQUIRED_PATHS = ['slug','adsName','pageLabel','meta.title','meta.description','meta.ogDescription',
+    'hero.eyebrow','hero.h1','hero.accent','hero.lead','form.step1Button','form.step2Sub','form.needLabel',
+    'form.needOptions','form.successText','form.browseUrl','roles','tools.items','wyg',
+    'ctaBanner.heading','ctaBanner.sub','faq','testimonialOrder','calendlyUrl','redirectUrl'];
+  function getPath(o, p) { return p.split('.').reduce(function (acc, k) { return acc == null ? acc : acc[k]; }, o); }
+  $('importBtn').addEventListener('click', function () { $('importFile').click(); });
+  $('importFile').addEventListener('change', function (e) {
+    var f = e.target.files[0]; e.target.value = '';
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      var cfg;
+      try { cfg = JSON.parse(r.result); } catch (err) { return setStatus('err', 'Import failed — not valid JSON: ' + err.message); }
+      var missing = REQUIRED_PATHS.filter(function (p) {
+        var v = getPath(cfg, p);
+        return v === undefined || v === null || v === '' || (Array.isArray(v) && !v.length);
+      });
+      if (missing.length) return setStatus('err', 'Import failed — missing or empty: ' + missing.join(', '));
+      if (!/^[a-z0-9-]{3,60}$/.test(cfg.slug)) return setStatus('err', 'Import failed — bad slug: "' + cfg.slug + '" (lowercase-with-dashes)');
+      cfg.variant = cfg.slug;
+      cfg.subdomain = cfg.subdomain || '';
+      // sizing defaults so a copy-only JSON from Claude renders without the numeric knobs
+      cfg.tools.chipHeight = cfg.tools.chipHeight || 80;
+      cfg.tools.imgHeight = cfg.tools.imgHeight || 80;
+      cfg.tools.imgMaxWidth = cfg.tools.imgMaxWidth || 130;
+      cfg.tools.wrapMaxWidth = cfg.tools.wrapMaxWidth || 760;
+      var exists = pages.some(function (p) { return p.slug === cfg.slug; });
+      current = cfg; isNew = !exists;
+      $('f_slug').disabled = exists;
+      try { fillForm(); renderPreview(); } catch (err) { return setStatus('err', 'Import failed — ' + err.message); }
+      setStatus('ok', exists
+        ? 'Imported over existing "' + cfg.slug + '". Review the preview, then Publish to update the live page.'
+        : 'Imported as NEW page "' + cfg.slug + '". Review the preview, then Publish to create it.');
+    };
+    r.readAsText(f);
+  });
+
+  /* ---------- export JSON (feeds Tyler's Claude workflow) ---------- */
+  $('exportBtn').addEventListener('click', function () {
+    harvest(); // export what's on screen, including unsaved edits
+    var blob = new Blob([JSON.stringify(current, null, 2) + '\n'], { type: 'application/json' });
+    var aEl = document.createElement('a');
+    aEl.href = URL.createObjectURL(blob);
+    aEl.download = current.slug + '.json';
+    document.body.appendChild(aEl); aEl.click(); aEl.remove();
+    URL.revokeObjectURL(aEl.href);
+    setStatus('ok', 'Downloaded ' + current.slug + '.json — attach it to your Claude Project, iterate the copy there, then bring the result back via Import JSON.');
   });
 
   /* ---------- form <-> config ---------- */
