@@ -43,13 +43,18 @@ for (const f of fs.readdirSync(path.join(ROOT, 'pages')).filter(f => f.endsWith(
 // 3. admin: inject template, renderer, testimonials, logo list
 const logos = fs.readdirSync(path.join(ROOT, 'shared/public/logos')).filter(f => /\.(png|webp)$/.test(f)).sort();
 let admin = fs.readFileSync(path.join(ROOT, 'admin/index.html'), 'utf8');
-// NOTE: function replacements so "$&"/"$'" inside the payloads are not treated as
-// special replacement patterns by String.replace (the template contains "$&" in readCookie).
+// NOTE 1: function replacements so "$&" inside the payloads is not treated as a special
+// replacement pattern by String.replace (the template contains "$&" in readCookie).
+// NOTE 2: inlineJson escapes "</" as "<\/" — a literal "</script>" inside a JS string would
+// otherwise terminate the inline <script> block early and dump the rest as page HTML.
+const inlineJson = (x) => JSON.stringify(x).replace(/<\//g, '<\\/');
+const renderSrc = fs.readFileSync(path.join(ROOT, 'lib/render.js'), 'utf8');
+if (/<\/script/i.test(renderSrc)) throw new Error('lib/render.js must not contain "</script"');
 admin = admin
-  .replace('/*__RENDER_JS__*/', () => fs.readFileSync(path.join(ROOT, 'lib/render.js'), 'utf8'))
-  .replace('"__TEMPLATE__"', () => JSON.stringify(template))
-  .replace('"__TESTIMONIALS__"', () => JSON.stringify(testimonials))
-  .replace('"__LOGOS__"', () => JSON.stringify(logos));
+  .replace('/*__RENDER_JS__*/', () => renderSrc)
+  .replace('"__TEMPLATE__"', () => inlineJson(template))
+  .replace('"__TESTIMONIALS__"', () => inlineJson(testimonials))
+  .replace('"__LOGOS__"', () => inlineJson(logos));
 fs.mkdirSync(path.join(DIST, 'admin'), { recursive: true });
 fs.writeFileSync(path.join(DIST, 'admin', 'index.html'), admin);
 
