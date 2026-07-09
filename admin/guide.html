@@ -49,6 +49,17 @@
   </ol>
   <div class="tip"><strong>Editing an existing page</strong> is the same, minus step 2: pick it in the dropdown, change the fields, Publish. The live page updates ~2 minutes later.</div>
 
+  <h2>Working with Claude (Download / Import JSON)</h2>
+  <p>Prefer iterating copy conversationally with Claude instead of typing into fields? The builder supports a full round-trip:</p>
+  <ol class="steps">
+    <li><strong>Download the page.</strong> Select the page in the dropdown and click <strong>Download JSON</strong> (top bar). You get <code>&lt;slug&gt;.json</code> — the page's entire copy as one small file. It exports exactly what's on screen, including unsaved edits.</li>
+    <li><strong>Work in your Claude Project.</strong> Attach the JSON and iterate the copy in plain conversation ("make the headline punchier", "rewrite the FAQ for accounting firms"). When you're done, ask Claude for the <strong>complete JSON</strong> and save it.</li>
+    <li><strong>Bring it back.</strong> Click <strong>Import JSON…</strong>, pick the file, and the editor + live preview load it instantly. If something required is missing, you'll get a clear message listing the exact fields — fix them in Claude and re-import.</li>
+    <li><strong>Review the preview, then Publish.</strong> Same as always.</li>
+  </ol>
+  <div class="tip"><strong>Import also creates new pages:</strong> if the JSON's slug doesn't exist yet, importing starts a brand-new page — a full page can be born in Claude and enter the builder in one click.</div>
+  <div class="warn"><strong>Always start from a fresh Download JSON</strong>, not from an old copy in a past Claude conversation. Importing an outdated file over a page silently discards any edits made in the builder since — the export/import pair is the source of truth handshake.</div>
+
   <h2>Section-by-section guide</h2>
 
   <h3>Page identity</h3>
