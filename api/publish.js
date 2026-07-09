@@ -90,8 +90,10 @@ async function validate(slug, cfg) {
   if (!Array.isArray(cfg.form.needOptions) || cfg.form.needOptions.length < 2) return 'need_at_least_2_options';
   if (!Array.isArray(cfg.roles) || !cfg.roles.length) return 'missing_roles';
   if (!cfg.tools || !Array.isArray(cfg.tools.items) || !cfg.tools.items.length) return 'missing_tools';
-  let logoLibrary;
-  try { logoLibrary = new Set(await readdir(path.join(process.cwd(), 'shared/public/logos'))); } catch { logoLibrary = null; }
+  let logoLibrary = await freshLogoLibrary();
+  if (!logoLibrary) {
+    try { logoLibrary = new Set(await readdir(path.join(process.cwd(), 'shared/public/logos'))); } catch { logoLibrary = null; }
+  }
   for (const t of cfg.tools.items) {
     if (!/^[\w-]+\.(png|webp)$/.test(t.file || '')) return 'bad_tool_file';
     if (logoLibrary && !logoLibrary.has(t.file)) return `unknown_logo:${t.file}`;
@@ -114,6 +116,21 @@ async function validate(slug, cfg) {
   if (!/^https:\/\//.test(cfg.redirectUrl || '')) return 'bad_redirectUrl';
   if (!/^https:\/\//.test(cfg.calendlyUrl || '')) return 'bad_calendlyUrl';
   return null;
+}
+
+
+// Live listing from GitHub so a logo uploaded seconds ago (commit done, deploy pending)
+// validates correctly. Returns null on any failure — caller falls back to the bundled copy.
+async function freshLogoLibrary() {
+  const token = process.env.GITHUB_TOKEN, repo = process.env.GITHUB_REPO;
+  if (!token || !repo) return null;
+  try {
+    const r = await fetch(`https://api.github.com/repos/${repo}/contents/shared/public/logos?ref=${process.env.GITHUB_BRANCH || 'main'}`, {
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'User-Agent': 'coconut-lp-factory', 'X-GitHub-Api-Version': '2022-11-28' }
+    });
+    if (!r.ok) return null;
+    return new Set((await r.json()).map(f => f.name));
+  } catch { return null; }
 }
 
 function passwordOk(given) {
