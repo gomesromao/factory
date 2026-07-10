@@ -72,6 +72,8 @@
   .adc .eyebrow { font-size:30px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--green-dark); }
   .adc .headline { margin:0; color:#0B1E3F; font-weight:900; line-height:1.06; letter-spacing:-0.015em; font-size:88px; }
   .adc .offer { align-self:flex-start; background:var(--green-dark); color:#fff; font-weight:800; font-size:40px; padding:20px 40px; border-radius:999px; }
+  .adc .proof { display:flex; flex-wrap:wrap; gap:14px 40px; align-items:center; font-size:27px; font-weight:600; color:#3d5570; }
+  .adc .proof .stars { color:#F5A623; font-size:30px; letter-spacing:3px; margin-right:10px; }
   .adc .toolrow { position:relative; z-index:2; }
   .adc .toolrow img { display:block; width:auto; height:auto; }
   .adc .face { position:absolute; right:0; bottom:0; z-index:1; height:660px; width:auto; }
@@ -240,6 +242,8 @@
         (page.hero && page.hero.eyebrow ? '<div class="eyebrow">' + esc(page.hero.eyebrow) + '</div>' : '') +
         '<h2 class="headline">' + String(page.hero && page.hero.h1 || '') + '</h2>' +
         (page.hero && page.hero.accent ? '<div class="offer">' + esc(page.hero.accent) + '</div>' : '') +
+        '<div class="proof"><span><span class="stars">\u2605\u2605\u2605\u2605\u2605</span>4.9/5 rating</span>' +
+        '<span>600+ companies trust us</span></div>' +
       '</div>' +
       (logo ? '<div class="toolrow"><img id="genLogoImg" src="/public/logos/' + esc(logo) + '" alt=""/></div>' : '') +
       (face ? '<img class="face" src="/public/faces/' + esc(face) + '" alt=""/>' : '');
