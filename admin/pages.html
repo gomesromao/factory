@@ -67,11 +67,11 @@
   .adc { width:1080px; height:1080px; background:linear-gradient(115deg, #DCEEFF 0%, #E5F5EA 60%, #C9F0D6 100%);
     display:flex; flex-direction:column; justify-content:space-between; padding:80px; position:relative; overflow:hidden;
     font-family:'Inter Tight','Helvetica Neue',Helvetica,Arial,sans-serif; }
-  .adc .brand { width:180px; height:auto; display:block; position:relative; z-index:2; }
-  .adc .copy { flex:1; display:flex; flex-direction:column; justify-content:center; gap:34px; padding:30px 0; position:relative; z-index:2; }
+  .adc .brand { width:330px; height:auto; display:block; position:relative; z-index:2; }
+  .adc .copy { flex:1; display:flex; flex-direction:column; justify-content:center; gap:24px; padding:8px 0; position:relative; z-index:2; min-height:0; }
   .adc .eyebrow { font-size:30px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--green-dark); }
   .adc .headline { margin:0; color:#0B1E3F; font-weight:900; line-height:1.06; letter-spacing:-0.015em; font-size:88px; }
-  .adc .offer { align-self:flex-start; background:var(--green-dark); color:#fff; font-weight:800; font-size:40px; padding:20px 40px; border-radius:999px; }
+  .adc .offer { align-self:flex-start; background:var(--green-dark); color:#fff; font-weight:800; font-size:38px; padding:16px 36px; border-radius:999px; }
   .adc .proof { display:flex; flex-wrap:wrap; gap:14px 40px; align-items:center; font-size:27px; font-weight:600; color:#3d5570; }
   .adc .proof .stars { color:#F5A623; font-size:30px; letter-spacing:3px; margin-right:10px; }
   .adc .toolrow { position:relative; z-index:2; }
@@ -237,7 +237,7 @@
   function buildCard(page, logo, face) {
     var card = el('div', 'adc' + (face ? ' has-face' : '') + (logo ? '' : ' no-logo'));
     card.innerHTML =
-      '<img class="brand" src="/public/coconut-logo.png" alt=""/>' +
+      '<img class="brand" src="/public/coconut-logo-lg.png" alt=""/>' +
       '<div class="copy">' +
         (page.hero && page.hero.eyebrow ? '<div class="eyebrow">' + esc(page.hero.eyebrow) + '</div>' : '') +
         '<h2 class="headline">' + String(page.hero && page.hero.h1 || '') + '</h2>' +
@@ -265,8 +265,15 @@
       // generic logo sizing: wide wordmarks capped by width, compact marks by height
       var lg = card.querySelector('#genLogoImg');
       if (lg && lg.naturalWidth) {
-        if (lg.naturalWidth / lg.naturalHeight > 2.5) lg.style.width = '480px';
-        else lg.style.height = '110px';
+        if (lg.naturalWidth / lg.naturalHeight > 2.5) lg.style.width = '430px';
+        else lg.style.height = '98px';
+      }
+      // overflow guard: shrink the headline until everything fits inside 1080px
+      var hl = card.querySelector('.headline');
+      var size = parseFloat(getComputedStyle(hl).fontSize);
+      while (card.scrollHeight > 1080 && size > 46) {
+        size -= 4;
+        hl.style.fontSize = size + 'px';
       }
       return html2canvas(card, { scale: 1, width: 1080, height: 1080, backgroundColor: null, logging: false });
     }).then(function (canvas) {
