@@ -1,0 +1,183 @@
+{
+  "slug": "cpa-firm-bookkeeper",
+  "variant": "cpa-firm-bookkeeper",
+  "adsName": "CPA Firm CAS Associate",
+  "pageLabel": "CPA Firm Bookkeeper",
+  "subdomain": "",
+  "meta": {
+    "title": "Stop turning clients away | Coconut for accounting firms",
+    "description": "For CPA, tax and bookkeeping firms with 3 to 30 staff: a dedicated CAS associate who runs client books, reconciliations, and month-end close. Vetted, senior, matched in days.",
+    "ogDescription": "A dedicated CAS associate who runs client books, reconciliations, and month-end close. Vetted, senior, matched in days."
+  },
+  "hero": {
+    "eyebrow": "For CPA, tax & bookkeeping firms with 3 to 30 staff",
+    "h1": "The books you're behind on<br>are the clients you can't take.",
+    "accent": "First 40 hours free",
+    "lead": "Accountant unemployment is 1.0%. A CPA seat takes 73 days to fill. So a good prospect calls in March, you quote six weeks out, and they call the firm across town. Get a dedicated CAS associate who already lives in QuickBooks, reconciliations, and month-end close. Vetted, senior, live in days."
+  },
+  "form": {
+    "step1Button": "Show me available CAS associates",
+    "step2Sub": "We match you with someone who has already closed books for a US accounting firm, not a generalist VA.",
+    "needLabel": "What's costing your firm the most right now?",
+    "needOptions": [
+      "Client books are behind",
+      "Month-end close drags",
+      "Turning away new clients",
+      "Cleanup and catch-up work",
+      "Partners doing staff-level work",
+      "Need ongoing CAS capacity"
+    ],
+    "successText": "Keep your phone handy, we'll text you today with the CAS associate profiles we matched to your firm.",
+    "browseUrl": "https://talent.coconutva.com?role=bookkeeper",
+    "hours": {
+      "label": "How much help do you need?",
+      "options": [
+        "Less than 10 hrs/week",
+        "10 to 20 hrs/week",
+        "20+ hrs/week",
+        "Full-time"
+      ]
+    }
+  },
+  "roles": [
+    "CAS Associate",
+    "Firm Bookkeeper",
+    "Month-End Close Support",
+    "AP/AR Specialist",
+    "Payroll Support",
+    "QuickBooks Cleanup"
+  ],
+  "tools": {
+    "wrapMaxWidth": 400,
+    "chipHeight": 80,
+    "imgHeight": 80,
+    "imgMaxWidth": 130,
+    "items": [
+      {
+        "file": "quickbooks.png",
+        "alt": "QuickBooks"
+      },
+      {
+        "file": "xero.png",
+        "alt": "Xero"
+      }
+    ]
+  },
+  "wyg": [
+    {
+      "featured": false,
+      "title": "A CAS associate who has closed books for a US firm",
+      "text": "Not a generalist pulled off a job board. Someone who already knows multi-client books, month-end close, reconciliations, and the review hierarchy a firm actually runs on."
+    },
+    {
+      "featured": false,
+      "title": "Vetted profiles this week. You pick who to meet.",
+      "text": "No cattle call resumes. No agency warm bodies. A real slate of pre-vetted candidates, and you choose who to interview."
+    },
+    {
+      "featured": false,
+      "title": "Co led interview with your Client Success Manager",
+      "text": "Your CSM runs it with you. We know what to listen for when hiring senior operators."
+    },
+    {
+      "featured": false,
+      "title": "40 hours of real work, free. Before you commit.",
+      "text": "Not a test project. Not a demo. Real output on your client files, on us, for the first 40 hours."
+    },
+    {
+      "featured": true,
+      "title": "They reconcile and categorize. They never move money.",
+      "text": "Transfers, payments, and filings stay with you and your review. You grant the access, and you can pull it anytime."
+    },
+    {
+      "featured": false,
+      "title": "Managed Talent (month to month) or Direct Hire (one time flat fee)",
+      "text": "Your call. Switch models anytime. No long term contracts, no hidden percentages."
+    },
+    {
+      "featured": false,
+      "title": "Not a fit? We re match, no hassle.",
+      "text": "You walk away clean, or we find the right person. Either way, you're not stuck."
+    }
+  ],
+  "ctaBanner": {
+    "heading": "Stop quoting six weeks out.",
+    "sub": "Take the client. See who fits, then decide."
+  },
+  "faq": [
+    {
+      "q": "Do they actually understand firm work, or just small business books?",
+      "a": "Firm work. This is the difference that matters. A generalist VA treats every file like a single small business and hands you a mess at review. We match for people who have worked multi-client books inside a US accounting practice: <strong>month-end close, reconciliations, cleanup and catch-up, AP and AR, payroll support, and a review hierarchy where a senior signs off.</strong> You keep review and sign-off. Always."
+    },
+    {
+      "q": "Where does IRC 7216 land on this?",
+      "a": "It depends entirely on scope, and it is a call for you and your counsel, not for us. Under IRC 7216, a tax return preparer needs informed, written client consent before tax return information is disclosed to a preparer outside the United States, and the cautious reading is that this holds even for data entry. Most firms that offshore tax work attach the consent to the engagement letter and report almost no client pushback. <strong>If you scope this seat to bookkeeping, CAS, and month-end close rather than return preparation, the analysis is different.</strong> We are not your tax advisor and we will not tell you where your line is."
+    },
+    {
+      "q": "Is my clients' financial data safe?",
+      "a": "Your associate works inside the systems you grant access to, under NDA, and can be removed anytime. Every operator is background checked and vetted before you meet them, and the engagement is managed by Coconut with a named Client Success Manager, not left to a solo freelancer."
+    },
+    {
+      "q": "Can they move money or touch a client's bank account?",
+      "a": "No. Reconciliation, categorization, close support, and AP and AR tracking do not require payment authority. Transfers, payments, and filings stay with you unless you specifically choose to set that up. <strong>You keep control.</strong>"
+    },
+    {
+      "q": "How much does Managed Talent cost?",
+      "a": "Plans start at <strong>$900 per month</strong>. Pricing depends on the role, experience level, and hours. Each plan includes management, payroll, benefits, and support."
+    },
+    {
+      "q": "How does the 40 hour free trial work?",
+      "a": "Once you pick who to meet and interview them, your matched associate does 40 hours of real work for you, on us. Not a test project or a demo. If it clicks, you keep them. If it does not, you walk away clean."
+    },
+    {
+      "q": "What software do they know?",
+      "a": "Primarily QuickBooks Online and Desktop, with experience across Xero and Bill.com. Tell us your practice management and payroll stack (Karbon, Canopy, Gusto) on the call and we match for it before you ever see a profile."
+    },
+    {
+      "q": "How is this different from TOA Global, Entigrity, or Upwork?",
+      "a": "Upwork and OnlineJobs are databases. You filter by price, pick from whoever applied, and carry the risk yourself. The offshore accounting firms sell you a seat off a rate card and lead with a discount. <strong>We headhunt and vet for your specific role, you interview and choose, and a named Client Success Manager runs the engagement.</strong> Our placements hold a 98% retention rate, and if a fit is not right we re-match you at no cost."
+    },
+    {
+      "q": "Will I have to manage them?",
+      "a": "No. A dedicated Client Success Manager runs onboarding, monitors performance, and handles the day to day. You delegate the work and review the output. You are not building an offshore HR function."
+    },
+    {
+      "q": "How long does it take to get matched?",
+      "a": "You'll receive your shortlist within 5 to 10 days. Once you've chosen a candidate and completed interviews, you can get started right away. Hire in summer and the seat is trained through the September and October extension deadlines and at full speed on January 2."
+    },
+    {
+      "q": "Can I change or replace my talent later on?",
+      "a": "Yes. If your needs change or performance dips, we'll replace your talent at no additional cost."
+    },
+    {
+      "q": "What's included in your management and payroll service?",
+      "a": "We handle contracts, payments, compliance, productivity tracking, and full suite benefits. You get one monthly invoice for everything."
+    },
+    {
+      "q": "Can I switch between part time and full time hours?",
+      "a": "Yes. You can adjust your talent's schedule as your needs evolve, with a minimum of 20 hours per week to maintain stability for the talent."
+    },
+    {
+      "q": "Can I buy out my talent?",
+      "a": "Yes. Buyouts are allowed as long as the talent agrees. The buyout fee starts at <strong>$3,500</strong> with flexibility based on hours, tenure, and subscription tier."
+    },
+    {
+      "q": "Where is your talent based?",
+      "a": "In the Philippines. Senior, college-educated, English-fluent professionals who work an overlap shift on US business hours and are vetted before you ever meet them."
+    },
+    {
+      "q": "Is there a minimum commitment?",
+      "a": "No long term contracts. Managed Talent is a month to month subscription designed for flexibility and scale."
+    }
+  ],
+  "calendlyUrl": "https://calendly.com/adell-coconutva/coconut-discovery-call-bill-com?utm_source=cpa-firm-bookkeeper",
+  "redirectUrl": "https://talent.coconutva.com?role=bookkeeper",
+  "testimonialOrder": [
+    "Stephanie Acker",
+    "VJ Gandhi",
+    "Liz Germain",
+    "Phil Kirkeiner",
+    "Kat Weaver",
+    "Bruce Hymas"
+  ]
+}
