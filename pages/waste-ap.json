@@ -56,6 +56,14 @@
       {
         "file": "quickbooks.png",
         "alt": "QuickBooks"
+      },
+      {
+        "file": "billcom.png",
+        "alt": "Bill.com"
+      },
+      {
+        "file": "gusto-logo-black.png",
+        "alt": "Gusto Logo Black"
       }
     ]
   },
