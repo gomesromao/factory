@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex,nofollow" />
+<title>Pages index — Coconut LP Factory</title>
+<link rel="icon" href="/public/favicon.png" />
+<style>
+  :root { --green:#2E9B58; --green-dark:#0F7B3F; --ink:#111; --border:#e2e2dc; --bg:#FAFAF7; --soft:#EAF7EF; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:'Inter Tight','Helvetica Neue',Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); font-size:15px; line-height:1.5; }
+  .wrap { max-width:960px; margin:0 auto; padding:36px 24px 80px; }
+  .brand { display:flex; align-items:center; gap:14px; margin-bottom:6px; }
+  .brand img { height:34px; width:auto; }
+  h1 { font-size:26px; font-weight:800; margin:0; }
+  .sub { color:#555; margin:2px 0 26px; font-size:14px; }
+  .bar { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+  .bar .count { color:#555; font-size:13px; }
+  button { font:inherit; font-weight:700; border:1px solid var(--ink); background:var(--ink); color:#fff; border-radius:8px; padding:8px 16px; cursor:pointer; }
+  button:hover { opacity:.88; }
+  table { border-collapse:collapse; width:100%; background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
+  th, td { border-bottom:1px solid var(--border); padding:12px 14px; text-align:left; vertical-align:top; font-size:14px; }
+  th { background:#f4f4ef; font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:#444; }
+  tr:last-child td { border-bottom:none; }
+  td.pl { font-weight:700; white-space:nowrap; }
+  td.hl { color:#333; }
+  a { color:var(--green-dark); font-weight:700; text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  .login { max-width:340px; margin:110px auto; background:#fff; border:1px solid var(--border); border-radius:14px; padding:28px; }
+  .login h2 { margin:0 0 12px; font-size:18px; }
+  .login input { width:100%; font:inherit; padding:9px 10px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px; }
+  .err { color:#c0392b; font-size:13px; min-height:18px; }
+  .hidden { display:none !important; }
+  .backlink { font-size:13px; margin-bottom:22px; display:inline-block; }
+</style>
+</head>
+<body>
+  <div class="login hidden" id="login">
+    <h2>🥥 Pages index</h2>
+    <input type="password" id="pw" placeholder="Admin password" />
+    <button id="loginBtn" style="width:100%">Enter</button>
+    <div class="err" id="loginErr"></div>
+  </div>
+
+  <div class="wrap hidden" id="app">
+    <a class="backlink" href="/admin/">← Back to the builder</a>
+    <div class="brand">
+      <img src="/public/coconut-logo.png" alt="Coconut" />
+      <h1>Pages index</h1>
+    </div>
+    <p class="sub">Every published landing page in the factory — title, hero headline, and live link.</p>
+    <div class="bar">
+      <button id="csvBtn">Download CSV</button>
+      <span class="count" id="count"></span>
+    </div>
+    <table>
+      <thead><tr><th>Page</th><th>Headline</th><th>Link</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </div>
+
+<script>
+(function () {
+  'use strict';
+  function $(id) { return document.getElementById(id); }
+  var pw = sessionStorage.getItem('lp_pw') || '';
+  var pages = [], BASE_URL = '';
+
+  function stripHtml(s) {
+    var d = document.createElement('div');
+    d.innerHTML = String(s || '').replace(/<br\s*\/?>/gi, ' ');
+    return (d.textContent || '').replace(/\s+/g, ' ').trim();
+  }
+  function pageUrl(slug) { return (BASE_URL || location.origin) + '/' + slug + '/'; }
+
+  function fetchPages(p) {
+    return fetch('/api/pages', { headers: { 'x-admin-password': p } })
+      .then(function (r) { if (!r.ok) throw new Error('auth'); return r.json(); });
+  }
+
+  function render() {
+    var tb = $('rows');
+    tb.innerHTML = pages.map(function (p) {
+      var url = pageUrl(p.slug);
+      return '<tr><td class="pl">' + esc(p.pageLabel || p.slug) + '</td>' +
+             '<td class="hl">' + esc(stripHtml(p.hero && p.hero.h1)) + '</td>' +
+             '<td><a href="' + url + '" target="_blank">' + esc(url.replace(/^https?:\/\//, '')) + '</a></td></tr>';
+    }).join('');
+    $('count').textContent = pages.length + ' page' + (pages.length === 1 ? '' : 's');
+  }
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  $('csvBtn').addEventListener('click', function () {
+    var q = function (v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; };
+    var lines = ['slug,page_label,headline,url'];
+    pages.forEach(function (p) {
+      lines.push([q(p.slug), q(p.pageLabel || ''), q(stripHtml(p.hero && p.hero.h1)), q(pageUrl(p.slug))].join(','));
+    });
+    var blob = new Blob(['\uFEFF' + lines.join('\r\n') + '\r\n'], { type: 'text/csv;charset=utf-8' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'coconut-pages.csv';
+    document.body.appendChild(a); a.click(); a.remove();
+    URL.revokeObjectURL(a.href);
+  });
+
+  function boot(d) {
+    pages = d.pages || []; BASE_URL = d.baseUrl || '';
+    $('login').className = 'login hidden';
+    $('app').className = 'wrap';
+    render();
+  }
+  $('loginBtn').addEventListener('click', function () {
+    var p = $('pw').value;
+    fetchPages(p).then(function (d) {
+      pw = p; sessionStorage.setItem('lp_pw', p);
+      boot(d);
+    }).catch(function () { $('loginErr').textContent = 'Wrong password.'; });
+  });
+  $('pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('loginBtn').click(); });
+
+  if (pw) {
+    fetchPages(pw).then(boot).catch(function () {
+      sessionStorage.removeItem('lp_pw');
+      $('login').className = 'login';
+    });
+  } else {
+    $('login').className = 'login';
+  }
+})();
+</script>
+</body>
+</html>
