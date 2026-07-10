@@ -33,6 +33,51 @@
   .err { color:#c0392b; font-size:13px; min-height:18px; }
   .hidden { display:none !important; }
   .backlink { font-size:13px; margin-bottom:22px; display:inline-block; }
+
+  /* --- Ad creative generator (added; does not affect existing styles) --- */
+  @font-face {
+    font-family: 'Inter Tight';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('/public/fonts/inter-tight-roman-latin.woff2') format('woff2-variations'),
+         url('/public/fonts/inter-tight-roman-latin.woff2') format('woff2');
+  }
+  .genBtn { background:none; border:none; color:#9aa; padding:2px 6px; font-size:16px; cursor:pointer; line-height:1; }
+  .genBtn:hover { color:var(--green-dark); opacity:1; }
+  .modal-backdrop { position:fixed; inset:0; background:rgba(11,30,63,.45); z-index:50; display:flex; align-items:center; justify-content:center; padding:20px; }
+  .modal { background:#fff; border-radius:14px; max-width:680px; width:100%; max-height:92vh; overflow:auto; padding:24px 26px; }
+  .modal h3 { margin:0 0 4px; font-size:18px; }
+  .modal .hint { color:#555; font-size:13px; margin:0 0 18px; }
+  .modal .cols { display:flex; gap:26px; flex-wrap:wrap; }
+  .modal .col { flex:1; min-width:220px; }
+  .modal .col h4 { margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:#444; }
+  .modal label.opt { display:flex; align-items:center; gap:10px; padding:7px 8px; border:1px solid var(--border); border-radius:8px; margin-bottom:6px; cursor:pointer; font-size:14px; }
+  .modal label.opt:hover { border-color:var(--green-dark); }
+  .modal label.opt img.lg { height:22px; width:auto; max-width:110px; }
+  .modal label.opt img.fc { height:42px; width:42px; object-fit:cover; object-position:top; border-radius:50%; background:var(--soft); }
+  .modal .actions { display:flex; gap:10px; align-items:center; margin-top:18px; }
+  .modal .cancel { background:#fff; color:var(--ink); }
+  .modal .status { font-size:13px; color:#555; }
+  .modal .preview { margin-top:16px; }
+  .modal .preview img { width:100%; border-radius:10px; border:1px solid var(--border); }
+
+  /* creative template (true 1080x1080, rendered off-screen for capture) */
+  #genStaging { position:fixed; left:-3000px; top:0; }
+  .adc { width:1080px; height:1080px; background:linear-gradient(115deg, #DCEEFF 0%, #E5F5EA 60%, #C9F0D6 100%);
+    display:flex; flex-direction:column; justify-content:space-between; padding:80px; position:relative; overflow:hidden;
+    font-family:'Inter Tight','Helvetica Neue',Helvetica,Arial,sans-serif; }
+  .adc .brand { width:180px; height:auto; display:block; position:relative; z-index:2; }
+  .adc .copy { flex:1; display:flex; flex-direction:column; justify-content:center; gap:34px; padding:30px 0; position:relative; z-index:2; }
+  .adc .eyebrow { font-size:30px; font-weight:700; letter-spacing:.14em; text-transform:uppercase; color:var(--green-dark); }
+  .adc .headline { margin:0; color:#0B1E3F; font-weight:900; line-height:1.06; letter-spacing:-0.015em; font-size:88px; }
+  .adc .offer { align-self:flex-start; background:var(--green-dark); color:#fff; font-weight:800; font-size:40px; padding:20px 40px; border-radius:999px; }
+  .adc .toolrow { position:relative; z-index:2; }
+  .adc .toolrow img { display:block; width:auto; height:auto; }
+  .adc .face { position:absolute; right:0; bottom:0; z-index:1; height:660px; width:auto; }
+  .adc.has-face .copy { padding-right:380px; }
+  .adc.has-face .headline { font-size:72px; }
+  .adc.has-face.no-logo .face { height:730px; }
 </style>
 </head>
 <body>
@@ -55,7 +100,7 @@
       <span class="count" id="count"></span>
     </div>
     <table>
-      <thead><tr><th>Page</th><th>Headline</th><th>Link</th></tr></thead>
+      <thead><tr><th>Page</th><th>Headline</th><th>Link</th><th></th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
   </div>
@@ -85,7 +130,8 @@
       var url = pageUrl(p.slug);
       return '<tr><td class="pl">' + esc(p.pageLabel || p.slug) + '</td>' +
              '<td class="hl">' + esc(stripHtml(p.hero && p.hero.h1)) + '</td>' +
-             '<td><a href="' + url + '" target="_blank">' + esc(url.replace(/^https?:\/\//, '')) + '</a></td></tr>';
+             '<td><a href="' + url + '" target="_blank">' + esc(url.replace(/^https?:\/\//, '')) + '</a></td>' +
+             '<td><button class="genBtn" data-slug="' + esc(p.slug) + '" title="Generate ad creative">&#128444;</button></td></tr>';
     }).join('');
     $('count').textContent = pages.length + ' page' + (pages.length === 1 ? '' : 's');
   }
@@ -107,6 +153,7 @@
 
   function boot(d) {
     pages = d.pages || []; BASE_URL = d.baseUrl || '';
+    window.__lpPages = pages;
     $('login').className = 'login hidden';
     $('app').className = 'wrap';
     render();
@@ -128,6 +175,121 @@
   } else {
     $('login').className = 'login';
   }
+})();
+</script>
+
+<!-- === Ad creative generator (additive; nothing above depends on this) === -->
+<div id="genStaging"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+(function () {
+  'use strict';
+  var FACES = null; // loaded lazily from /public/faces/manifest.json
+
+  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
+  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+  function loadFaces() {
+    if (FACES) return Promise.resolve(FACES);
+    return fetch('/public/faces/manifest.json')
+      .then(function (r) { return r.ok ? r.json() : []; })
+      .catch(function () { return []; })
+      .then(function (list) { FACES = list; return list; });
+  }
+
+  function openModal(page) {
+    loadFaces().then(function (faces) {
+      var bd = el('div', 'modal-backdrop');
+      var logoOpts = (page.tools && page.tools.items || []).map(function (t, i) {
+        return '<label class="opt"><input type="radio" name="genLogo" value="' + esc(t.file) + '"' + (i === 0 ? ' checked' : '') + '/>' +
+               '<img class="lg" src="/public/logos/' + esc(t.file) + '" alt=""/> ' + esc(t.alt || t.file) + '</label>';
+      }).join('') + '<label class="opt"><input type="radio" name="genLogo" value=""/>No logo</label>';
+      var faceOpts = faces.map(function (f) {
+        return '<label class="opt"><input type="radio" name="genFace" value="' + esc(f.file) + '"/>' +
+               '<img class="fc" src="/public/faces/' + esc(f.file) + '" alt=""/> ' + esc(f.name || f.file) + '</label>';
+      }).join('') + '<label class="opt"><input type="radio" name="genFace" value="" checked/>No face</label>';
+      if (!faces.length) faceOpts = '<p class="hint">No faces uploaded yet (shared/public/faces/).</p>';
+
+      bd.appendChild(el('div', 'modal',
+        '<h3>Generate ad creative</h3>' +
+        '<p class="hint">1080\u00d71080 PNG for Meta, using this page\u2019s hero copy. Pick a logo, a face, or one of each.</p>' +
+        '<div class="cols">' +
+          '<div class="col"><h4>Logo</h4>' + logoOpts + '</div>' +
+          '<div class="col"><h4>Face</h4>' + faceOpts + '</div>' +
+        '</div>' +
+        '<div class="actions"><button id="genGo">Generate &amp; download</button>' +
+        '<button class="cancel" id="genCancel">Cancel</button><span class="status" id="genStatus"></span></div>' +
+        '<div class="preview" id="genPreview"></div>'));
+      document.body.appendChild(bd);
+      bd.addEventListener('click', function (e) { if (e.target === bd) bd.remove(); });
+      bd.querySelector('#genCancel').addEventListener('click', function () { bd.remove(); });
+      bd.querySelector('#genGo').addEventListener('click', function () {
+        var logo = (bd.querySelector('input[name="genLogo"]:checked') || {}).value || '';
+        var face = (bd.querySelector('input[name="genFace"]:checked') || {}).value || '';
+        if (!logo && !face) { bd.querySelector('#genStatus').textContent = 'Pick at least a logo or a face.'; return; }
+        generate(page, logo, face, bd);
+      });
+    });
+  }
+
+  function buildCard(page, logo, face) {
+    var card = el('div', 'adc' + (face ? ' has-face' : '') + (logo ? '' : ' no-logo'));
+    card.innerHTML =
+      '<img class="brand" src="/public/coconut-logo.png" alt=""/>' +
+      '<div class="copy">' +
+        (page.hero && page.hero.eyebrow ? '<div class="eyebrow">' + esc(page.hero.eyebrow) + '</div>' : '') +
+        '<h2 class="headline">' + String(page.hero && page.hero.h1 || '') + '</h2>' +
+        (page.hero && page.hero.accent ? '<div class="offer">' + esc(page.hero.accent) + '</div>' : '') +
+      '</div>' +
+      (logo ? '<div class="toolrow"><img id="genLogoImg" src="/public/logos/' + esc(logo) + '" alt=""/></div>' : '') +
+      (face ? '<img class="face" src="/public/faces/' + esc(face) + '" alt=""/>' : '');
+    return card;
+  }
+
+  function generate(page, logo, face, bd) {
+    var status = bd.querySelector('#genStatus');
+    var go = bd.querySelector('#genGo');
+    go.disabled = true; status.textContent = 'Rendering\u2026';
+    var staging = document.getElementById('genStaging');
+    var card = buildCard(page, logo, face);
+    staging.appendChild(card);
+
+    var imgs = Array.prototype.slice.call(card.querySelectorAll('img'));
+    Promise.all(imgs.map(function (im) {
+      return im.complete ? Promise.resolve() : new Promise(function (res) { im.onload = im.onerror = res; });
+    })).then(function () { return document.fonts.ready; }).then(function () {
+      // generic logo sizing: wide wordmarks capped by width, compact marks by height
+      var lg = card.querySelector('#genLogoImg');
+      if (lg && lg.naturalWidth) {
+        if (lg.naturalWidth / lg.naturalHeight > 2.5) lg.style.width = '480px';
+        else lg.style.height = '110px';
+      }
+      return html2canvas(card, { scale: 1, width: 1080, height: 1080, backgroundColor: null, logging: false });
+    }).then(function (canvas) {
+      var kind = logo && face ? 'logo-face' : (logo ? 'logo' : 'face');
+      var a = document.createElement('a');
+      a.download = 'coconut-ad-' + page.slug + '-' + kind + '.png';
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+      var pv = bd.querySelector('#genPreview');
+      pv.innerHTML = '';
+      var img = new Image(); img.src = a.href; pv.appendChild(img);
+      status.textContent = 'Downloaded.';
+    }).catch(function (e) {
+      status.textContent = 'Render failed: ' + (e && e.message || e);
+    }).then(function () {
+      go.disabled = false;
+      if (card.parentNode) card.parentNode.removeChild(card);
+    });
+  }
+
+  document.getElementById('rows').addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('.genBtn') : null;
+    if (!btn) return;
+    var slug = btn.getAttribute('data-slug');
+    var page = (window.__lpPages || []).filter(function (p) { return p.slug === slug; })[0];
+    if (page) openModal(page);
+  });
 })();
 </script>
 </body>
