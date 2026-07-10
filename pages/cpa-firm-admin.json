@@ -10,7 +10,7 @@
     "ogDescription": "A dedicated firm admin who chases documents, runs intake and the portal, and books the calls. Vetted, senior, matched in days."
   },
   "hero": {
-    "eyebrow": "For CPA, tax & bookkeeping firms",
+    "eyebrow": "For CPA, tax & bookkeeping firms with 3 to 30 staff",
     "h1": "Nobody bills<br>for chasing a 1099.",
     "accent": "First 40 hours free",
     "lead": "The AICPA puts 17% of an accountant's time in non-billable work. Firms lose 9.3 hours a week to client communication, and another 5 fixing client data. That is a full salary you pay and never bill. Get a dedicated firm admin who chases the documents, runs the portal, and keeps intake moving. Vetted, senior, live in days."
@@ -60,6 +60,26 @@
       {
         "file": "xero.png",
         "alt": "Xero"
+      },
+      {
+        "file": "billcom.png",
+        "alt": "Bill.com"
+      },
+      {
+        "file": "gusto-logo-black.png",
+        "alt": "Gusto Logo Black"
+      },
+      {
+        "file": "ramp-business-corporation-logo-svg.webp",
+        "alt": "Ramp Business Corporation Logo Svg"
+      },
+      {
+        "file": "claude-logo-brandlogos-net-yx32y.png",
+        "alt": "Claude Logo Brandlogos Net Yx32y"
+      },
+      {
+        "file": "chat-gpt-logo-png-transparent.png",
+        "alt": "Chat Gpt Logo Png Transparent"
       }
     ]
   },
