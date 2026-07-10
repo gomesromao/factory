@@ -10,8 +10,8 @@
     "ogDescription": "A dedicated CAS associate who runs client books, reconciliations, and month-end close. Vetted, senior, matched in days."
   },
   "hero": {
-    "eyebrow": "For CPA, tax & bookkeeping firms",
-    "h1": "Your backlog is<br>costing you new clients.",
+    "eyebrow": "For CPA, tax & bookkeeping firms with 3 to 30 staff",
+    "h1": "The books you're behind on<br>are the clients you can't take.",
     "accent": "First 40 hours free",
     "lead": "Accountant unemployment is 1.0%. A CPA seat takes 73 days to fill. So a good prospect calls in March, you quote six weeks out, and they call the firm across town. Get a dedicated CAS associate who already lives in QuickBooks, reconciliations, and month-end close. Vetted, senior, live in days."
   },
@@ -60,6 +60,22 @@
       {
         "file": "xero.png",
         "alt": "Xero"
+      },
+      {
+        "file": "billcom.png",
+        "alt": "Bill.com"
+      },
+      {
+        "file": "gusto-logo-black.png",
+        "alt": "Gusto Logo Black"
+      },
+      {
+        "file": "claude-logo-brandlogos-net-yx32y.png",
+        "alt": "Claude Logo Brandlogos Net Yx32y"
+      },
+      {
+        "file": "chat-gpt-logo-png-transparent.png",
+        "alt": "Chat Gpt Logo Png Transparent"
       }
     ]
   },
