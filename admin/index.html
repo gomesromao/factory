@@ -68,6 +68,8 @@
     <button id="exportBtn">Download JSON</button>
     <input type="file" id="importFile" accept=".json,application/json" style="display:none" />
     <span class="spacer"></span>
+    <a id="viewPageLink" href="#" target="_blank" style="color:#0F7B3F;font-weight:700;text-decoration:none;font-size:13px;margin-right:6px">View page ↗</a>
+    <a href="/admin/pages.html" target="_blank" style="color:#0F7B3F;font-weight:700;text-decoration:none;font-size:13px;margin-right:6px">Page index ↗</a>
     <a href="/admin/guide.html" target="_blank" style="color:#0F7B3F;font-weight:700;text-decoration:none;font-size:13px;margin-right:6px">How to use ↗</a>
     <span id="deployNote" style="font-size:12px;color:#888"></span>
     <button class="primary" id="publishBtn">Publish</button>
@@ -179,13 +181,15 @@
   var current = null;   // working copy
   var isNew = false;
   var pw = sessionStorage.getItem('lp_pw') || '';
+  var BASE_URL = '';
 
   var $ = function (id) { return document.getElementById(id); };
 
   /* ---------- auth ---------- */
   function tryLogin(p) {
     return fetch('/api/pages', { headers: { 'x-admin-password': p } })
-      .then(function (r) { if (!r.ok) throw new Error('auth'); return r.json(); });
+      .then(function (r) { if (!r.ok) throw new Error('auth'); return r.json(); })
+      .then(function (d) { BASE_URL = d.baseUrl || ''; return d; });
   }
   $('loginBtn').addEventListener('click', function () {
     var p = $('pw').value;
@@ -208,6 +212,20 @@
   }
 
   /* ---------- load / duplicate ---------- */
+  function updateViewLink() {
+    var l = $('viewPageLink');
+    if (!current) { l.style.display = 'none'; return; }
+    l.style.display = '';
+    if (isNew) {
+      l.style.opacity = '.4'; l.style.pointerEvents = 'none';
+      l.title = 'Not published yet \u2014 Publish first, then the live link activates here.';
+      l.removeAttribute('href');
+    } else {
+      l.style.opacity = '1'; l.style.pointerEvents = 'auto';
+      l.title = 'Open the live page in a new tab';
+      l.href = (BASE_URL || location.origin) + '/' + current.slug + '/';
+    }
+  }
   function load(slug) {
     var src = pages.find(function (p) { return p.slug === slug; });
     current = JSON.parse(JSON.stringify(src));
@@ -216,6 +234,7 @@
     $('f_slug').disabled = true;
     fillForm();
     renderPreview();
+    updateViewLink();
   }
   $('dupBtn').addEventListener('click', function () {
     var name = prompt('New page slug (lowercase-with-dashes, e.g. trades-dispatcher):');
@@ -226,6 +245,7 @@
     current = JSON.parse(JSON.stringify(current));
     current.slug = name; current.variant = name; current.subdomain = '';
     isNew = true;
+    setTimeout(updateViewLink, 0);
     $('f_slug').disabled = false;
     fillForm();
     setStatus('ok', 'Duplicated. Edit the copy, then Publish to create pages/' + name + '.json.');
@@ -262,6 +282,7 @@
       var exists = pages.some(function (p) { return p.slug === cfg.slug; });
       current = cfg; isNew = !exists;
       resetPreviewScroll();
+      updateViewLink();
       $('f_slug').disabled = exists;
       try { fillForm(); renderPreview(); } catch (err) { return setStatus('err', 'Import failed — ' + err.message); }
       setStatus('ok', exists
@@ -540,7 +561,7 @@
       if (res.ok) {
         setStatus('ok', (res.created ? 'Created ' : 'Updated ') + res.slug + '. Vercel is deploying (~2 min). Page: ' + res.pageUrl +
           (current.subdomain ? ' — Daniel was emailed to wire ' + current.subdomain + '.' : ''));
-        if (isNew) { pages.push(JSON.parse(JSON.stringify(current))); boot(pages); }
+        if (isNew) { pages.push(JSON.parse(JSON.stringify(current))); isNew = false; boot(pages); } else { updateViewLink(); }
       } else {
         setStatus('err', 'Publish failed: ' + (res.error || 'unknown'));
       }
