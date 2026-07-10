@@ -20,7 +20,7 @@ export default async function handler(req, res) {
       pages.push(JSON.parse(await readFile(path.join(dir, f), 'utf8')));
     }
     pages.sort((a, b) => a.slug.localeCompare(b.slug));
-    return res.status(200).json({ ok: true, pages });
+    return res.status(200).json({ ok: true, pages, baseUrl: process.env.PROD_BASE_URL || '' });
   } catch (e) {
     console.error('pages read failed', e);
     return res.status(500).json({ ok: false, error: 'read_failed' });
