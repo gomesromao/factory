@@ -62,12 +62,20 @@
         "alt": "Bill.com"
       },
       {
-        "file": "gusto-logo-black.png",
-        "alt": "Gusto Logo Black"
-      },
-      {
         "file": "Netsuite-Logo-hi-res.png",
         "alt": "Netsuite Logo Hi Res"
+      },
+      {
+        "file": "claude-logo-brandlogos-net-yx32y.png",
+        "alt": "Claude Logo Brandlogos Net Yx32y"
+      },
+      {
+        "file": "chat-gpt-logo-png-transparent.png",
+        "alt": "Chat Gpt Logo Png Transparent"
+      },
+      {
+        "file": "xero.png",
+        "alt": "Xero"
       }
     ]
   },
