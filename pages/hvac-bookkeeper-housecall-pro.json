@@ -1,0 +1,204 @@
+{
+  "slug": "hvac-bookkeeper-housecall-pro",
+  "variant": "hvac-bookkeeper-housecall-pro",
+  "adsName": "HVAC Bookkeeper (Housecall Pro)",
+  "pageLabel": "HVAC Bookkeeper — Housecall Pro",
+  "subdomain": "",
+  "meta": {
+    "title": "A bookkeeper who already knows Housecall Pro | Coconut for HVAC",
+    "description": "For HVAC shop owners: a dedicated remote bookkeeper who knows Housecall Pro and QuickBooks. Job costing, maintenance-agreement revenue, and tech payroll that finally line up. Vetted, senior, matched in days.",
+    "ogDescription": "A dedicated remote bookkeeper who knows Housecall Pro and QuickBooks. Job costing, maintenance-agreement revenue, and tech payroll that finally line up."
+  },
+  "hero": {
+    "eyebrow": "For HVAC shop owners",
+    "h1": "Need a bookkeeper who already<br>knows Housecall Pro?",
+    "accent": "First 40 hours free",
+    "lead": "Our virtual assistants know Housecall Pro and QuickBooks inside out, so your job costing, maintenance-agreement revenue, and tech payroll finally line up. They cost a fraction of a local hire and free you up to grow the shop."
+  },
+  "form": {
+    "step1Button": "Try out a bookkeeper for 40 hours free",
+    "step2Sub": "We match you with a bookkeeper who already knows Housecall Pro and HVAC job costing.",
+    "needLabel": "Which HVAC bookkeeping headache is costing you the most?",
+    "needOptions": [
+      "Books behind after peak season",
+      "Don't know which jobs actually make money",
+      "Maintenance-agreement / deferred revenue is a mess",
+      "Housecall Pro won't match QuickBooks",
+      "Tech payroll: spiffs, overtime, commissions",
+      "AP/AR and collections behind",
+      "Need ongoing HVAC bookkeeping"
+    ],
+    "successText": "Keep your phone handy, we'll text you today with the HVAC bookkeeper profiles we matched to your shop.",
+    "browseUrl": "https://talent.coconutva.com?role=bookkeeper",
+    "hours": {
+      "label": "How much help do you need?",
+      "options": [
+        "Less than 10 hrs/week",
+        "10 to 20 hrs/week",
+        "20+ hrs/week",
+        "Full-time"
+      ]
+    }
+  },
+  "roles": [
+    "HVAC Bookkeeper",
+    "AP/AR & Collections",
+    "QuickBooks Cleanup & Catch-Up",
+    "Job Costing & WIP",
+    "Maintenance-Agreement / Deferred Revenue",
+    "Housecall Pro–QuickBooks Reconciliation"
+  ],
+  "tools": {
+    "wrapMaxWidth": 760,
+    "chipHeight": 80,
+    "imgHeight": 80,
+    "imgMaxWidth": 130,
+    "items": [
+      {
+        "file": "housecallpro.png",
+        "alt": "Housecall Pro"
+      },
+      {
+        "file": "quickbooks.png",
+        "alt": "QuickBooks"
+      },
+      {
+        "file": "servicetitan.png",
+        "alt": "ServiceTitan"
+      },
+      {
+        "file": "jobber.png",
+        "alt": "Jobber"
+      },
+      {
+        "file": "buildertrend.png",
+        "alt": "Buildertrend"
+      },
+      {
+        "file": "xero.png",
+        "alt": "Xero"
+      },
+      {
+        "file": "billcom.png",
+        "alt": "Bill.com"
+      }
+    ]
+  },
+  "wyg": [
+    {
+      "featured": false,
+      "title": "A senior bookkeeper who already runs HVAC books",
+      "text": "Not a generalist pulled off a job board. Someone who already knows Housecall Pro and QuickBooks and knows HVAC cold: job costing by service type, WIP, maintenance-agreement deferred revenue, tech spiffs and overtime, and warranty reserve."
+    },
+    {
+      "featured": false,
+      "title": "Vetted profiles this week. You pick who to meet.",
+      "text": "No cattle call resumes. No agency warm bodies. A real slate of pre-vetted candidates, and you choose who to interview."
+    },
+    {
+      "featured": false,
+      "title": "Co-led interview with your Client Success Manager",
+      "text": "Your CSM runs it with you. We know what to listen for when hiring senior HVAC bookkeepers."
+    },
+    {
+      "featured": false,
+      "title": "40 hours of real work, free. Before you commit.",
+      "text": "Not a test project. Not a demo. Real output from your matched bookkeeper, on us, for the first 40 hours."
+    },
+    {
+      "featured": true,
+      "title": "They reconcile and categorize. They never move your money.",
+      "text": "Transfers and payments always stay with you. You grant the access, and you can pull it anytime."
+    },
+    {
+      "featured": false,
+      "title": "Managed Talent (month to month) or Direct Hire (one-time flat fee)",
+      "text": "Your call. Switch models anytime. No long term contracts, no hidden percentages."
+    },
+    {
+      "featured": false,
+      "title": "Not a fit? We re-match, no hassle.",
+      "text": "You walk away clean, or we find the right person. Either way, you're not stuck."
+    }
+  ],
+  "ctaBanner": {
+    "heading": "Get your nights back.",
+    "sub": "Back on the calls by day, home for dinner by night. See who fits, then decide."
+  },
+  "faq": [
+    {
+      "q": "Is my financial data safe?",
+      "a": "Yes. Your bookkeeper works inside your QuickBooks with the access you grant, under NDA, and can be removed anytime. Every operator is background checked and vetted before you meet them, and the engagement is managed by Coconut with a named Client Success Manager, not left to a solo freelancer."
+    },
+    {
+      "q": "Do they actually know HVAC bookkeeping?",
+      "a": "Yes. Your bookkeeper has run books for HVAC shops, so they already understand seasonal cash flow, job costing by service type, maintenance-agreement deferred revenue, tech spiffs and overtime rules, warranty reserve, and how Housecall Pro syncs (or doesn't) with QuickBooks. You're not paying to train a generalist on your business."
+    },
+    {
+      "q": "What accounting software do they know?",
+      "a": "QuickBooks first and foremost, plus Housecall Pro. They work inside Housecall Pro and reconcile it to QuickBooks so your revenue reports and your books finally agree."
+    },
+    {
+      "q": "Can they move money or touch my bank?",
+      "a": "No. Reconciliation, categorization, and AP and AR tracking do not require payment authority. Transfers and payments stay with you unless you specifically choose to set that up. <strong>You keep control.</strong>"
+    },
+    {
+      "q": "How much does Managed Talent cost?",
+      "a": "Plans start at <strong>$900 per month</strong>. Pricing depends on the role, experience level, and hours. Each plan includes management, payroll, benefits, and support."
+    },
+    {
+      "q": "How does the 40 hour free trial work?",
+      "a": "Once you pick who to meet and interview them, your matched bookkeeper does 40 hours of real work for you, on us. Not a test project or a demo. If it clicks, you keep them. If it does not, you walk away clean."
+    },
+    {
+      "q": "How is this different from hiring on Upwork or OnlineJobs.ph?",
+      "a": "Those are databases. You filter by price, pick from whoever applied, and manage the risk yourself, which is exactly why most bad offshore hires go sideways. We headhunt and vet for your specific role, then manage payroll, benefits, and backups. Our placements hold a <strong>98% retention rate</strong>, and if a fit is not right we re-match you at no cost."
+    },
+    {
+      "q": "Will I have to manage them?",
+      "a": "No. A dedicated Client Success Manager runs onboarding, monitors performance, and handles the day to day. You delegate the work and review the output. You are not building an offshore HR function."
+    },
+    {
+      "q": "How long does it take to get matched?",
+      "a": "You'll receive your shortlist within 5 to 10 days. Specialized or niche roles may take longer. Once you've chosen a candidate and completed interviews, you can get started right away."
+    },
+    {
+      "q": "Can I change or replace my talent later on?",
+      "a": "Yes. If your needs change or performance dips, we'll replace your talent at no additional cost."
+    },
+    {
+      "q": "Do you provide ongoing support after hiring?",
+      "a": "Yes. A dedicated Client and VA Success Manager monitors performance, facilitates feedback, and ensures both sides are supported long term."
+    },
+    {
+      "q": "What's included in your management and payroll service?",
+      "a": "We handle contracts, payments, compliance, productivity tracking, and full suite benefits. You get one monthly invoice for everything."
+    },
+    {
+      "q": "Can I switch between part time and full time hours?",
+      "a": "Yes. You can adjust your talent's schedule as your needs evolve, with a minimum of 20 hours per week to maintain stability for the talent."
+    },
+    {
+      "q": "Can I buy out my talent?",
+      "a": "Yes. Buyouts are allowed as long as the talent agrees. The buyout fee starts at <strong>$3,500</strong> with flexibility based on hours, tenure, and subscription tier."
+    },
+    {
+      "q": "Where is your talent based?",
+      "a": "In the Philippines. Senior, college-educated, English-fluent professionals who work an overlap shift on US business hours and are vetted before you ever meet them."
+    },
+    {
+      "q": "Is there a minimum commitment?",
+      "a": "No long term contracts. Managed Talent is a month to month subscription designed for flexibility and scale."
+    }
+  ],
+  "calendlyUrl": "https://calendly.com/adell-coconutva/coconut-discovery-call-bill-com",
+  "redirectUrl": "https://talent.coconutva.com?role=bookkeeper",
+  "testimonialOrder": [
+    "Stephanie Acker",
+    "VJ Gandhi",
+    "Liz Germain",
+    "Phil Kirkeiner",
+    "Kat Weaver",
+    "Bruce Hymas"
+  ]
+}
