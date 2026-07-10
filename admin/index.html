@@ -19,6 +19,12 @@
   .preview-pane { display:flex; flex-direction:column; min-height:0; }
   .preview-bar { padding:8px 16px; font-size:12px; color:#666; background:#f2f2ee; border-bottom:1px solid var(--border); display:flex; gap:12px; align-items:center; }
   iframe { flex:1; width:100%; border:0; background:#fff; }
+  .preview-pane.mobile { background:#e9e9e3; }
+  .preview-pane.mobile iframe { width:390px; align-self:center; box-shadow:0 0 0 1px var(--border), 0 8px 30px rgba(0,0,0,.10); }
+  .pv-toggle { margin-left:auto; background:none; border:1px solid transparent; border-radius:6px; padding:2px 7px;
+    font-size:14px; cursor:pointer; opacity:.45; line-height:1; }
+  .pv-toggle:hover { opacity:1; border-color:var(--border); }
+  .pv-toggle.on { opacity:1; border-color:var(--green-dark); }
   fieldset { border:1px solid var(--border); border-radius:10px; margin:0 0 16px; padding:12px 14px; }
   legend { font-weight:800; font-size:13px; padding:0 6px; }
   label { display:block; font-size:12px; font-weight:600; margin:10px 0 4px; color:#333; }
@@ -164,6 +170,7 @@
       <div class="preview-bar">
         <strong>Live preview</strong>
         <span>updates as you type — exact same renderer as the deployed pages</span>
+        <button type="button" id="pvMobile" class="pv-toggle" title="Toggle mobile preview (390px)">&#128241;</button>
       </div>
       <iframe id="preview" sandbox="allow-same-origin"></iframe>
     </div>
@@ -577,6 +584,17 @@
     s.textContent = msg;
     if (kind) s.scrollIntoView({ block: 'nearest' });
   }
+})();
+</script>
+<script>
+(function () {
+  var btn = document.getElementById('pvMobile');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    var pane = document.querySelector('.preview-pane');
+    var on = pane.classList.toggle('mobile');
+    btn.classList.toggle('on', on);
+  });
 })();
 </script>
 </body>
