@@ -1,0 +1,179 @@
+{
+  "slug": "waste-ap",
+  "variant": "waste-ap",
+  "adsName": "Waste AP Specialist",
+  "pageLabel": "Waste AP Specialist",
+  "subdomain": "",
+  "meta": {
+    "title": "Fill the AP seat nobody wants | Coconut for Waste Brokers",
+    "description": "For waste brokers and managed-services firms: a dedicated remote AP specialist who works the hauler portals, keys and codes every invoice, and flags overcharges before they reach a client bill. Vetted, senior, matched in days.",
+    "ogDescription": "A dedicated remote AP specialist who works the hauler portals, keys and codes every invoice, and flags overcharges. Vetted, senior, matched in days."
+  },
+  "hero": {
+    "eyebrow": "For waste management execs",
+    "h1": "Stop making your best people<br>key invoices.",
+    "accent": "First 40 hours free",
+    "lead": "You didn't build a managed-services book so your account managers could spend month-end inside hauler portals. Get a dedicated AP specialist who collects from every portal, keys and codes every line item, and flags the overcharges before they pass through to a client bill. Vetted, senior, and live in days. We already run this exact seat inside a large waste managed-services firm."
+  },
+  "form": {
+    "step1Button": "Show me available AP specialists",
+    "step2Sub": "We match you with an AP specialist who already lives in hauler portals and high-volume invoice entry.",
+    "needLabel": "What's eating your back office the most?",
+    "needOptions": [
+      "Hauler portal collection every month",
+      "Invoice entry backlog",
+      "Overcharges slipping through",
+      "Month-end close runs late",
+      "Client billing held up",
+      "Need ongoing AP support"
+    ],
+    "successText": "Keep your phone handy, we'll text you today with the AP specialist profiles we matched to your operation.",
+    "browseUrl": "https://talent.coconutva.com?role=bookkeeper",
+    "hours": {
+      "label": "How much help do you need?",
+      "options": [
+        "Less than 10 hrs/week",
+        "10 to 20 hrs/week",
+        "20+ hrs/week",
+        "Full-time"
+      ]
+    }
+  },
+  "roles": [
+    "AP Specialist",
+    "Invoice Processing",
+    "Billing Support",
+    "AR Follow-up",
+    "Data Entry (Ledger)",
+    "Back-Office Admin"
+  ],
+  "tools": {
+    "wrapMaxWidth": 760,
+    "chipHeight": 80,
+    "imgHeight": 80,
+    "imgMaxWidth": 130,
+    "items": [
+      {
+        "file": "quickbooks.png",
+        "alt": "QuickBooks"
+      }
+    ]
+  },
+  "wyg": [
+    {
+      "featured": false,
+      "title": "A dedicated AP specialist, matched to your operation",
+      "text": "Not a generalist pulled off a job board. Someone who has run high-volume invoice entry and knows portal collection, line-item coding, and what a hauler overcharge looks like."
+    },
+    {
+      "featured": false,
+      "title": "Vetted profiles this week. You pick who to meet.",
+      "text": "No cattle call resumes. No agency warm bodies. A real slate of pre-vetted candidates, and you choose who to interview."
+    },
+    {
+      "featured": false,
+      "title": "Co led interview with your Client Success Manager",
+      "text": "Your CSM runs it with you. We know what to listen for when hiring detail-heavy back-office operators."
+    },
+    {
+      "featured": false,
+      "title": "40 hours of real work, free. Before you commit.",
+      "text": "Not a test project. Not a demo. Real output from your matched AP specialist, on us, for the first 40 hours."
+    },
+    {
+      "featured": true,
+      "title": "They key and code. They never move your money.",
+      "text": "Payments and transfers always stay with you. Your specialist enters, codes, and preps payables with the access you grant, and you can pull that access anytime."
+    },
+    {
+      "featured": false,
+      "title": "Managed Talent (month to month) or Direct Hire (one time flat fee)",
+      "text": "Your call. Switch models anytime. No long term contracts, no hidden percentages."
+    },
+    {
+      "featured": false,
+      "title": "Not a fit? We re match, no hassle.",
+      "text": "You walk away clean, or we find the right person. Either way, you're not stuck."
+    }
+  ],
+  "ctaBanner": {
+    "heading": "Get your month-end back.",
+    "sub": "Invoices collected, keyed, and coded before close. See who fits, then decide."
+  },
+  "faq": [
+    {
+      "q": "Do they actually understand hauler invoices?",
+      "a": "Yes, and this is where generalists fail. There is no standard hauler invoice. Every hauler has its own portal, its own PDF layout, its own line-item conventions, and its own idea of when in the month a statement should appear. We match you with someone who has run <strong>high-volume invoice entry</strong> and works portal collection, line-item coding, and overcharge flags, so a duplicate fee or a surcharge jump gets caught before it passes through to a client's bill."
+    },
+    {
+      "q": "Is my financial data safe?",
+      "a": "Yes. Your AP specialist works inside your systems with the access you grant, under NDA, and can be removed anytime. Every operator is background checked and vetted before you meet them, and the engagement is managed by Coconut with a named Client Success Manager, not left to a solo freelancer."
+    },
+    {
+      "q": "Can they move money or touch my bank?",
+      "a": "No. Portal collection, invoice entry, coding, and payables prep do not require payment authority. Payments and transfers stay with you unless you specifically choose to set that up. <strong>You keep control.</strong>"
+    },
+    {
+      "q": "How much does Managed Talent cost?",
+      "a": "Plans start at <strong>$900 per month</strong>. Pricing depends on the role, experience level, and hours. Each plan includes management, payroll, benefits, and support."
+    },
+    {
+      "q": "How does the 40 hour free trial work?",
+      "a": "Once you pick who to meet and interview them, your matched AP specialist does 40 hours of real work for you, on us. Not a test project or a demo. If it clicks, you keep them. If it does not, you walk away clean."
+    },
+    {
+      "q": "What software do they know?",
+      "a": "QuickBooks, NetSuite, Sage Intacct, Bill.com, and Excel are the common ones, plus whatever combination of hauler portals and spreadsheets your operation actually runs on. If you work in an industry platform like AMCS or Routeware, we match for that too."
+    },
+    {
+      "q": "How is this different from hiring on Upwork or OnlineJobs.ph?",
+      "a": "Those are databases. You filter by price, pick from whoever applied, and manage the risk yourself, which is exactly why most bad offshore hires go sideways. We headhunt and vet for your specific role, then manage payroll, benefits, and backups. Our placements hold a <strong>98% retention rate</strong>, and if a fit is not right we re-match you at no cost."
+    },
+    {
+      "q": "Will I have to manage them?",
+      "a": "No. A dedicated Client Success Manager runs onboarding, monitors performance, and handles the day to day. You delegate the work and review the output. You are not building an offshore HR function."
+    },
+    {
+      "q": "How long does it take to get matched?",
+      "a": "You'll receive your shortlist within 5 to 10 days. Specialized or niche roles may take longer. Once you've chosen a candidate and completed interviews, you can get started right away."
+    },
+    {
+      "q": "Can I change or replace my talent later on?",
+      "a": "Yes. If your needs change or performance dips, we'll replace your talent at no additional cost."
+    },
+    {
+      "q": "Do you provide ongoing support after hiring?",
+      "a": "Yes. A dedicated Client and VA Success Manager monitors performance, facilitates feedback, and ensures both sides are supported long term."
+    },
+    {
+      "q": "What's included in your management and payroll service?",
+      "a": "We handle contracts, payments, compliance, productivity tracking, and full suite benefits. You get one monthly invoice for everything."
+    },
+    {
+      "q": "Can I switch between part time and full time hours?",
+      "a": "Yes. You can adjust your talent's schedule as your needs evolve, with a minimum of 20 hours per week to maintain stability for the talent."
+    },
+    {
+      "q": "Can I buy out my talent?",
+      "a": "Yes. Buyouts are allowed as long as the talent agrees, with terms based on hours, tenure, and subscription tier. Direct hire from day one is also an option."
+    },
+    {
+      "q": "Where is your talent based?",
+      "a": "In the Philippines. Senior, college-educated, English-fluent professionals who work an overlap shift on US business hours and are vetted before you ever meet them."
+    },
+    {
+      "q": "Is there a minimum commitment?",
+      "a": "No long term contracts. Managed Talent is a month to month subscription designed for flexibility and scale."
+    }
+  ],
+  "calendlyUrl": "https://calendly.com/adell-coconutva/coconut-discovery-call-bill-com?utm_source=waste-ap",
+  "redirectUrl": "https://talent.coconutva.com?role=bookkeeper",
+  "testimonialOrder": [
+    "Stephanie Acker",
+    "Phil Kirkeiner",
+    "VJ Gandhi",
+    "Bruce Hymas",
+    "Kat Weaver",
+    "Liz Germain"
+  ]
+}
