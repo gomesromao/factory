@@ -266,9 +266,12 @@
       }
       return html2canvas(card, { scale: 1, width: 1080, height: 1080, backgroundColor: null, logging: false });
     }).then(function (canvas) {
-      var kind = logo && face ? 'logo-face' : (logo ? 'logo' : 'face');
+      var stem = function (f) { return String(f).replace(/\.[a-z0-9]+$/i, '').toLowerCase().replace(/[^a-z0-9-]+/g, '-'); };
+      var parts = ['coconut-ad-' + page.slug];
+      if (logo) parts.push('logo-' + stem(logo));
+      if (face) parts.push('face-' + stem(face));
       var a = document.createElement('a');
-      a.download = 'coconut-ad-' + page.slug + '-' + kind + '.png';
+      a.download = parts.join('-') + '.png';
       a.href = canvas.toDataURL('image/png');
       a.click();
       var pv = bd.querySelector('#genPreview');
