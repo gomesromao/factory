@@ -37,7 +37,8 @@
 
   /* ---------- grid of cards ---------- */
   #app { display:none; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(360px, 1fr)); gap:22px; padding:24px; max-width:1400px; margin:0 auto; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(360px, 1fr)); gap:22px; padding:24px; max-width:1400px; margin:0 auto; align-items:start; }
+  .t-item { display:flex; flex-direction:column; }
   .empty { grid-column:1/-1; text-align:center; color:#888; padding:60px 0; font-size:14px; }
 
   /* card — mirrors the LP review-card (gradient, radius, B&W photo anchored bottom-right) */
@@ -50,7 +51,17 @@
   .t-title strong { color:#333; }
   .t-logo { width:auto; max-width:110px; height:40px; object-fit:contain; display:block; }
   .t-photo { position:absolute; bottom:-4px; right:-4px; width:130px; height:auto; filter:grayscale(1); pointer-events:none; }
-  .t-usage { position:absolute; left:26px; bottom:10px; font-size:10.5px; color:#7a8a7f; }
+  /* usage lives OUTSIDE the card: a small toggle above it */
+  .t-toggle { display:inline-flex; align-items:center; gap:5px; border:0; background:transparent;
+    font-size:11px; color:#7a8a7f; padding:0 4px 6px; font-weight:600; }
+  .t-toggle .chev { transition:transform .15s; font-size:9px; }
+  .t-toggle[aria-expanded="true"] .chev { transform:rotate(180deg); }
+  .t-toggle.none { color:#b3bab5; font-weight:500; cursor:default; }
+  .t-pages { display:none; flex-wrap:wrap; gap:6px; padding:0 4px 10px; }
+  .t-pages.open { display:flex; }
+  .t-pages a { font-size:10.5px; color:#3a5c46; background:#fff; border:1px solid var(--border);
+    border-radius:999px; padding:3px 9px; text-decoration:none; }
+  .t-pages a:hover { border-color:var(--green); color:var(--green-dark); }
 
   /* very subtle pencils */
   .pencil { border:0; background:transparent; padding:2px 4px; opacity:.22; transition:opacity .15s; line-height:1; vertical-align:middle; }
@@ -275,9 +286,20 @@
 
   function card(name, e, t) {
     var used = USAGE[name] || [];
-    var el = document.createElement('div');
-    el.className = 't-card';
-    el.innerHTML =
+    var item = document.createElement('div');
+    item.className = 't-item';
+
+    // usage toggle sits ABOVE the card, outside it; not expandable when unused
+    var head = used.length
+      ? '<button class="t-toggle" aria-expanded="false">On ' + used.length + ' page' + (used.length > 1 ? 's' : '') +
+        ' <span class="chev">&#9662;</span></button>' +
+        '<div class="t-pages">' + used.map(function (s) {
+          return '<a href="/' + escHtml(s) + '/" target="_blank" rel="noopener">' + escHtml(s) + '</a>';
+        }).join('') + '</div>'
+      : '<span class="t-toggle none">Not on any page yet</span>';
+
+    item.innerHTML = head +
+      '<div class="t-card">' +
       '<button class="t-del" title="Delete from the library" aria-label="Delete ' + escHtml(name) + '">&#10005;</button>' +
       '<div class="t-stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div>' +
       '<div class="ed ed-quote"><p class="t-quote">' + escHtml(e.text) +
@@ -288,16 +310,21 @@
       '<div style="display:flex; align-items:center; gap:6px;">' +
         '<img class="t-logo" src="' + assetUrl(e.logoFile) + '" alt="' + escHtml(e.logoAlt || t.company) + '" />' +
         '<button class="pencil" data-ed="logo" title="Replace company logo">' + PENCIL + '</button></div>' +
-      (used.length ? '<div class="t-usage">On ' + used.length + ' page' + (used.length > 1 ? 's' : '') + ': ' + escHtml(used.join(', ')) + '</div>'
-                   : '<div class="t-usage">Not on any page yet</div>') +
       '<img class="t-photo" src="' + assetUrl(e.photoFile) + '" alt="" />' +
-      '<button class="pencil pencil-photo" data-ed="photo" title="Replace photo">' + PENCIL + '</button>';
+      '<button class="pencil pencil-photo" data-ed="photo" title="Replace photo">' + PENCIL + '</button>' +
+      '</div>';
 
-    el.querySelector('.t-del').addEventListener('click', function () { openDelete(name); });
-    el.querySelectorAll('.pencil').forEach(function (b) {
-      b.addEventListener('click', function () { startEdit(el, name, b.getAttribute('data-ed')); });
+    var tog = item.querySelector('.t-toggle:not(.none)');
+    if (tog) tog.addEventListener('click', function () {
+      var open = tog.getAttribute('aria-expanded') === 'true';
+      tog.setAttribute('aria-expanded', open ? 'false' : 'true');
+      item.querySelector('.t-pages').classList.toggle('open', !open);
     });
-    return el;
+    item.querySelector('.t-del').addEventListener('click', function () { openDelete(name); });
+    item.querySelectorAll('.pencil').forEach(function (b) {
+      b.addEventListener('click', function () { startEdit(item, name, b.getAttribute('data-ed')); });
+    });
+    return item;
   }
 
   /* ---------------- inline edits ---------------- */
