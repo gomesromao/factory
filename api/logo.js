@@ -47,6 +47,7 @@ export default async function handler(req, res) {
     if (usedBy.length) return res.status(409).json({ ok: false, error: 'logo_in_use', pages: usedBy });
     const del = await gh(apiUrl, { method: 'DELETE', body: JSON.stringify({ message: `builder: delete logo ${filename}`, sha, branch }) });
     if (!del.ok) return res.status(502).json({ ok: false, error: 'github_delete_failed', detail: del.status });
+    await updateLogoSources(gh, repo, branch, filename, null);
     return res.status(200).json({ ok: true, deleted: filename });
   }
 
@@ -68,7 +69,32 @@ export default async function handler(req, res) {
     console.error('logo PUT failed', put.status, await put.text());
     return res.status(502).json({ ok: false, error: 'github_write_failed', detail: put.status });
   }
+  await updateLogoSources(gh, repo, branch, filename, body.source === 'logo.dev' ? 'logo.dev' : null);
   return res.status(200).json({ ok: true, filename, replaced: Boolean(sha), publicPath: `/public/logos/${filename}` });
+}
+
+// Best-effort provenance registry (lib/logo-sources.json). A failure here never fails the
+// main logo commit — worst case a fetched logo misses its footer attribution until re-saved.
+async function updateLogoSources(gh, repo, branch, filename, source) {
+  const url = `https://api.github.com/repos/${repo}/contents/lib/logo-sources.json`;
+  try {
+    let sources = {}, sha;
+    const cur = await gh(`${url}?ref=${branch}`);
+    if (cur.status === 200) {
+      const j = await cur.json();
+      sha = j.sha;
+      try { sources = JSON.parse(Buffer.from(j.content, 'base64').toString('utf8')); } catch { sources = {}; }
+    } else if (cur.status !== 404) return;
+    const had = Object.prototype.hasOwnProperty.call(sources, filename);
+    if (source === 'logo.dev') sources[filename] = 'logo.dev';
+    else if (had) delete sources[filename];
+    else return; // nothing to change
+    const content = Buffer.from(JSON.stringify(sources, null, 2) + '\n').toString('base64');
+    await gh(url, {
+      method: 'PUT',
+      body: JSON.stringify({ message: `builder: logo provenance ${filename} -> ${source || 'removed'}`, content, branch, ...(sha ? { sha } : {}) })
+    });
+  } catch { /* best-effort by design */ }
 }
 
 async function pagesUsing(filename) {
