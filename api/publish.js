@@ -109,10 +109,13 @@ async function validate(slug, cfg) {
   if (!Array.isArray(cfg.wyg) || !cfg.wyg.length) return 'missing_wyg';
   if (!Array.isArray(cfg.faq) || !cfg.faq.length) return 'missing_faq';
   if (!Array.isArray(cfg.testimonialOrder) || cfg.testimonialOrder.length < 4 || cfg.testimonialOrder.length > 10) return 'testimonialOrder_must_have_4_to_10';
-  try {
-    const lib = JSON.parse(await readFile(path.join(process.cwd(), 'lib/testimonials.json'), 'utf8'));
-    for (const n of cfg.testimonialOrder) if (!lib[n]) return `unknown_testimonial:${n}`;
-  } catch { /* same note as above */ }
+  let tstLib = await freshTestimonialLibrary();
+  if (!tstLib) {
+    try { tstLib = JSON.parse(await readFile(path.join(process.cwd(), 'lib/testimonials.json'), 'utf8')); } catch { tstLib = null; }
+  }
+  if (tstLib) {
+    for (const n of cfg.testimonialOrder) if (!tstLib[n]) return `unknown_testimonial:${n}`;
+  }
   if (!/^https:\/\//.test(cfg.redirectUrl || '')) return 'bad_redirectUrl';
   if (!/^https:\/\//.test(cfg.calendlyUrl || '')) return 'bad_calendlyUrl';
   return null;
@@ -130,6 +133,22 @@ async function freshLogoLibrary() {
     });
     if (!r.ok) return null;
     return new Set((await r.json()).map(f => f.name));
+  } catch { return null; }
+}
+
+
+// Live copy of lib/testimonials.json from GitHub so a testimonial added seconds ago
+// (commit done, deploy pending) validates correctly. Null on failure -> bundled fallback.
+async function freshTestimonialLibrary() {
+  const token = process.env.GITHUB_TOKEN, repo = process.env.GITHUB_REPO;
+  if (!token || !repo) return null;
+  try {
+    const r = await fetch(`https://api.github.com/repos/${repo}/contents/lib/testimonials.json?ref=${process.env.GITHUB_BRANCH || 'main'}`, {
+      headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'User-Agent': 'coconut-lp-factory', 'X-GitHub-Api-Version': '2022-11-28' }
+    });
+    if (!r.ok) return null;
+    const f = await r.json();
+    return JSON.parse(Buffer.from(f.content, 'base64').toString('utf8'));
   } catch { return null; }
 }
 
