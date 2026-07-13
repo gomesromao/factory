@@ -518,8 +518,18 @@
         var cw = Math.max(1, Math.round(w * scale)), ch = Math.max(1, Math.round(h * scale));
         var c = document.createElement('canvas'); c.width = cw; c.height = ch;
         var ctx = c.getContext('2d');
-        if (opts.grayscale) ctx.filter = 'grayscale(1)';
         ctx.drawImage(img, 0, 0, cw, ch);
+        if (opts.grayscale) {
+          // Pixel-loop desaturation: ctx.filter='grayscale(1)' is silently IGNORED in Safari,
+          // so photos authored there uploaded in color (the .png fallback files are the tell).
+          // Rec.709 luma, alpha preserved — identical result in every browser.
+          var id = ctx.getImageData(0, 0, cw, ch), d = id.data;
+          for (var i = 0; i < d.length; i += 4) {
+            var y = Math.round(0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]);
+            d[i] = d[i + 1] = d[i + 2] = y;
+          }
+          ctx.putImageData(id, 0, 0);
+        }
         var dataUrl = c.toDataURL('image/webp', 0.85);
         if (dataUrl.indexOf('data:image/webp') !== 0) dataUrl = c.toDataURL('image/png');
         URL.revokeObjectURL(img.src);
