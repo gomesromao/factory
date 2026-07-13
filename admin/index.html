@@ -184,11 +184,15 @@
       </fieldset>
 
       <fieldset><legend>Works in your stack</legend>
-        <div class="hintline" style="margin-bottom:8px">Pick from the logo library. New logo? Send the file to Daniel first (transparent PNG, uniform height) — uploads are manual for now.</div>
+        <div class="hintline" style="margin-bottom:8px">Pick from the logo library. New logo? Upload the file below, or type the company's domain to fetch it from logo.dev.</div>
         <div class="logo-grid" id="logoGrid"></div>
         <div style="margin-top:10px">
           <button class="small" id="logoUploadBtn">Upload logo (PNG/WebP)…</button>
           <input type="file" id="logoFile" accept=".png,.webp,image/png,image/webp" style="display:none" />
+          <span style="font-size:11px; color:#888; margin:0 4px;">or</span>
+          <input type="text" id="logoDevDomain" placeholder="fetch from logo.dev — acme.com"
+            style="width:200px; padding:5px 8px; border:1px solid #ddd; border-radius:6px; font-size:11.5px; font-family:inherit;" />
+          <button class="small" id="logoDevBtn">Fetch</button>
           <div class="logo-upload-hint">Transparent background, trimmed. Wide wordmarks and square icons both work — aim for a file under ~150&nbsp;KB (512&nbsp;KB hard limit). It appears in the preview instantly and goes live with the next deploy (~2&nbsp;min).</div>
         </div>
       </fieldset>
@@ -581,6 +585,27 @@
 
   /* ---------- logo upload / delete ---------- */
   $('logoUploadBtn').addEventListener('click', function (e) { e.preventDefault(); $('logoFile').click(); });
+  // shared tail: manual uploads and logo.dev fetches both commit through here,
+  // so preview mechanics and library state stay identical for the two paths.
+  function commitLogoToLibrary(filename, dataUrl) {
+    var b64 = String(dataUrl).split(',')[1];
+    setStatus('ok', 'Uploading ' + filename + '…');
+    fetch('/api/logo', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw, filename: filename, contentBase64: b64 })
+    }).then(function (r) {
+      return r.json().catch(function () { return { ok: false, error: 'HTTP ' + r.status + ' \u2014 is api/logo.js deployed?' }; });
+    }).then(function (resp) {
+      if (!resp.ok) return setStatus('err', 'Upload failed: ' + ghErrMsg(resp));
+      pendingLogos[filename] = dataUrl;
+      if (LOGOS.indexOf(filename) === -1) LOGOS.push(filename);
+      LOGOS.sort();
+      buildLogoGrid();
+      renderPreview();
+      setStatus('ok', (resp.replaced ? 'Replaced ' : 'Added ') + filename + '. It\u2019s previewing here already; the file itself goes live with the next deploy (~2 min). Tick it to add the chip to this page.');
+    }).catch(function () { setStatus('err', 'Network error during upload.'); });
+  }
+
   $('logoFile').addEventListener('change', function (e) {
     var f = e.target.files[0]; e.target.value = '';
     if (!f) return;
@@ -591,27 +616,36 @@
     if (!/^[a-z0-9][a-z0-9-]{1,50}\.(png|webp)$/.test(filename)) return setStatus('err', 'Could not derive a clean filename from "' + f.name + '" — rename the file (letters, numbers, dashes) and retry.');
     if (LOGOS.indexOf(filename) !== -1 && !confirm('"' + filename + '" already exists in the library. Replace it everywhere?')) return;
     var reader = new FileReader();
-    reader.onload = function () {
-      var dataUrl = reader.result;
-      var b64 = String(dataUrl).split(',')[1];
-      setStatus('ok', 'Uploading ' + filename + '…');
-      fetch('/api/logo', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password: pw, filename: filename, contentBase64: b64 })
-      }).then(function (r) {
-        return r.json().catch(function () { return { ok: false, error: 'HTTP ' + r.status + ' \u2014 is api/logo.js deployed?' }; });
-      }).then(function (resp) {
-        if (!resp.ok) return setStatus('err', 'Upload failed: ' + ghErrMsg(resp));
-        pendingLogos[filename] = dataUrl;
-        if (LOGOS.indexOf(filename) === -1) LOGOS.push(filename);
-        LOGOS.sort();
-        buildLogoGrid();
-        renderPreview();
-        setStatus('ok', (resp.replaced ? 'Replaced ' : 'Added ') + filename + '. It\u2019s previewing here already; the file itself goes live with the next deploy (~2 min). Tick it to add the chip to this page.');
-      }).catch(function () { setStatus('err', 'Network error during upload.'); });
-    };
+    reader.onload = function () { commitLogoToLibrary(filename, reader.result); };
     reader.readAsDataURL(f);
   });
+
+  // logo.dev fetch path: domain in, PNG out of /api/logo-fetch, then the shared commit tail.
+  function fetchFromLogoDev() {
+    var raw = $('logoDevDomain').value.trim();
+    if (!raw) return setStatus('err', 'Type a domain first — e.g. acme.com');
+    var domain = raw.toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').split(/[\/?#]/)[0];
+    if (!/^[a-z0-9][a-z0-9.-]{1,80}\.[a-z]{2,}$/.test(domain)) return setStatus('err', '\u201C' + raw + '\u201D doesn\u2019t look like a domain \u2014 try the acme.com form.');
+    setStatus('ok', 'Fetching logo for ' + domain + ' from logo.dev\u2026');
+    fetch('/api/logo-fetch?domain=' + encodeURIComponent(domain), { headers: { 'x-admin-password': pw } })
+      .then(function (r) { return r.json().catch(function () { return { ok: false, error: 'HTTP ' + r.status + ' \u2014 is api/logo-fetch.js deployed?' }; }); })
+      .then(function (resp) {
+        if (!resp.ok) {
+          if (resp.error === 'logo_not_found') return setStatus('err', 'logo.dev has no logo for ' + domain + ' \u2014 upload the file manually instead.');
+          if (resp.error === 'logo_dev_not_configured') return setStatus('err', 'LOGO_DEV_TOKEN is missing in Vercel.');
+          return setStatus('err', 'Fetch failed: ' + (resp.error || 'unknown'));
+        }
+        var filename = domain.replace(/\.(com|com\.br|io|co|net|org|ai|dev|app)$/, '').replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
+        filename = (filename || domain.replace(/[^a-z0-9-]+/g, '-')) + '.' + resp.ext;
+        if (!/^[a-z0-9][a-z0-9-]{1,50}\.(png|webp)$/.test(filename)) return setStatus('err', 'Could not derive a clean filename from ' + domain + '.');
+        if (LOGOS.indexOf(filename) !== -1 && !confirm('"' + filename + '" already exists in the library. Replace it everywhere?')) return;
+        $('logoDevDomain').value = '';
+        commitLogoToLibrary(filename, 'data:image/' + resp.ext + ';base64,' + resp.contentBase64);
+      })
+      .catch(function () { setStatus('err', 'Network error talking to /api/logo-fetch.'); });
+  }
+  $('logoDevBtn').addEventListener('click', function (e) { e.preventDefault(); fetchFromLogoDev(); });
+  $('logoDevDomain').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); fetchFromLogoDev(); } });
   function ghErrMsg(resp) {
     var m = (resp.error || 'unknown') + (resp.detail ? ' (HTTP ' + resp.detail + ')' : '');
     if (resp.detail === 401) m += ' \u2014 the GITHUB_TOKEN is invalid or was revoked. Update it in Vercel env vars and redeploy.';
