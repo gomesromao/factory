@@ -23,6 +23,10 @@ if (process.env.VERCEL_ENV === 'production' && process.env.META_TEST_EVENT_CODE 
 }
 
 const logoLibrary = new Set(fs.readdirSync(path.join(ROOT, 'shared/public/logos')));
+const logoSources = (() => {
+  try { return JSON.parse(fs.readFileSync(path.join(ROOT, 'lib/logo-sources.json'), 'utf8')); }
+  catch { return {}; } // missing/invalid file just means: no attribution anywhere
+})();
 
 // 2. pages
 const slugs = [];
@@ -33,7 +37,7 @@ for (const f of fs.readdirSync(path.join(ROOT, 'pages')).filter(f => f.endsWith(
   for (const t of cfg.tools.items) {
     if (!logoLibrary.has(t.file)) throw new Error(`Missing logo file: ${t.file} (page ${cfg.slug}) — not in shared/public/logos/`);
   }
-  const html = render(template, cfg, testimonials);
+  const html = render(template, cfg, testimonials, logoSources);
   fs.mkdirSync(path.join(DIST, cfg.slug), { recursive: true });
   fs.writeFileSync(path.join(DIST, cfg.slug, 'index.html'), html);
   slugs.push({ slug: cfg.slug, title: cfg.meta.title, subdomain: cfg.subdomain || null });
@@ -54,7 +58,8 @@ admin = admin
   .replace('/*__RENDER_JS__*/', () => renderSrc)
   .replace('"__TEMPLATE__"', () => inlineJson(template))
   .replace('"__TESTIMONIALS__"', () => inlineJson(testimonials))
-  .replace('"__LOGOS__"', () => inlineJson(logos));
+  .replace('"__LOGOS__"', () => inlineJson(logos))
+  .replace('"__LOGO_SOURCES__"', () => inlineJson(logoSources));
 fs.mkdirSync(path.join(DIST, 'admin'), { recursive: true });
 fs.writeFileSync(path.join(DIST, 'admin', 'index.html'), admin);
 // copy every other static file in admin/ (guide, pages index, future additions)
