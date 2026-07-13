@@ -1,0 +1,181 @@
+{
+  "slug": "dtc-cx-anchor",
+  "variant": "dtc-cx-anchor",
+  "adsName": "DTC CX Anchor",
+  "pageLabel": "DTC CX Anchor",
+  "subdomain": "",
+  "meta": {
+    "title": "A CX manager without the salary | Coconut for DTC Brands",
+    "description": "For DTC and ecommerce founders: a senior, dedicated CX manager who runs your reps and your AI stack, at a fraction of the in-house cost. Vetted, matched in days.",
+    "ogDescription": "A senior, dedicated CX manager who runs your reps and your AI stack, at a fraction of the in-house cost. Vetted, matched in days."
+  },
+  "hero": {
+    "eyebrow": "For DTC founders & operators",
+    "h1": "A CX manager<br>without the salary.",
+    "accent": "First 40 hours free",
+    "lead": "Someone senior enough to own your queue, your reps, and your AI stack costs a full US management salary before benefits, software, and severance enter the math. Coconut places dedicated CX managers at a fraction of the in-house cost, month to month, and you interview them before anyone starts. One client's Coconut customer service manager just passed 47 months in seat."
+  },
+  "form": {
+    "step1Button": "Show me available CX managers",
+    "step2Sub": "We match you with a senior CX manager who has run helpdesk teams, QA programs, and AI stacks for ecommerce brands.",
+    "needLabel": "Where does your CX org need leadership?",
+    "needOptions": [
+      "No one owns CSAT or SLAs",
+      "Reps need coaching and QA",
+      "Our AI stack has no owner",
+      "Founder still handles escalations",
+      "Scaling the team for Q4",
+      "Building CX from scratch"
+    ],
+    "successText": "Keep your phone handy, we'll text you today with the CX manager profiles we matched to your brand.",
+    "browseUrl": "https://talent.coconutva.com?role=customer-service",
+    "hours": {
+      "label": "How much help do you need?",
+      "options": [
+        "Less than 10 hrs/week",
+        "10 to 20 hrs/week",
+        "20+ hrs/week",
+        "Full-time"
+      ]
+    }
+  },
+  "roles": [
+    "Ecommerce CX Manager",
+    "CX Team Lead",
+    "QA & Coaching",
+    "Escalations Owner",
+    "CX Ops & Reporting",
+    "Helpdesk / AI Admin"
+  ],
+  "tools": {
+    "wrapMaxWidth": 760,
+    "chipHeight": 80,
+    "imgHeight": 80,
+    "imgMaxWidth": 130,
+    "items": [
+      {
+        "file": "Netsuite-Logo-hi-res.png",
+        "alt": "Netsuite Logo Hi Res"
+      }
+    ]
+  },
+  "wyg": [
+    {
+      "featured": false,
+      "title": "A senior CX manager, not another rep",
+      "text": "Someone who has run queues and teams before: SLAs, QA scorecards, macro libraries, escalation trees, and the reporting your CFO actually reads."
+    },
+    {
+      "featured": false,
+      "title": "Dedicated to your brand. Never pooled.",
+      "text": "One manager, one brand. Your policies, your tone, your escalation rules. Not a shared account lead splitting attention across six other stores."
+    },
+    {
+      "featured": false,
+      "title": "Vetted profiles this week. You pick who to meet.",
+      "text": "No cattle call resumes. No agency warm bodies. A real slate of pre-vetted candidates, and you choose who to interview."
+    },
+    {
+      "featured": false,
+      "title": "Co led interview with your Client Success Manager",
+      "text": "Your CSM runs it with you. We know what to listen for when hiring senior operators who will lead a team in your name."
+    },
+    {
+      "featured": false,
+      "title": "40 hours of real management, free. Before you commit.",
+      "text": "Not a test project. Not a demo. Real queue ownership from your matched CX manager, on us, for the first 40 hours."
+    },
+    {
+      "featured": true,
+      "title": "They run the team inside rules you set.",
+      "text": "Refund thresholds, escalation authority, and store permissions stay yours. You grant the access, and you can pull it anytime."
+    },
+    {
+      "featured": false,
+      "title": "Not a fit? We re match, no hassle.",
+      "text": "You walk away clean, or we find the right person. Either way, you're not stuck."
+    }
+  ],
+  "ctaBanner": {
+    "heading": "Give the inbox a boss.",
+    "sub": "Someone senior owns CSAT by day, and escalations stop landing in your Slack. See who fits, then decide."
+  },
+  "faq": [
+    {
+      "q": "Can they manage reps I already have?",
+      "a": "Yes. Coaching, QA reviews, scheduling, macro upkeep, and escalation handling for your existing team, whether those reps are in-house, offshore, or a mix. You define the authority levels; your manager works inside them."
+    },
+    {
+      "q": "Can an offshore manager really lead a team?",
+      "a": "This is exactly what we vet for. Your manager has run support queues and people before, works US hours alongside your team, and is backed by a named Coconut Client Success Manager. Our placements hold a <strong>98% retention rate</strong>, and one client's Coconut customer service manager just passed 47 months in the same seat."
+    },
+    {
+      "q": "Won't AI replace this role?",
+      "a": "AI is taking the easy majority of tickets, which is precisely why someone senior has to own it: writing and tuning the macros, deciding what escalates, and QAing what the AI sends. The brands winning right now pair the two. <strong>AI deflects the easy tickets; your manager runs the AI and closes the hard ones.</strong>"
+    },
+    {
+      "q": "Can they issue refunds or credits?",
+      "a": "Only inside thresholds you set, for themselves and for any reps they oversee. Anything above your limit escalates to you before a dollar moves. <strong>You keep control</strong>, and you can change the thresholds or pull access anytime."
+    },
+    {
+      "q": "Is my customer data safe?",
+      "a": "Yes. Your manager works inside your helpdesk and store admin with the access you grant, under NDA, and can be removed anytime. Every operator is background checked and vetted before you meet them, and the engagement is managed by Coconut with a named Client Success Manager, not left to a solo freelancer."
+    },
+    {
+      "q": "How much does Managed Talent cost?",
+      "a": "Plans start at <strong>$900 per month</strong>. Pricing depends on the role, experience level, and hours. Each plan includes management, payroll, benefits, and support."
+    },
+    {
+      "q": "How does the 40 hour free trial work?",
+      "a": "Once you pick who to meet and interview them, your matched CX manager takes real ownership of your queue for 40 hours, on us. Not a test project or a demo. If it clicks, you keep them. If it does not, you walk away clean."
+    },
+    {
+      "q": "What tools do they know?",
+      "a": "Primarily Gorgias and Zendesk on top of Shopify, plus marketplace inboxes (Amazon, eBay, Walmart), Klaviyo flows, Recharge subscriptions, and returns tools like Loop. If you run something else, we match for it."
+    },
+    {
+      "q": "Can they be ramped before Black Friday?",
+      "a": "Yes, if you start now. Matching takes 5 to 10 days and full ramp on your policies, team, and stack takes a few weeks. Hire in summer and your manager owns the queue before the Q4 spike, instead of learning your returns policy during it."
+    },
+    {
+      "q": "How is this different from hiring on Upwork or OnlineJobs.ph?",
+      "a": "Those are databases. You filter by price, pick from whoever applied, and manage the risk yourself, which is exactly why most bad offshore hires go sideways. We headhunt and vet for your specific role, then manage payroll, benefits, and backups. Our placements hold a <strong>98% retention rate</strong>, and if a fit is not right we re-match you at no cost."
+    },
+    {
+      "q": "Will I have to manage the manager?",
+      "a": "No. A dedicated Client Success Manager runs onboarding, monitors performance, and handles the day to day of the engagement. You set direction and review the CSAT number. You are not building an offshore HR function."
+    },
+    {
+      "q": "Can I change or replace my talent later on?",
+      "a": "Yes. If your needs change or performance dips, we'll replace your talent at no additional cost."
+    },
+    {
+      "q": "Can I switch between part time and full time hours?",
+      "a": "Yes. You can adjust your talent's schedule as your needs evolve, with a minimum of 20 hours per week to maintain stability for the talent."
+    },
+    {
+      "q": "Can I buy out my talent?",
+      "a": "Yes. Buyouts are allowed as long as the talent agrees, with flexibility based on hours, tenure, and subscription tier."
+    },
+    {
+      "q": "Where is your talent based?",
+      "a": "In the Philippines. Senior, college-educated, English-fluent professionals who work an overlap shift on US business hours and are vetted before you ever meet them."
+    },
+    {
+      "q": "Is there a minimum commitment?",
+      "a": "No long term contracts. Managed Talent is a month to month subscription designed for flexibility and scale."
+    }
+  ],
+  "calendlyUrl": "https://calendly.com/adell-coconutva/coconut-discovery-call-bill-com?utm_source=dtc-cx-anchor",
+  "redirectUrl": "https://talent.coconutva.com?role=customer-service",
+  "testimonialOrder": [
+    "Stephanie Acker",
+    "Bruce Hymas",
+    "Phil Kirkeiner",
+    "Liz Germain",
+    "Jim Wilson",
+    "Molly Wemlinger",
+    "Kat Weaver",
+    "Heather Mason"
+  ]
+}
