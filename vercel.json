@@ -16,6 +16,9 @@
     },
     "api/logo.js": {
       "includeFiles": "pages/**"
+    },
+    "api/testimonial.js": {
+      "includeFiles": "pages/**"
     }
   },
   "rewrites": [
