@@ -54,8 +54,8 @@
     "imgMaxWidth": 130,
     "items": [
       {
-        "file": "brex.png",
-        "alt": "Brex"
+        "file": "Netsuite-Logo-hi-res.png",
+        "alt": "Netsuite Logo Hi Res"
       }
     ]
   },
@@ -170,10 +170,14 @@
   "redirectUrl": "https://talent.coconutva.com?role=customer-service",
   "testimonialOrder": [
     "Stephanie Acker",
-    "Kat Weaver",
+    "Bruce Hymas",
     "VJ Gandhi",
+    "Kat Weaver",
+    "Jim Wilson",
+    "Molly Wemlinger",
     "Liz Germain",
     "Phil Kirkeiner",
-    "Bruce Hymas"
+    "Heather Mason",
+    "Thea Blystone"
   ]
 }
