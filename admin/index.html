@@ -62,7 +62,8 @@
   .logo-grid .logo-del { border:none; background:transparent; color:#b55; font-weight:800; font-size:12px; padding:0 2px; cursor:pointer; line-height:1; }
   .logo-grid .logo-del:hover { color:#c0392b; }
   .logo-upload-hint { font-size:11px; color:#888; margin-top:6px; }
-  .status { font-size:12px; padding:8px 12px; border-radius:8px; margin:10px 0; display:none; }
+  .status { font-size:12px; padding:8px 12px; border-radius:8px; margin:10px 0; display:none;
+    position:sticky; top:0; z-index:15; box-shadow:0 2px 8px rgba(0,0,0,.06); }
   .status.ok { display:block; background:#EAF7EF; color:var(--green-dark); }
   .status.err { display:block; background:#fdecea; color:#c0392b; }
   .login { max-width:340px; margin:120px auto; background:#fff; border:1px solid var(--border); border-radius:14px; padding:28px; overflow:auto; }
@@ -784,7 +785,8 @@
     var s = $('status');
     s.className = 'status' + (kind ? ' ' + kind : '');
     s.textContent = msg;
-    if (kind) s.scrollIntoView({ block: 'nearest' });
+    // no scrollIntoView: the bar is position:sticky at the top of the editor,
+    // so it's always visible without yanking the sidebar scroll position.
   }
 })();
 </script>
