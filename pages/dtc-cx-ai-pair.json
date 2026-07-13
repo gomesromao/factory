@@ -54,16 +54,8 @@
     "imgMaxWidth": 130,
     "items": [
       {
-        "file": "stripe-logo-revised-2016-svg.webp",
-        "alt": "Stripe Logo Revised 2016 Svg"
-      },
-      {
-        "file": "logo-monday-com-2.png",
-        "alt": "Logo Monday Com 2"
-      },
-      {
-        "file": "hubspot-logo-2005.png",
-        "alt": "Hubspot Logo 2005"
+        "file": "Netsuite-Logo-hi-res.png",
+        "alt": "Netsuite Logo Hi Res"
       }
     ]
   },
@@ -178,10 +170,14 @@
   "redirectUrl": "https://talent.coconutva.com?role=customer-service",
   "testimonialOrder": [
     "Stephanie Acker",
-    "Kat Weaver",
+    "Bruce Hymas",
     "VJ Gandhi",
+    "Kat Weaver",
+    "Jim Wilson",
+    "Molly Wemlinger",
     "Liz Germain",
     "Phil Kirkeiner",
-    "Bruce Hymas"
+    "Heather Mason",
+    "Thea Blystone"
   ]
 }
