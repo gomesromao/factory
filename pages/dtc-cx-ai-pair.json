@@ -1,0 +1,187 @@
+{
+  "slug": "dtc-cx-ai-pair",
+  "variant": "dtc-cx-ai-pair",
+  "adsName": "DTC CX AI Pair",
+  "pageLabel": "DTC CX AI Pair",
+  "subdomain": "",
+  "meta": {
+    "title": "AI can't talk down a chargeback | Coconut for DTC Brands",
+    "description": "For DTC and ecommerce founders: pair your AI helpdesk with a dedicated human CX specialist for the tickets that need judgment. Vetted, senior, matched in days.",
+    "ogDescription": "Pair your AI helpdesk with a dedicated human CX specialist for the tickets that need judgment. Vetted, senior, matched in days."
+  },
+  "hero": {
+    "eyebrow": "For DTC & ecommerce founders",
+    "h1": "AI can't talk down<br>a chargeback.",
+    "accent": "First 40 hours free",
+    "lead": "Your AI helpdesk deflects the password resets and the easy WISMOs. It can't save a chargeback, untangle a three-box return, or talk an angry VIP out of a one-star review; pair it with a dedicated CX specialist who handles the tickets that need judgment. We've placed 48 CX specialists, and 31 are still in seat today."
+  },
+  "form": {
+    "step1Button": "Show me available CX specialists",
+    "step2Sub": "We match you with a CX pro who already lives in Gorgias, Shopify, and marketplace inboxes.",
+    "needLabel": "What's the biggest fire in your inbox?",
+    "needOptions": [
+      "WISMO ticket backlog",
+      "Slow first response time",
+      "Refunds and chargebacks",
+      "Review and CSAT damage",
+      "Coverage for BFCM / Q4",
+      "Need full-time CX help"
+    ],
+    "successText": "Keep your phone handy, we'll text you today with the CX specialist profiles we matched to your brand.",
+    "browseUrl": "https://talent.coconutva.com?role=customer-service",
+    "hours": {
+      "label": "How much help do you need?",
+      "options": [
+        "Less than 10 hrs/week",
+        "10 to 20 hrs/week",
+        "20+ hrs/week",
+        "Full-time"
+      ]
+    }
+  },
+  "roles": [
+    "Ecommerce CX Specialist",
+    "Email & Chat Support",
+    "Returns & RMA Coordinator",
+    "Marketplace Support",
+    "Social & Review Response",
+    "CX Team Lead"
+  ],
+  "tools": {
+    "wrapMaxWidth": 760,
+    "chipHeight": 80,
+    "imgHeight": 80,
+    "imgMaxWidth": 130,
+    "items": [
+      {
+        "file": "stripe-logo-revised-2016-svg.webp",
+        "alt": "Stripe Logo Revised 2016 Svg"
+      },
+      {
+        "file": "logo-monday-com-2.png",
+        "alt": "Logo Monday Com 2"
+      },
+      {
+        "file": "hubspot-logo-2005.png",
+        "alt": "Hubspot Logo 2005"
+      }
+    ]
+  },
+  "wyg": [
+    {
+      "featured": false,
+      "title": "A senior CX pro, matched to your brand",
+      "text": "Not a generalist pulled off a job board. Someone who already knows Gorgias or Zendesk, Shopify, WISMO flows, RMA and returns, and marketplace inboxes."
+    },
+    {
+      "featured": false,
+      "title": "Dedicated to your brand. Never pooled.",
+      "text": "One specialist, one brand. Your macros, your tone, your escalation rules. Not a shared queue splitting attention across six other stores."
+    },
+    {
+      "featured": false,
+      "title": "Vetted profiles this week. You pick who to meet.",
+      "text": "No cattle call resumes. No agency warm bodies. A real slate of pre-vetted candidates, and you choose who to interview."
+    },
+    {
+      "featured": false,
+      "title": "Co led interview with your Client Success Manager",
+      "text": "Your CSM runs it with you. We know what to listen for when hiring CX operators who will speak in your brand's voice."
+    },
+    {
+      "featured": false,
+      "title": "40 hours of real tickets, free. Before you commit.",
+      "text": "Not a test project. Not a demo. Real output from your matched CX specialist, on us, for the first 40 hours."
+    },
+    {
+      "featured": true,
+      "title": "They work your helpdesk. Refunds stay inside your rules.",
+      "text": "You set the refund and credit thresholds; anything above them escalates to you. You grant the access, and you can pull it anytime."
+    },
+    {
+      "featured": false,
+      "title": "Not a fit? We re match, no hassle.",
+      "text": "You walk away clean, or we find the right person. Either way, you're not stuck."
+    }
+  ],
+  "ctaBanner": {
+    "heading": "Get out of the support queue.",
+    "sub": "Run the brand by day, home for dinner by night. See who fits, then decide."
+  },
+  "faq": [
+    {
+      "q": "Will an offshore specialist hurt my brand voice?",
+      "a": "This is the difference between a dedicated specialist and a pooled agent. Yours works your brand only, onboards on your macros, tone docs, and past tickets, and your Client Success Manager reviews quality with you. Voice compounds when the same person answers every day. <strong>It erodes when a rotating pool does.</strong>"
+    },
+    {
+      "q": "I got burned by a pooled BPO before. How is this different?",
+      "a": "Pooled services split one agent across many brands and rotate people without asking you. Coconut places <strong>one dedicated specialist</strong> who works for your brand alone. You interview and pick them, a named Client Success Manager manages the seat, and our placements hold a <strong>98% retention rate</strong>. One client's CX manager just passed 47 months in the same seat."
+    },
+    {
+      "q": "Won't AI replace this role?",
+      "a": "AI is good at the easy majority: order lookups, password resets, simple WISMO. It cannot talk down a chargeback, untangle a multi-box return, or save an angry VIP from a one-star review. The brands winning right now pair the two: <strong>AI deflects the easy tickets, your specialist closes the hard ones</strong> and keeps the AI's macros current."
+    },
+    {
+      "q": "Can they issue refunds or credits?",
+      "a": "Only inside thresholds you set. Anything above your limit escalates to you before a dollar moves. <strong>You keep control</strong>, and you can change the thresholds or pull access anytime."
+    },
+    {
+      "q": "Is my customer data safe?",
+      "a": "Yes. Your specialist works inside your helpdesk and store admin with the access you grant, under NDA, and can be removed anytime. Every operator is background checked and vetted before you meet them, and the engagement is managed by Coconut with a named Client Success Manager, not left to a solo freelancer."
+    },
+    {
+      "q": "How much does Managed Talent cost?",
+      "a": "Plans start at <strong>$900 per month</strong>. Pricing depends on the role, experience level, and hours. Each plan includes management, payroll, benefits, and support."
+    },
+    {
+      "q": "How does the 40 hour free trial work?",
+      "a": "Once you pick who to meet and interview them, your matched CX specialist works 40 hours of real tickets for you, on us. Not a test project or a demo. If it clicks, you keep them. If it does not, you walk away clean."
+    },
+    {
+      "q": "What tools do they know?",
+      "a": "Primarily Gorgias and Zendesk on top of Shopify, plus marketplace inboxes (Amazon, eBay, Walmart), Klaviyo flows, Recharge subscriptions, and returns tools like Loop. If you run something else, we match for it."
+    },
+    {
+      "q": "Can they be ramped before Black Friday?",
+      "a": "Yes, if you start now. Matching takes 5 to 10 days and full ramp on your macros and stack takes a few weeks. Hire in summer and your specialist is at full speed before the Q4 spike, instead of learning your returns policy during it."
+    },
+    {
+      "q": "How is this different from hiring on Upwork or OnlineJobs.ph?",
+      "a": "Those are databases. You filter by price, pick from whoever applied, and manage the risk yourself, which is exactly why most bad offshore hires go sideways. We headhunt and vet for your specific role, then manage payroll, benefits, and backups. Our placements hold a <strong>98% retention rate</strong>, and if a fit is not right we re-match you at no cost."
+    },
+    {
+      "q": "Will I have to manage them?",
+      "a": "No. A dedicated Client Success Manager runs onboarding, monitors performance, and handles the day to day. You delegate the inbox and review the output. You are not building an offshore HR function."
+    },
+    {
+      "q": "Can I change or replace my talent later on?",
+      "a": "Yes. If your needs change or performance dips, we'll replace your talent at no additional cost."
+    },
+    {
+      "q": "Can I switch between part time and full time hours?",
+      "a": "Yes. You can adjust your talent's schedule as your needs evolve, with a minimum of 20 hours per week to maintain stability for the talent."
+    },
+    {
+      "q": "Can I buy out my talent?",
+      "a": "Yes. Buyouts are allowed as long as the talent agrees, with flexibility based on hours, tenure, and subscription tier."
+    },
+    {
+      "q": "Where is your talent based?",
+      "a": "In the Philippines. Senior, college-educated, English-fluent professionals who work an overlap shift on US business hours and are vetted before you ever meet them."
+    },
+    {
+      "q": "Is there a minimum commitment?",
+      "a": "No long term contracts. Managed Talent is a month to month subscription designed for flexibility and scale."
+    }
+  ],
+  "calendlyUrl": "https://calendly.com/adell-coconutva/coconut-discovery-call-bill-com?utm_source=dtc-cx-ai-pair",
+  "redirectUrl": "https://talent.coconutva.com?role=customer-service",
+  "testimonialOrder": [
+    "Stephanie Acker",
+    "Kat Weaver",
+    "VJ Gandhi",
+    "Liz Germain",
+    "Phil Kirkeiner",
+    "Bruce Hymas"
+  ]
+}
