@@ -17,7 +17,7 @@
   },
   "form": {
     "step1Button": "Show me available CX specialists",
-    "step2Sub": "We match you with a CX pro who already lives in Gorgias, Shopify, and marketplace inboxes.",
+    "step2Sub": "We match you with a CX pro who already lives in Gorgias, Shopify, and marketplace inboxes, then trains on your macros and your tone.",
     "needLabel": "What's the biggest fire in your inbox?",
     "needOptions": [
       "WISMO ticket backlog",
@@ -97,8 +97,8 @@
     }
   ],
   "ctaBanner": {
-    "heading": "Get out of the support queue.",
-    "sub": "Run the brand by day, home for dinner by night. See who fits, then decide."
+    "heading": "Get your Sunday nights back.",
+    "sub": "The queue gets a dedicated owner. You get to be the founder again. See who fits, then decide."
   },
   "faq": [
     {
