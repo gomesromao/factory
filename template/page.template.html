@@ -309,6 +309,7 @@
   .client-title { font-size: 13px; color: #555; }
   .company-logo { width: auto; max-width: 120px; height: 45px; object-fit: contain; }
   .client-image {
+    filter: grayscale(1); /* render-time safety net; upload-time pixel-loop is still the real fix (html2canvas creatives ignore CSS filters) */
     position: absolute;
     bottom: -5px; right: -5px;
     width: 180px;
