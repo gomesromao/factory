@@ -54,8 +54,24 @@
     "imgMaxWidth": 130,
     "items": [
       {
-        "file": "Netsuite-Logo-hi-res.png",
-        "alt": "Netsuite Logo Hi Res"
+        "file": "zendesk-com-wordmark.png",
+        "alt": "Zendesk Com Wordmark"
+      },
+      {
+        "file": "9dc7e18a-18d7-424d-9a6f-c5da848786b3.png",
+        "alt": "9dc7e18a 18d7 424d 9a6f C5da848786b3"
+      },
+      {
+        "file": "8e03c61a-7f9d-4488-bf8a-bdc856ea14f1.png",
+        "alt": "8e03c61a 7f9d 4488 Bf8a Bdc856ea14f1"
+      },
+      {
+        "file": "1a884909-f197-4e9a-9e76-fe1f76adc433.png",
+        "alt": "1a884909 F197 4e9a 9e76 Fe1f76adc433"
+      },
+      {
+        "file": "850a97b2-0479-4ccc-a4fb-27ceba435516.png",
+        "alt": "850a97b2 0479 4ccc A4fb 27ceba435516"
       }
     ]
   },
