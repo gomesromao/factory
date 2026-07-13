@@ -14,8 +14,41 @@ const LIB_PATH = 'lib/testimonials.json';
 const ASSET_DIR = 'shared/public/testimonials';
 
 export default async function handler(req, res) {
+  // GET: full library (fresh from GitHub, bundled fallback) + per-name page usage.
+  // Auth via x-admin-password header (same pattern as /api/pages). Read-only, no side effects.
+  if (req.method === 'GET') {
+    if (!passwordOk(req.headers['x-admin-password'])) {
+      return res.status(401).json({ ok: false, error: 'bad_password' });
+    }
+    let lib = null, source = 'github';
+    const token = process.env.GITHUB_TOKEN, repo = process.env.GITHUB_REPO;
+    if (token && repo) {
+      try {
+        const r = await fetch(`https://api.github.com/repos/${repo}/contents/${LIB_PATH}?ref=${process.env.GITHUB_BRANCH || 'main'}`, {
+          headers: { Authorization: `Bearer ${token}`, Accept: 'application/vnd.github+json', 'User-Agent': 'coconut-lp-factory', 'X-GitHub-Api-Version': '2022-11-28' }
+        });
+        if (r.ok) lib = JSON.parse(Buffer.from((await r.json()).content, 'base64').toString('utf8'));
+      } catch { lib = null; }
+    }
+    if (!lib) {
+      source = 'bundle';
+      try { lib = JSON.parse(await readFile(path.join(process.cwd(), LIB_PATH), 'utf8')); }
+      catch { return res.status(500).json({ ok: false, error: 'library_unreadable' }); }
+    }
+    // usage map from the bundled pages (same freshness model as the delete guard)
+    const usage = {};
+    try {
+      const dir = path.join(process.cwd(), 'pages');
+      for (const f of (await readdir(dir)).filter(x => x.endsWith('.json'))) {
+        const cfg = JSON.parse(await readFile(path.join(dir, f), 'utf8'));
+        for (const n of (cfg.testimonialOrder || [])) (usage[n] = usage[n] || []).push(cfg.slug);
+      }
+    } catch { /* usage stays partial — UI treats missing as unused */ }
+    return res.status(200).json({ ok: true, lib, usage, source });
+  }
+
   if (req.method !== 'POST' && req.method !== 'DELETE') {
-    res.setHeader('Allow', 'POST, DELETE');
+    res.setHeader('Allow', 'GET, POST, DELETE');
     return res.status(405).json({ ok: false, error: 'method_not_allowed' });
   }
   const body = await readJson(req);
