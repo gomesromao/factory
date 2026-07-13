@@ -236,6 +236,8 @@
   var TEMPLATE = "__TEMPLATE__";
   var TESTIMONIALS = "__TESTIMONIALS__";
   var LOGOS = "__LOGOS__";
+  var LOGO_SOURCES = "__LOGO_SOURCES__"; // filename -> 'logo.dev' (provenance for footer attribution)
+  if (typeof LOGO_SOURCES === 'string') LOGO_SOURCES = {}; // pre-injection fallback
 
   var pages = [];       // all configs from /api/pages
   var current = null;   // working copy
@@ -588,17 +590,19 @@
   $('logoUploadBtn').addEventListener('click', function (e) { e.preventDefault(); $('logoFile').click(); });
   // shared tail: manual uploads and logo.dev fetches both commit through here,
   // so preview mechanics and library state stay identical for the two paths.
-  function commitLogoToLibrary(filename, dataUrl) {
+  function commitLogoToLibrary(filename, dataUrl, fromLogoDev) {
     var b64 = String(dataUrl).split(',')[1];
     setStatus('ok', 'Uploading ' + filename + '…');
     fetch('/api/logo', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password: pw, filename: filename, contentBase64: b64 })
+      body: JSON.stringify({ password: pw, filename: filename, contentBase64: b64, source: fromLogoDev ? 'logo.dev' : 'upload' })
     }).then(function (r) {
       return r.json().catch(function () { return { ok: false, error: 'HTTP ' + r.status + ' \u2014 is api/logo.js deployed?' }; });
     }).then(function (resp) {
       if (!resp.ok) return setStatus('err', 'Upload failed: ' + ghErrMsg(resp));
       pendingLogos[filename] = dataUrl;
+      if (fromLogoDev) LOGO_SOURCES[filename] = 'logo.dev'; // preview shows the attribution immediately
+      else delete LOGO_SOURCES[filename]; // manual re-upload clears provenance
       if (LOGOS.indexOf(filename) === -1) LOGOS.push(filename);
       LOGOS.sort();
       buildLogoGrid();
@@ -641,7 +645,7 @@
         if (!/^[a-z0-9][a-z0-9-]{1,50}\.(png|webp)$/.test(filename)) return setStatus('err', 'Could not derive a clean filename from ' + domain + '.');
         if (LOGOS.indexOf(filename) !== -1 && !confirm('"' + filename + '" already exists in the library. Replace it everywhere?')) return;
         $('logoDevDomain').value = '';
-        commitLogoToLibrary(filename, 'data:image/' + resp.ext + ';base64,' + resp.contentBase64);
+        commitLogoToLibrary(filename, 'data:image/' + resp.ext + ';base64,' + resp.contentBase64, true);
       })
       .catch(function () { setStatus('err', 'Network error talking to /api/logo-fetch.'); });
   }
@@ -727,7 +731,7 @@
   function renderPreview() {
     try {
       harvest();
-      var html = LPRender.render(TEMPLATE, current, TESTIMONIALS);
+      var html = LPRender.render(TEMPLATE, current, TESTIMONIALS, LOGO_SOURCES);
       // base tag so /public/* resolves against this deployment inside the frame
       html = html.replace('<head>', '<head><base href="/">');
       for (var pf in pendingLogos) {
