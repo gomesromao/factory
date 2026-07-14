@@ -87,7 +87,13 @@
 <div id="app" class="hidden">
   <div class="topbar">
     <h1>🥥 LP Factory</h1>
-    <select id="pageSelect" style="width:260px"></select>
+    <div id="pagePick" style="position:relative; display:inline-block;">
+      <button type="button" id="pagePickBtn" style="width:260px; display:flex; justify-content:space-between; align-items:center; gap:8px; padding:7px 10px; border:1px solid var(--border); border-radius:8px; background:#fff; color:var(--ink); font:inherit; font-size:13px; cursor:pointer;"><span id="pagePickLabel" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">—</span><span style="font-size:10px; color:#888;">▾</span></button>
+      <div id="pagePickPanel" class="hidden" style="position:absolute; top:calc(100% + 4px); left:0; width:300px; background:#fff; border:1px solid var(--border); border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,.12); z-index:60; padding:8px;">
+        <input type="text" id="pagePickSearch" placeholder="Search pages…" style="width:100%; padding:7px 9px; border:1px solid var(--border); border-radius:8px; font:inherit; font-size:12.5px; margin-bottom:6px;" />
+        <div id="pagePickList" style="max-height:300px; overflow-y:auto; scrollbar-width:thin;"></div>
+      </div>
+    </div>
     <button id="dupBtn">Duplicate as new page…</button>
     <button id="importBtn">Import JSON…</button>
     <button id="exportBtn">Download JSON</button>
@@ -267,11 +273,57 @@
     pages = list;
     $('login').classList.add('hidden');
     $('app').classList.remove('hidden');
-    var sel = $('pageSelect');
-    sel.innerHTML = pages.map(function (p) { return '<option value="' + p.slug + '">' + p.slug + '</option>'; }).join('');
-    sel.addEventListener('change', function () { load(sel.value); });
+    pagePicker.populate(pages.map(function (p) { return p.slug; }));
     load(pages[0].slug);
   }
+
+  /* ---------- page picker: searchable dropdown with a fixed-height scrolling list ----------
+     (native <select> popups can't be height-limited by CSS; this scales to hundreds of pages) */
+  var pagePicker = (function () {
+    var slugs = [], value = '';
+    var btn = $('pagePickBtn'), panel = $('pagePickPanel'), search = $('pagePickSearch'), list = $('pagePickList');
+    function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+    function rowStyle(sel) {
+      return 'padding:7px 9px; border-radius:7px; cursor:pointer; font-size:13px; margin-bottom:2px;' +
+             (sel ? ' background:#E5F5EA; font-weight:700;' : '');
+    }
+    function renderList() {
+      var q = search.value.trim().toLowerCase();
+      var shown = slugs.filter(function (s) { return !q || s.toLowerCase().indexOf(q) !== -1; });
+      list.innerHTML = shown.length
+        ? shown.map(function (s) { return '<div class="ppk-item" data-slug="' + esc(s) + '" style="' + rowStyle(s === value) + '">' + esc(s) + '</div>'; }).join('')
+        : '<div style="padding:8px; font-size:12px; color:#888;">No page matches \u201C' + esc(q) + '\u201D</div>';
+    }
+    function open() {
+      panel.classList.remove('hidden');
+      search.value = ''; renderList(); search.focus();
+      var cur = list.querySelector('[data-slug="' + CSS.escape(value) + '"]');
+      if (cur) cur.scrollIntoView({ block: 'nearest' });
+    }
+    function close() { panel.classList.add('hidden'); }
+    function pick(slug) { close(); if (slug !== value) load(slug); }
+    btn.addEventListener('click', function (e) { e.preventDefault(); panel.classList.contains('hidden') ? open() : close(); });
+    search.addEventListener('input', renderList);
+    search.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape') { close(); btn.focus(); }
+      if (e.key === 'Enter') { var first = list.querySelector('.ppk-item'); if (first) pick(first.getAttribute('data-slug')); }
+    });
+    list.addEventListener('click', function (e) {
+      var it = e.target.closest('.ppk-item'); if (it) pick(it.getAttribute('data-slug'));
+    });
+    list.addEventListener('mouseover', function (e) {
+      var it = e.target.closest('.ppk-item'); if (it && it.getAttribute('data-slug') !== value) it.style.background = '#f4f4f0';
+    });
+    list.addEventListener('mouseout', function (e) {
+      var it = e.target.closest('.ppk-item'); if (it && it.getAttribute('data-slug') !== value) it.style.background = '';
+    });
+    document.addEventListener('click', function (e) { if (!$('pagePick').contains(e.target)) close(); });
+    return {
+      populate: function (s) { slugs = s.slice().sort(); },
+      set: function (v) { value = v; $('pagePickLabel').textContent = v || '\u2014'; },
+      add: function (s) { if (slugs.indexOf(s) === -1) { slugs.push(s); slugs.sort(); } }
+    };
+  })();
 
   /* ---------- load / duplicate ---------- */
   function updateViewLink() {
@@ -291,6 +343,7 @@
   function load(slug) {
     var src = pages.find(function (p) { return p.slug === slug; });
     current = JSON.parse(JSON.stringify(src));
+    pagePicker.set(slug);
     isNew = false;
     resetPreviewScroll();
     $('f_slug').disabled = true;
