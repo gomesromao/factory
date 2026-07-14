@@ -223,29 +223,36 @@
           '<div class="col"><h4>Logo</h4>' + logoOpts + '</div>' +
           '<div class="col"><h4>Face</h4>' + faceOpts + '</div>' +
         '</div>' +
+        '<h4 style="margin:16px 0 6px">CTA pill</h4>' +
+        '<input type="text" id="genCta" maxlength="40" value="' + esc(page.hero && page.hero.accent || '') + '"' +
+        ' style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-family:inherit; font-size:13px;" />' +
+        '<p class="hint" style="margin:4px 0 0"><span id="genCtaCount"></span> \u2014 the green pill on the creative. Edit it freely (e.g. \u201CLearn more\u201D); leave empty for no pill. The landing page itself is not changed.</p>' +
         '<div class="actions"><button id="genGo">Generate &amp; download</button>' +
         '<button class="cancel" id="genCancel">Cancel</button><span class="status" id="genStatus"></span></div>' +
         '<div class="preview" id="genPreview"></div>'));
       document.body.appendChild(bd);
       bd.addEventListener('click', function (e) { if (e.target === bd) bd.remove(); });
       bd.querySelector('#genCancel').addEventListener('click', function () { bd.remove(); });
+      var ctaInput = bd.querySelector('#genCta'), ctaCount = bd.querySelector('#genCtaCount');
+      function syncCtaCount() { ctaCount.textContent = ctaInput.value.length + '/40'; }
+      ctaInput.addEventListener('input', syncCtaCount); syncCtaCount();
       bd.querySelector('#genGo').addEventListener('click', function () {
         var logo = (bd.querySelector('input[name="genLogo"]:checked') || {}).value || '';
         var face = (bd.querySelector('input[name="genFace"]:checked') || {}).value || '';
         if (!logo && !face) { bd.querySelector('#genStatus').textContent = 'Pick at least a logo or a face.'; return; }
-        generate(page, logo, face, bd);
+        generate(page, logo, face, ctaInput.value.trim(), bd);
       });
     });
   }
 
-  function buildCard(page, logo, face) {
+  function buildCard(page, logo, face, cta) {
     var card = el('div', 'adc' + (face ? ' has-face' : '') + (logo ? '' : ' no-logo'));
     card.innerHTML =
       '<img class="brand" src="/public/coconut-logo-lg.png" alt=""/>' +
       (page.hero && page.hero.eyebrow ? '<div class="eyebrow">' + esc(page.hero.eyebrow) + '</div>' : '') +
       '<div class="copy">' +
         '<h2 class="headline">' + String(page.hero && page.hero.h1 || '').replace(/<br\s*\/?>/gi, ' ') + '</h2>' +
-        (page.hero && page.hero.accent ? '<div class="offer">' + esc(page.hero.accent) + '</div>' : '') +
+        (cta ? '<div class="offer">' + esc(cta) + '</div>' : '') +
         '<div class="proof"><span><span class="stars">\u2605\u2605\u2605\u2605\u2605</span>4.9/5 rating</span>' +
         '<span>600+ companies trust us</span></div>' +
       '</div>' +
@@ -254,12 +261,12 @@
     return card;
   }
 
-  function generate(page, logo, face, bd) {
+  function generate(page, logo, face, cta, bd) {
     var status = bd.querySelector('#genStatus');
     var go = bd.querySelector('#genGo');
     go.disabled = true; status.textContent = 'Rendering\u2026';
     var staging = document.getElementById('genStaging');
-    var card = buildCard(page, logo, face);
+    var card = buildCard(page, logo, face, cta);
     staging.appendChild(card);
 
     var imgs = Array.prototype.slice.call(card.querySelectorAll('img'));
@@ -271,6 +278,15 @@
       if (lg && lg.naturalWidth) {
         if (lg.naturalWidth / lg.naturalHeight > 2.5) lg.style.width = '430px';
         else lg.style.height = '98px';
+      }
+      // pill fit guard: available width differs with/without face, so a fixed char cap
+      // alone can't guarantee fit — shrink the pill font (38 -> 26px) until it fits its lane
+      var pill = card.querySelector('.offer');
+      if (pill) {
+        var ps = 38, lane = card.querySelector('.copy').clientWidth;
+        pill.style.maxWidth = '100%';
+        while (pill.scrollWidth > lane && ps > 26) { ps -= 2; pill.style.fontSize = ps + 'px'; }
+        if (pill.scrollWidth > lane) pill.style.whiteSpace = 'normal'; // last resort: wrap to 2 lines
       }
       // overflow guard: shrink the headline until everything fits inside 1080px
       var hl = card.querySelector('.headline');
