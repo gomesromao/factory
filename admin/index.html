@@ -738,7 +738,7 @@
       // keystroke, plus the markup leaking visibly at the end of the frame).
       html = html.replace(/<noscript>[\s\S]*?<\/noscript>/gi, '');
       html = html.replace(/<script>[\s\S]*?<\/script>/gi, function (blk) {
-        return /connect\.facebook\.net|b2bjsstore/.test(blk) ? '' : blk;
+        return /connect\.facebook\.net|b2bjsstore|googletagmanager\.com/.test(blk) ? '' : blk;
       });
       // base tag so /public/* resolves against this deployment inside the frame
       html = html.replace('<head>', '<head><base href="/">');
