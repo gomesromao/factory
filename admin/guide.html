@@ -84,7 +84,8 @@
   <p>One role per line → the black pills. Order here = order on the page.</p>
 
   <h3>Works in your stack (tool logos)</h3>
-  <p>Tick the tools your audience actually uses. The library is shared by every page — and you can grow it yourself with <strong>Upload logo (PNG/WebP)…</strong> right under the checkboxes.</p>
+  <p>Tick the tools your audience actually uses. The library is shared by every page — and you can grow it yourself, two ways, right under the checkboxes: <strong>Upload logo (PNG/WebP)…</strong> for a file you already have, or type the company's domain (e.g. <code>acme.com</code>) and hit <strong>Fetch</strong> to pull it from logo.dev.</p>
+  <div class="tip"><strong>Prefer the Fetch field over downloading files from logo.dev's website.</strong> Fetched logos are tracked automatically, and any page that displays one gets a small "Logos provided by Logo.dev" line in its footer (that's our free-tier attribution). Manual downloads from their site bypass that tracking. If logo.dev returns a square icon when you wanted the wide wordmark, just fall back to a manual upload.</div>
   <div class="tip"><strong>Good logo files:</strong> transparent background, tightly trimmed (no empty margins), PNG or WebP. Wide wordmarks and square icons both render fine. Keep the <em>file size</em> under ~150&nbsp;KB (512&nbsp;KB is the hard cap) — that's about compression, not dimensions; tinypng.com gets most logos there in one drop. The uploaded logo appears in your live preview instantly and is live on the internet with the next deploy (~2&nbsp;min).</div>
   <div class="warn"><strong>Deleting a logo</strong> (the small ✕ on its checkbox) removes it for every page, so you'll get a confirmation popup — and the system refuses if any page still uses it, telling you which ones. If a logo looks bad on your page, you don't need to delete it: just untick it.</div>
 
@@ -104,6 +105,12 @@
 
   <h3>Links</h3>
   <p><strong>Calendly URL:</strong> the booking link in the FAQ footer. Attribution (<code>utm_source</code>) is set automatically to your slug — you can't get it wrong. <strong>Redirect URL:</strong> where the success-screen button goes.</p>
+
+  <h2>Ad creatives (Pages index &rarr; the &#127912; icon)</h2>
+  <p>Every page row in the <a href="/admin/pages.html" target="_blank">Pages index</a> has a generate-creative icon. It renders a 1080&times;1080 PNG for Meta using that page's hero copy, and you compose it from three choices:</p>
+  <p><strong>Logo</strong> — one of the page's own tool logos, or none. <strong>Face</strong> — a person from the shared face library, or none. <strong>CTA pill</strong> — the green pill text. It pre-fills with the page's hero accent (e.g. "First 40 hours free"), but you can type anything up to 40 characters ("Learn more", "See how it works"…) or clear it for no pill. <em>Editing the pill only changes the creative you're downloading — the landing page itself is untouched.</em></p>
+  <div class="tip"><strong>Adding a new face:</strong> at the top of the FACE column, type the person's name and click <strong>+ Add face</strong>, then pick the photo. Requirements: transparent background (the person is composited over the card gradient), color photo (faces are not black &amp; white — that rule is only for testimonial headshots), and ideally a half-body crop facing center-left, like the existing ones. It's resized automatically and usable by you immediately; the rest of the team sees it after the next deploy (~2&nbsp;min).</div>
+  <div class="warn"><strong>Long CTA text never breaks the layout:</strong> the pill shrinks its font automatically to fit (and wraps as a last resort), but shorter reads better on a feed — if you're fighting the 40-character limit, the message probably belongs in the headline, not the pill.</div>
 
   <h2>If Publish shows a red error</h2>
   <table>
