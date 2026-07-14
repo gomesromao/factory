@@ -732,6 +732,14 @@
     try {
       harvest();
       var html = LPRender.render(TEMPLATE, current, TESTIMONIALS, LOGO_SOURCES);
+      // Preview hygiene: strip third-party trackers. Without this the srcdoc path EXECUTES the
+      // Meta pixel + RB2B loaders (fake PageViews / visitor IDs on every preview), and the
+      // innerHTML live-update path turns the <noscript> pixel <img> into real DOM (a hit per
+      // keystroke, plus the markup leaking visibly at the end of the frame).
+      html = html.replace(/<noscript>[\s\S]*?<\/noscript>/gi, '');
+      html = html.replace(/<script>[\s\S]*?<\/script>/gi, function (blk) {
+        return /connect\.facebook\.net|b2bjsstore/.test(blk) ? '' : blk;
+      });
       // base tag so /public/* resolves against this deployment inside the frame
       html = html.replace('<head>', '<head><base href="/">');
       for (var pf in pendingLogos) {
