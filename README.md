@@ -70,10 +70,30 @@ api/pages.js    builder page list (auth: x-admin-password header)
    ```
 4. Commit. Done.
 
-## Adding a tool logo (manual for now)
+## Adding a tool logo (self-service in the builder)
 
-Drop a transparent PNG (uniform height ~120px, trimmed) into `shared/public/logos/` and
-commit. It appears as a checkbox in the builder after the next deploy.
+Two ways, both in the builder's logo library (left sidebar):
+1. **Upload logo (PNG/WebP)…** — transparent background, under ~150 KB (512 KB hard limit).
+2. **Fetch from logo.dev** — type the company's domain (e.g. `acme.com`) and hit Fetch. The logo
+   is committed to the repo like a manual upload. Fetched logos are tracked in
+   `lib/logo-sources.json`, and any page displaying one automatically gets a small
+   "Logos provided by Logo.dev" line in its footer (free-tier attribution).
+   Prefer this field over downloading files from logo.dev's website — manual downloads bypass
+   the attribution tracking.
+
+Either way the logo previews instantly and goes live with the next deploy (~2 min).
+
+## Adding a face (for ad creatives, self-service)
+
+In the Pages index (`/admin/pages.html`), open **Generate ad creative** on any page. At the top
+of the FACE column: type the person's name, click **+ Add face**, pick a photo.
+- Transparent background required (the face is composited over the card gradient).
+- Keep it color (faces are not B&W, unlike testimonial photos); it's resized to 800px max.
+- The photo renders 720px tall anchored bottom-right — half-body crops facing center-left work best.
+The face is committed to `shared/public/faces/` + `manifest.json` and is selectable immediately
+in your session; everyone else sees it after the next deploy (~2 min). Manual fallback: upload
+the file to `shared/public/faces/` and add `{ "file": "...", "name": "..." }` to `manifest.json`.
+
 
 ## Notes & gotchas
 
