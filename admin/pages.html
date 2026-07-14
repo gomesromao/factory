@@ -55,8 +55,13 @@
   .modal .optlist { max-height:300px; overflow-y:auto; padding-right:4px; scrollbar-width:thin; }
   .modal .face-add { display:flex; gap:6px; margin-bottom:8px; }
   .modal .face-add input[type=text] { flex:1; min-width:0; padding:7px 9px; border:1px solid var(--border); border-radius:8px; font-family:inherit; font-size:13px; }
-  .modal .face-add button { padding:7px 12px; border:1px solid var(--border); background:#fff; border-radius:8px; font-size:12.5px; font-weight:600; cursor:pointer; white-space:nowrap; }
+  .modal .face-add button { padding:7px 12px; border:1px solid var(--border); background:#fff; color:var(--ink); border-radius:8px; font-size:12.5px; font-weight:600; cursor:pointer; white-space:nowrap; }
   .modal .face-add button:hover { border-color:var(--green-dark); }
+  .modal .face-add button:disabled { opacity:.55; cursor:default; }
+  .modal .face-add input.attn { border-color:#c0392b; }
+  .modal .face-add-hint { font-size:11px; color:#888; margin:-2px 0 8px; padding:0 2px; min-height:14px; }
+  .modal .face-add-hint.err { color:#c0392b; }
+  .modal .face-add-hint.ok { color:var(--green-dark); }
   .modal label.opt { display:flex; align-items:center; gap:10px; padding:7px 8px; border:1px solid var(--border); border-radius:8px; margin-bottom:6px; cursor:pointer; font-size:14px; }
   .modal label.opt:hover { border-color:var(--green-dark); }
   .modal label.opt img.lg { height:22px; width:auto; max-width:110px; }
@@ -229,8 +234,9 @@
           '<div class="col"><h4>Face</h4>' +
             '<div class="face-add">' +
               '<input type="text" id="faceName" maxlength="40" placeholder="Name (e.g. Carla)" />' +
-              '<button id="faceUpBtn" title="Transparent-background photo; resized to 800px and committed to the shared face library">+ Add face</button>' +
+              '<button id="faceUpBtn">+ Add face</button>' +
             '</div>' +
+            '<div class="face-add-hint" id="faceAddHint">Type a name, then click <b>+ Add face</b> and pick a transparent-background photo.</div>' +
             '<div class="optlist" id="faceList">' + faceOpts + '</div>' +
           '</div>' +
         '</div>' +
@@ -251,16 +257,30 @@
                '<img class="fc" src="' + (f.dataUrl || '/public/faces/' + esc(f.file)) + '" alt=""/> ' + esc(f.name || f.file) + '</label>';
       }
       bd.querySelector('#faceUpBtn').addEventListener('click', function () {
-        var status = bd.querySelector('#genStatus');
-        var nm = bd.querySelector('#faceName').value.trim();
-        if (!nm) { status.textContent = 'Type the face\u2019s name first.'; return; }
+        var btn = bd.querySelector('#faceUpBtn');
+        var hint = bd.querySelector('#faceAddHint');
+        var nameInput = bd.querySelector('#faceName');
+        function say(cls, msg) { hint.className = 'face-add-hint' + (cls ? ' ' + cls : ''); hint.innerHTML = msg; }
+        function done(cls, msg) { btn.disabled = false; btn.textContent = '+ Add face'; say(cls, msg); }
+        // NOTE: read the password from the session HERE — a bare `pw` in this script block
+        // resolves to the login <input id="pw"> DOM element (ids become window globals),
+        // which serializes to {} and got rejected as bad_password.
+        var adminPw = sessionStorage.getItem('lp_pw') || '';
+        var nm = nameInput.value.trim();
+        if (!nm) {
+          nameInput.classList.add('attn'); nameInput.focus();
+          setTimeout(function () { nameInput.classList.remove('attn'); }, 1600);
+          say('err', 'Name first \u2014 type it here, then click <b>+ Add face</b>.');
+          return;
+        }
         var input = document.createElement('input');
         input.type = 'file'; input.accept = 'image/*'; input.style.display = 'none';
         document.body.appendChild(input);
         input.addEventListener('change', function () {
           var f = input.files[0]; document.body.removeChild(input);
           if (!f) return;
-          status.textContent = 'Processing photo\u2026';
+          btn.disabled = true; btn.textContent = 'Uploading\u2026';
+          say('', 'Processing photo\u2026');
           var img = new Image();
           img.onload = function () {
             var scale = Math.min(1, 800 / Math.max(img.naturalWidth, img.naturalHeight));
@@ -272,26 +292,29 @@
             if (dataUrl.indexOf('data:image/webp') !== 0) dataUrl = c.toDataURL('image/png');
             var ext = dataUrl.indexOf('data:image/webp') === 0 ? 'webp' : 'png';
             var fn = nm.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') + '.' + ext;
-            if (!/^[a-z0-9][a-z0-9-]{0,50}\.(png|webp)$/.test(fn)) { status.textContent = 'Could not derive a filename from that name.'; return; }
-            if (FACES.some(function (x) { return x.file === fn; }) && !confirm('"' + fn + '" already exists in the face library. Replace it?')) return;
-            status.textContent = 'Saving ' + nm + '\u2026';
+            if (!/^[a-z0-9][a-z0-9-]{0,50}\.(png|webp)$/.test(fn)) { done('err', 'Could not derive a filename from that name.'); return; }
+            if (FACES.some(function (x) { return x.file === fn; }) && !confirm('"' + fn + '" already exists in the face library. Replace it?')) { done('', ''); return; }
+            say('', 'Saving ' + nm + '\u2026');
             fetch('/api/face', {
               method: 'POST', headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ password: pw, name: nm, filename: fn, contentBase64: dataUrl.split(',')[1] })
+              body: JSON.stringify({ password: adminPw, name: nm, filename: fn, contentBase64: dataUrl.split(',')[1] })
             }).then(function (r) { return r.json().catch(function () { return { ok: false, error: 'HTTP ' + r.status + ' \u2014 is api/face.js deployed?' }; }); })
               .then(function (resp) {
-                if (!resp.ok) { status.textContent = 'Save failed: ' + (resp.error || 'unknown'); return; }
+                if (!resp.ok) {
+                  var msg = resp.error === 'bad_password' ? 'Session expired \u2014 reload the page and log in again.' : (resp.error || 'unknown');
+                  done('err', 'Save failed: ' + msg); return;
+                }
                 FACES = FACES.filter(function (x) { return x.file !== fn; });
                 FACES.push({ file: fn, name: nm, dataUrl: dataUrl });
                 FACES.sort(function (a, b) { return String(a.name).localeCompare(String(b.name)); });
                 bd.querySelector('#faceList').innerHTML = FACES.map(function (x) { return faceOptHtml(x, x.file === fn); }).join('') +
                   '<label class="opt"><input type="radio" name="genFace" value=""/>No face</label>';
-                bd.querySelector('#faceName').value = '';
-                status.textContent = nm + ' added to the face library (live for everyone after the next deploy, ~2 min).';
+                nameInput.value = '';
+                done('ok', '\u2713 ' + nm + ' added \u2014 selected below. Live for everyone after the next deploy (~2 min).');
               })
-              .catch(function () { status.textContent = 'Network error talking to /api/face.'; });
+              .catch(function () { done('err', 'Network error talking to /api/face.'); });
           };
-          img.onerror = function () { URL.revokeObjectURL(img.src); status.textContent = 'Could not read that image.'; };
+          img.onerror = function () { URL.revokeObjectURL(img.src); done('err', 'Could not read that image \u2014 try a different file.'); };
           img.src = URL.createObjectURL(f);
         });
         input.click();
