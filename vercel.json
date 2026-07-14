@@ -18,7 +18,7 @@
       "includeFiles": "pages/**"
     },
     "api/testimonial.js": {
-      "includeFiles": "pages/**"
+      "includeFiles": "{pages/**,lib/testimonials.json}"
     }
   },
   "rewrites": [
@@ -41,6 +41,25 @@
         }
       ],
       "destination": "/trades-bookkeeper/"
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "get.coconutva.com"
+        }
+      ],
+      "missing": [
+        {
+          "type": "query",
+          "key": "ec_b2b"
+        }
+      ],
+      "destination": "https://www.coconutva.com/",
+      "permanent": false
     }
   ]
 }
