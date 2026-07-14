@@ -68,8 +68,11 @@ for (const f of fs.readdirSync(path.join(ROOT, 'admin'))) {
 }
 
 // 4. root index: plain list of built pages (handy sanity page)
+// RB2B lives here too: their script validator opens the domain ROOT with a query string,
+// so the snippet must exist on /, not only on the per-page LPs.
+const RB2B_SNIPPET = '<script>!function(key) {if (window.reb2b) return;window.reb2b = {loaded: true};var s = document.createElement("script");s.async = true;s.src = "https://b2bjsstore.s3.us-west-2.amazonaws.com/b/" + key + "/" + key + ".js.gz";document.getElementsByTagName("script")[0].parentNode.insertBefore(s, document.getElementsByTagName("script")[0]);}("8XOE9GHK38OM");</script>';
 fs.writeFileSync(path.join(DIST, 'index.html'),
-  '<!DOCTYPE html><meta charset="utf-8"><title>Coconut LP Factory</title>' +
+  '<!DOCTYPE html><meta charset="utf-8"><title>Coconut LP Factory</title>' + RB2B_SNIPPET +
   '<body style="font-family:sans-serif;padding:40px"><h1>Coconut LP Factory</h1><ul>' +
   slugs.map(s => `<li><a href="/${s.slug}/">${s.slug}</a> — ${s.title}${s.subdomain ? ' — ' + s.subdomain : ''}</li>`).join('') +
   '</ul><p><a href="/admin/">Page builder</a></p></body>');
