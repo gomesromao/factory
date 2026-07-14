@@ -1029,6 +1029,22 @@
 </script>
 
 
+<!-- ===================== Google Analytics 4 (deferred, non-blocking) =====================
+     Same GA4 property/stream as the Wix site (coconutva.com): GA4 splits traffic by Hostname,
+     and the cookie lives on .coconutva.com, so site <-> LP journeys count as one session. -->
+<script>
+window.addEventListener('load', function () {
+  var s = document.createElement('script'); s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=G-2ZD4NN6DKG';
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  window.gtag = gtag;
+  gtag('js', new Date());
+  gtag('config', 'G-2ZD4NN6DKG');
+});
+</script>
+
 <!-- ===================== Meta Pixel (deferred, non-blocking) ===================== -->
 <script>
 window.addEventListener('load', function () {
