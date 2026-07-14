@@ -52,6 +52,11 @@
   .modal .cols { display:flex; gap:26px; flex-wrap:wrap; }
   .modal .col { flex:1; min-width:220px; }
   .modal .col h4 { margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:#444; }
+  .modal .optlist { max-height:300px; overflow-y:auto; padding-right:4px; scrollbar-width:thin; }
+  .modal .face-add { display:flex; gap:6px; margin-bottom:8px; }
+  .modal .face-add input[type=text] { flex:1; min-width:0; padding:7px 9px; border:1px solid var(--border); border-radius:8px; font-family:inherit; font-size:13px; }
+  .modal .face-add button { padding:7px 12px; border:1px solid var(--border); background:#fff; border-radius:8px; font-size:12.5px; font-weight:600; cursor:pointer; white-space:nowrap; }
+  .modal .face-add button:hover { border-color:var(--green-dark); }
   .modal label.opt { display:flex; align-items:center; gap:10px; padding:7px 8px; border:1px solid var(--border); border-radius:8px; margin-bottom:6px; cursor:pointer; font-size:14px; }
   .modal label.opt:hover { border-color:var(--green-dark); }
   .modal label.opt img.lg { height:22px; width:auto; max-width:110px; }
@@ -220,8 +225,14 @@
         '<h3>Generate ad creative</h3>' +
         '<p class="hint">1080\u00d71080 PNG for Meta, using this page\u2019s hero copy. Pick a logo, a face, or one of each.</p>' +
         '<div class="cols">' +
-          '<div class="col"><h4>Logo</h4>' + logoOpts + '</div>' +
-          '<div class="col"><h4>Face</h4>' + faceOpts + '</div>' +
+          '<div class="col"><h4>Logo</h4><div class="optlist">' + logoOpts + '</div></div>' +
+          '<div class="col"><h4>Face</h4>' +
+            '<div class="face-add">' +
+              '<input type="text" id="faceName" maxlength="40" placeholder="Name (e.g. Carla)" />' +
+              '<button id="faceUpBtn" title="Transparent-background photo; resized to 800px and committed to the shared face library">+ Add face</button>' +
+            '</div>' +
+            '<div class="optlist" id="faceList">' + faceOpts + '</div>' +
+          '</div>' +
         '</div>' +
         '<h4 style="margin:16px 0 6px">CTA pill</h4>' +
         '<input type="text" id="genCta" maxlength="40" value="' + esc(page.hero && page.hero.accent || '') + '"' +
@@ -233,6 +244,59 @@
       document.body.appendChild(bd);
       bd.addEventListener('click', function (e) { if (e.target === bd) bd.remove(); });
       bd.querySelector('#genCancel').addEventListener('click', function () { bd.remove(); });
+      // ---- add face: process client-side (keep color+alpha, max 800px), commit via /api/face,
+      // ---- refresh the list in place with the new face pre-selected
+      function faceOptHtml(f, checked) {
+        return '<label class="opt"><input type="radio" name="genFace" value="' + esc(f.file) + '"' + (checked ? ' checked' : '') + '/>' +
+               '<img class="fc" src="' + (f.dataUrl || '/public/faces/' + esc(f.file)) + '" alt=""/> ' + esc(f.name || f.file) + '</label>';
+      }
+      bd.querySelector('#faceUpBtn').addEventListener('click', function () {
+        var status = bd.querySelector('#genStatus');
+        var nm = bd.querySelector('#faceName').value.trim();
+        if (!nm) { status.textContent = 'Type the face\u2019s name first.'; return; }
+        var input = document.createElement('input');
+        input.type = 'file'; input.accept = 'image/*'; input.style.display = 'none';
+        document.body.appendChild(input);
+        input.addEventListener('change', function () {
+          var f = input.files[0]; document.body.removeChild(input);
+          if (!f) return;
+          status.textContent = 'Processing photo\u2026';
+          var img = new Image();
+          img.onload = function () {
+            var scale = Math.min(1, 800 / Math.max(img.naturalWidth, img.naturalHeight));
+            var cw = Math.max(1, Math.round(img.naturalWidth * scale)), ch = Math.max(1, Math.round(img.naturalHeight * scale));
+            var c = document.createElement('canvas'); c.width = cw; c.height = ch;
+            c.getContext('2d').drawImage(img, 0, 0, cw, ch);
+            URL.revokeObjectURL(img.src);
+            var dataUrl = c.toDataURL('image/webp', 0.9);
+            if (dataUrl.indexOf('data:image/webp') !== 0) dataUrl = c.toDataURL('image/png');
+            var ext = dataUrl.indexOf('data:image/webp') === 0 ? 'webp' : 'png';
+            var fn = nm.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') + '.' + ext;
+            if (!/^[a-z0-9][a-z0-9-]{0,50}\.(png|webp)$/.test(fn)) { status.textContent = 'Could not derive a filename from that name.'; return; }
+            if (FACES.some(function (x) { return x.file === fn; }) && !confirm('"' + fn + '" already exists in the face library. Replace it?')) return;
+            status.textContent = 'Saving ' + nm + '\u2026';
+            fetch('/api/face', {
+              method: 'POST', headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ password: pw, name: nm, filename: fn, contentBase64: dataUrl.split(',')[1] })
+            }).then(function (r) { return r.json().catch(function () { return { ok: false, error: 'HTTP ' + r.status + ' \u2014 is api/face.js deployed?' }; }); })
+              .then(function (resp) {
+                if (!resp.ok) { status.textContent = 'Save failed: ' + (resp.error || 'unknown'); return; }
+                FACES = FACES.filter(function (x) { return x.file !== fn; });
+                FACES.push({ file: fn, name: nm, dataUrl: dataUrl });
+                FACES.sort(function (a, b) { return String(a.name).localeCompare(String(b.name)); });
+                bd.querySelector('#faceList').innerHTML = FACES.map(function (x) { return faceOptHtml(x, x.file === fn); }).join('') +
+                  '<label class="opt"><input type="radio" name="genFace" value=""/>No face</label>';
+                bd.querySelector('#faceName').value = '';
+                status.textContent = nm + ' added to the face library (live for everyone after the next deploy, ~2 min).';
+              })
+              .catch(function () { status.textContent = 'Network error talking to /api/face.'; });
+          };
+          img.onerror = function () { URL.revokeObjectURL(img.src); status.textContent = 'Could not read that image.'; };
+          img.src = URL.createObjectURL(f);
+        });
+        input.click();
+      });
+
       var ctaInput = bd.querySelector('#genCta'), ctaCount = bd.querySelector('#genCtaCount');
       function syncCtaCount() { ctaCount.textContent = ctaInput.value.length + '/40'; }
       ctaInput.addEventListener('input', syncCtaCount); syncCtaCount();
