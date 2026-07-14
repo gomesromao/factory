@@ -4,326 +4,812 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex,nofollow" />
-<title>Pages index — Coconut LP Factory</title>
-<link rel="icon" href="/public/favicon.png" />
+<title>Coconut LP Factory — Page Builder</title>
 <style>
-  :root { --green:#2E9B58; --green-dark:#0F7B3F; --ink:#111; --border:#e2e2dc; --bg:#FAFAF7; --soft:#EAF7EF; }
-  * { box-sizing:border-box; }
-  body { margin:0; font-family:'Inter Tight','Helvetica Neue',Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); font-size:15px; line-height:1.5; }
-  .wrap { max-width:960px; margin:0 auto; padding:36px 24px 80px; }
-  .brand { display:flex; align-items:center; gap:14px; margin-bottom:6px; }
-  .brand img { height:34px; width:auto; }
-  h1 { font-size:26px; font-weight:800; margin:0; }
-  .sub { color:#555; margin:2px 0 26px; font-size:14px; }
-  .bar { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
-  .bar .count { color:#555; font-size:13px; }
-  button { font:inherit; font-weight:700; border:1px solid var(--ink); background:var(--ink); color:#fff; border-radius:8px; padding:8px 16px; cursor:pointer; }
-  button:hover { opacity:.88; }
-  table { border-collapse:collapse; width:100%; background:#fff; border:1px solid var(--border); border-radius:12px; overflow:hidden; }
-  th, td { border-bottom:1px solid var(--border); padding:12px 14px; text-align:left; vertical-align:top; font-size:14px; }
-  th { background:#f4f4ef; font-size:12px; text-transform:uppercase; letter-spacing:.04em; color:#444; }
-  tr:last-child td { border-bottom:none; }
-  td.pl { font-weight:700; white-space:nowrap; }
-  td.hl { color:#333; }
-  a { color:var(--green-dark); font-weight:700; text-decoration:none; }
-  a:hover { text-decoration:underline; }
-  .login { max-width:340px; margin:110px auto; background:#fff; border:1px solid var(--border); border-radius:14px; padding:28px; }
-  .login h2 { margin:0 0 12px; font-size:18px; }
-  .login input { width:100%; font:inherit; padding:9px 10px; border:1px solid #ccc; border-radius:8px; margin-bottom:10px; }
-  .err { color:#c0392b; font-size:13px; min-height:18px; }
+  :root { --green:#2E9B58; --green-dark:#0F7B3F; --mint:#B8EDC8; --ink:#111; --border:#e2e2dc; --bg:#FAFAF7; }
+  * { box-sizing: border-box; }
+  html, body { height:100%; }
+  body { margin:0; font-family:'Inter Tight','Helvetica Neue',Helvetica,Arial,sans-serif; background:var(--bg); color:var(--ink); font-size:14px; display:flex; flex-direction:column; overflow:hidden; }
+  .topbar { display:flex; align-items:center; gap:16px; padding:12px 20px; background:#fff; border-bottom:1px solid var(--border); flex:0 0 auto; z-index:10; flex-wrap:wrap; }
+  .topbar h1 { font-size:16px; margin:0; font-weight:800; }
+  .topbar .spacer { flex:1; }
+  #app { display:flex; flex-direction:column; flex:1 1 auto; min-height:0; }
+  .layout { display:grid; grid-template-columns: 460px 1fr; grid-template-rows: minmax(0, 1fr); flex:1 1 auto; min-height:0; }
+  .editor { overflow-y:auto; min-height:0; padding:16px 20px 80px; background:#fff; border-right:1px solid var(--border); }
+  .preview-pane { display:flex; flex-direction:column; min-height:0; }
+  .preview-bar { padding:8px 16px; font-size:12px; color:#666; background:#f2f2ee; border-bottom:1px solid var(--border); display:flex; gap:12px; align-items:center; }
+  iframe { flex:1; width:100%; border:0; background:#fff; }
+  .preview-pane.mobile { background:#e9e9e3; }
+  .preview-pane.mobile iframe { width:390px; align-self:center; box-shadow:0 0 0 1px var(--border), 0 8px 30px rgba(0,0,0,.10); }
+  .pv-toggle { margin-left:auto; background:none; border:1px solid transparent; border-radius:6px; padding:2px 7px;
+    font-size:14px; cursor:pointer; opacity:.45; line-height:1; }
+  .pv-toggle:hover { opacity:1; border-color:var(--border); }
+  .pv-toggle.on { opacity:1; border-color:var(--green-dark); }
+  fieldset { border:1px solid var(--border); border-radius:10px; margin:0 0 16px; padding:12px 14px; }
+  legend { font-weight:800; font-size:13px; padding:0 6px; }
+  label { display:block; font-size:12px; font-weight:600; margin:10px 0 4px; color:#333; }
+  input[type=text], textarea, select { width:100%; padding:8px 10px; border:1px solid var(--border); border-radius:8px; font-family:inherit; font-size:13px; }
+  textarea { resize:vertical; }
+  .hintline { font-size:11px; color:#888; margin-top:3px; }
+  button { font-family:inherit; cursor:pointer; border-radius:8px; border:1px solid var(--border); background:#fff; padding:8px 14px; font-weight:600; font-size:13px; }
+  button.primary { background:var(--ink); color:#fff; border-color:var(--ink); }
+  button.primary:disabled { opacity:.5; cursor:not-allowed; }
+  button.small { padding:4px 9px; font-size:12px; }
+  .row-item { display:flex; gap:6px; align-items:flex-start; margin-bottom:6px; }
+  .row-item textarea, .row-item input { flex:1; }
+  .logo-grid { display:flex; flex-wrap:wrap; gap:6px; }
+  .logo-grid label { display:inline-flex; align-items:center; gap:6px; border:1px solid var(--border); border-radius:8px; padding:6px 10px; margin:0; cursor:pointer; font-weight:500; background:#fff; }
+  .logo-grid label.on { border-color:var(--green); background:#EAF7EF; }
+  .logo-grid img { height:20px; width:auto; max-width:70px; object-fit:contain; }
+  .tst-list { display:flex; flex-direction:column; gap:6px; }
+  .tst-chip { display:flex; align-items:center; gap:8px; border:1px solid var(--green); background:#EAF7EF; border-radius:8px; padding:6px 8px; }
+  .tst-chip img { width:28px; height:28px; border-radius:50%; object-fit:cover; filter:grayscale(1); }
+  .tst-chip .tst-name { font-weight:700; font-size:13px; }
+  .tst-chip .tst-co { color:#555; font-size:12px; }
+  .tst-chip .grow { flex:1; }
+  .tst-chip button { border:none; background:transparent; cursor:pointer; font-size:13px; padding:2px 4px; line-height:1; color:#333; }
+  .tst-chip button:hover { color:#000; }
+  .tst-chip button.tst-x { color:#b55; font-weight:800; }
+  .tst-add-row { display:flex; gap:6px; margin-top:8px; }
+  .tst-add-row select { flex:1; font:inherit; padding:6px; border:1px solid #ccc; border-radius:8px; }
+  .tst-count { font-size:11px; margin-top:6px; }
+  .tst-count.bad { color:#c0392b; font-weight:700; }
+  .tst-count.good { color:#666; }
+  .tst-new { border:1px dashed var(--border); border-radius:10px; padding:10px; margin-top:10px; background:#fcfcf9; }
+  .tst-new label { font-size:12px; font-weight:700; display:block; margin:8px 0 2px; }
+  .tst-new input[type=text], .tst-new textarea { width:100%; font:inherit; padding:6px 8px; border:1px solid #ccc; border-radius:8px; }
+  .tst-new .hint { font-size:11px; color:#888; margin-top:2px; }
+  .logo-grid .logo-del { border:none; background:transparent; color:#b55; font-weight:800; font-size:12px; padding:0 2px; cursor:pointer; line-height:1; }
+  .logo-grid .logo-del:hover { color:#c0392b; }
+  .logo-upload-hint { font-size:11px; color:#888; margin-top:6px; }
+  .status { font-size:12px; padding:8px 12px; border-radius:8px; margin:10px 0; display:none;
+    position:sticky; top:0; z-index:15; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+  .status.ok { display:block; background:#EAF7EF; color:var(--green-dark); }
+  .status.err { display:block; background:#fdecea; color:#c0392b; }
+  .login { max-width:340px; margin:120px auto; background:#fff; border:1px solid var(--border); border-radius:14px; padding:28px; overflow:auto; }
+  .login h2 { margin:0 0 14px; }
   .hidden { display:none !important; }
-  .backlink { font-size:13px; margin-bottom:22px; display:inline-block; }
-
-  /* --- Ad creative generator (added; does not affect existing styles) --- */
-  @font-face {
-    font-family: 'Inter Tight';
-    font-style: normal;
-    font-weight: 100 900;
-    font-display: swap;
-    src: url('/public/fonts/inter-tight-roman-latin.woff2') format('woff2-variations'),
-         url('/public/fonts/inter-tight-roman-latin.woff2') format('woff2');
-  }
-  .genBtn { background:none; border:none; color:#9aa; padding:2px 6px; font-size:16px; cursor:pointer; line-height:1; }
-  .genBtn:hover { color:var(--green-dark); opacity:1; }
-  .modal-backdrop { position:fixed; inset:0; background:rgba(11,30,63,.45); z-index:50; display:flex; align-items:center; justify-content:center; padding:20px; }
-  .modal { background:#fff; border-radius:14px; max-width:680px; width:100%; max-height:92vh; overflow:auto; padding:24px 26px; }
-  .modal h3 { margin:0 0 4px; font-size:18px; }
-  .modal .hint { color:#555; font-size:13px; margin:0 0 18px; }
-  .modal .cols { display:flex; gap:26px; flex-wrap:wrap; }
-  .modal .col { flex:1; min-width:220px; }
-  .modal .col h4 { margin:0 0 8px; font-size:12px; text-transform:uppercase; letter-spacing:.05em; color:#444; }
-  .modal label.opt { display:flex; align-items:center; gap:10px; padding:7px 8px; border:1px solid var(--border); border-radius:8px; margin-bottom:6px; cursor:pointer; font-size:14px; }
-  .modal label.opt:hover { border-color:var(--green-dark); }
-  .modal label.opt img.lg { height:22px; width:auto; max-width:110px; }
-  .modal label.opt img.fc { height:42px; width:42px; object-fit:cover; object-position:top; border-radius:50%; background:var(--soft); }
-  .modal .actions { display:flex; gap:10px; align-items:center; margin-top:18px; }
-  .modal .cancel { background:#fff; color:var(--ink); }
-  .modal .status { font-size:13px; color:#555; }
-  .modal .preview { margin-top:16px; }
-  .modal .preview img { width:100%; border-radius:10px; border:1px solid var(--border); }
-
-  /* creative template (true 1080x1080, rendered off-screen for capture) */
-  #genStaging { position:fixed; left:-3000px; top:0; }
-  .adc { width:1080px; height:1080px; background:linear-gradient(115deg, #DCEEFF 0%, #E5F5EA 60%, #C9F0D6 100%);
-    display:flex; flex-direction:column; justify-content:flex-start; padding:80px; position:relative; overflow:hidden;
-    font-family:'Inter Tight','Helvetica Neue',Helvetica,Arial,sans-serif; }
-  .adc .brand { width:330px; height:auto; display:block; position:relative; z-index:2; }
-  .adc .copy { display:flex; flex-direction:column; gap:0; margin-top:96px; position:relative; z-index:2; }
-  .adc .offer { margin-top:44px; }
-  .adc .headline + .offer { margin-top:44px; }
-  .adc .eyebrow { position:absolute; top:86px; left:600px; width:400px; z-index:2; text-align:right;
-    font-size:26px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--green-dark); line-height:1.35; }
-  .adc .headline { margin:0; color:#0B1E3F; font-weight:900; line-height:1.06; letter-spacing:-0.015em; font-size:88px; }
-  .adc .offer { align-self:flex-start; background:var(--green-dark); color:#fff; font-weight:800; font-size:38px; padding:16px 36px; border-radius:999px; }
-  .adc .proof { display:flex; flex-wrap:wrap; align-items:center; font-size:27px; font-weight:600; color:#3d5570; margin-top:36px; }
-  .adc .proof > span { margin:6px 44px 0 0; white-space:nowrap; }
-  .adc .proof .stars { color:#F5A623; font-size:30px; letter-spacing:3px; margin-right:10px; }
-  .adc .toolrow { position:relative; z-index:2; margin-top:52px; }
-  .adc .toolrow img { display:block; width:auto; height:auto; }
-  .adc .face { position:absolute; right:0; bottom:0; z-index:1; height:720px; width:auto; }
-  .adc.has-face .copy { padding-right:380px; }
-  .adc.has-face .headline { font-size:72px; }
-  .adc.has-face.no-logo .face { height:780px; }
+  .wyg-item, .faq-item { border:1px dashed var(--border); border-radius:8px; padding:8px; margin-bottom:8px; }
+  .pill-row { display:flex; gap:8px; align-items:center; }
+  .featured-toggle { display:flex; align-items:center; gap:5px; font-size:11px; white-space:nowrap; }
 </style>
 </head>
 <body>
-  <div class="login hidden" id="login">
-    <h2>🥥 Pages index</h2>
-    <input type="password" id="pw" placeholder="Admin password" />
-    <button id="loginBtn" style="width:100%">Enter</button>
-    <div class="err" id="loginErr"></div>
-  </div>
 
-  <div class="wrap hidden" id="app">
-    <a class="backlink" href="/admin/">← Back to the builder</a>
-    <div class="brand">
-      <img src="/public/coconut-logo.png" alt="Coconut" />
-      <h1>Pages index</h1>
-    </div>
-    <p class="sub">Every published landing page in the factory — title, hero headline, and live link.</p>
-    <div class="bar">
-      <button id="csvBtn">Download CSV</button>
-      <span class="count" id="count"></span>
-    </div>
-    <table>
-      <thead><tr><th>Page</th><th>Headline</th><th>Link</th><th></th></tr></thead>
-      <tbody id="rows"></tbody>
-    </table>
-  </div>
+<div class="login" id="login">
+  <h2>LP Factory</h2>
+  <label>Admin password</label>
+  <input type="password" id="pw" autocomplete="current-password" />
+  <div class="status" id="loginErr"></div>
+  <div style="margin-top:12px"><button class="primary" id="loginBtn">Enter</button></div>
+</div>
 
+<div id="app" class="hidden">
+  <div class="topbar">
+    <h1>🥥 LP Factory</h1>
+    <select id="pageSelect" style="width:260px"></select>
+    <button id="dupBtn">Duplicate as new page…</button>
+    <button id="importBtn">Import JSON…</button>
+    <button id="exportBtn">Download JSON</button>
+    <input type="file" id="importFile" accept=".json,application/json" style="display:none" />
+    <span class="spacer"></span>
+    <a id="viewPageLink" href="#" target="_blank" style="color:#0F7B3F;font-weight:700;text-decoration:none;font-size:13px;margin-right:6px">View page ↗</a>
+    <a href="/admin/pages.html" target="_blank" style="color:#0F7B3F;font-weight:700;text-decoration:none;font-size:13px;margin-right:6px">Page index ↗</a>
+    <a href="/admin/guide.html" target="_blank" style="color:#0F7B3F;font-weight:700;text-decoration:none;font-size:13px;margin-right:6px">How to use ↗</a>
+    <span id="deployNote" style="font-size:12px;color:#888"></span>
+    <button class="primary" id="publishBtn">Publish</button>
+  </div>
+  <div class="layout">
+    <div class="editor" id="editor">
+      <div class="status" id="status"></div>
+
+      <fieldset><legend>Page identity</legend>
+        <label>Slug (URL path + variant + config filename)</label>
+        <input type="text" id="f_slug" placeholder="trades-dispatcher" />
+        <div class="hintline">lowercase-with-dashes. Page URL becomes /&lt;slug&gt;/. Locked after first publish.</div>
+        <label>Ads name (Coconut OS contacts.ads_name + Meta content_name)</label>
+        <input type="text" id="f_adsName" placeholder="Dispatcher" />
+        <label>Page label (Slack headers: "New lead — &lt;label&gt;")</label>
+        <input type="text" id="f_pageLabel" placeholder="Trades Dispatcher" />
+        <label>Subdomain (optional — Daniel wires it after publish)</label>
+        <input type="text" id="f_subdomain" placeholder="dispatch.coconutva.com" />
+      </fieldset>
+
+      <fieldset><legend>Meta / SEO</legend>
+        <label>Title tag</label><input type="text" id="f_title" />
+        <label>Meta description</label><textarea id="f_desc" rows="2"></textarea>
+        <label>OG/Twitter description</label><textarea id="f_ogdesc" rows="2"></textarea>
+      </fieldset>
+
+      <fieldset><legend>Hero</legend>
+        <label>Eyebrow</label><input type="text" id="f_eyebrow" />
+        <label>Headline (use &lt;br&gt; for the line break)</label><textarea id="f_h1" rows="2"></textarea>
+        <label>Accent line</label><input type="text" id="f_accent" />
+        <label>Lead paragraph (HTML allowed: &lt;strong&gt;)</label><textarea id="f_lead" rows="4"></textarea>
+      </fieldset>
+
+      <fieldset><legend>Form — step 1</legend>
+        <label>Button text</label><input type="text" id="f_step1btn" />
+      </fieldset>
+
+      <fieldset><legend>Form — step 2</legend>
+        <label>Subtitle</label><textarea id="f_step2sub" rows="2"></textarea>
+        <label>Dropdown label</label><input type="text" id="f_needLabel" />
+        <label>Dropdown options (one per line — must match what leads pick; feeds the CRM)</label>
+        <textarea id="f_needOptions" rows="7"></textarea>
+      </fieldset>
+
+      <fieldset><legend>Form — step 2: hours dropdown (optional)</legend>
+        <div class="hintline" style="margin-bottom:6px">Leave empty to skip this field (like Office Admin). If filled, the answer shows in Slack as "Hours needed".</div>
+        <label>Label</label><input type="text" id="f_hoursLabel" placeholder="How much help do you need?" />
+        <label>Options (one per line)</label><textarea id="f_hoursOptions" rows="4"></textarea>
+      </fieldset>
+
+      <fieldset><legend>Form — success</legend>
+        <label>Success text</label><textarea id="f_successText" rows="2"></textarea>
+        <label>"Browse example profiles" URL</label><input type="text" id="f_browseUrl" />
+      </fieldset>
+
+      <fieldset><legend>Testimonials</legend>
+        <div class="hint" style="font-size:11px;color:#888;margin-bottom:8px">This page shows 4&ndash;10 testimonials from the shared library, in this order. &uarr;&darr; reorder &middot; &#10005; removes from THIS page only.</div>
+        <div class="tst-list" id="tstList"></div>
+        <div class="tst-count" id="tstCount"></div>
+        <div class="tst-add-row">
+          <select id="tstAddSel"></select>
+          <button class="small" id="tstAddBtn">Add to page</button>
+        </div>
+        <div style="margin-top:8px"><button class="small" id="tstNewBtn">+ New testimonial&hellip;</button></div>
+        <div class="tst-new" id="tstNew" style="display:none">
+          <label>Person's name (also the library ID)</label>
+          <input type="text" id="tn_name" placeholder="Jane Cooper" />
+          <label>Quote</label>
+          <textarea id="tn_text" rows="3" placeholder="Coconut VA sent me a list of qualified people to interview&hellip;"></textarea>
+          <label>Role</label>
+          <input type="text" id="tn_role" placeholder="Owner" />
+          <label>Company</label>
+          <input type="text" id="tn_company" placeholder="Kascadia" />
+          <label>Photo of the person</label>
+          <input type="file" id="tn_photo" accept="image/*" />
+          <div class="hint">Any image works &mdash; it's converted to black &amp; white and resized (~400px) automatically, matching the house style.</div>
+          <label>Company logo</label>
+          <input type="file" id="tn_logo" accept="image/*" />
+          <div class="hint">Transparent PNG/WebP preferred; auto-resized. Stays in color (that's the card design).</div>
+          <div style="margin-top:10px; display:flex; gap:6px">
+            <button class="small" id="tn_save">Save to library &amp; add to page</button>
+            <button class="small" id="tn_cancel" type="button">Cancel</button>
+          </div>
+        </div>
+      </fieldset>
+      <fieldset><legend>Roles we fill (one per line)</legend>
+        <textarea id="f_roles" rows="6"></textarea>
+      </fieldset>
+
+      <fieldset><legend>Works in your stack</legend>
+        <div class="hintline" style="margin-bottom:8px">Pick from the logo library. New logo? Upload the file below, or type the company's domain to fetch it from logo.dev.</div>
+        <div class="logo-grid" id="logoGrid"></div>
+        <div style="margin-top:10px">
+          <button class="small" id="logoUploadBtn">Upload logo (PNG/WebP)…</button>
+          <input type="file" id="logoFile" accept=".png,.webp,image/png,image/webp" style="display:none" />
+          <span style="font-size:11px; color:#888; margin:0 4px;">or</span>
+          <input type="text" id="logoDevDomain" placeholder="fetch from logo.dev — acme.com"
+            style="width:200px; padding:5px 8px; border:1px solid #ddd; border-radius:6px; font-size:11.5px; font-family:inherit;" />
+          <button class="small" id="logoDevBtn">Fetch</button>
+          <div class="logo-upload-hint">Transparent background, trimmed. Wide wordmarks and square icons both work — aim for a file under ~150&nbsp;KB (512&nbsp;KB hard limit). It appears in the preview instantly and goes live with the next deploy (~2&nbsp;min).</div>
+        </div>
+      </fieldset>
+
+      <fieldset><legend>What You Get</legend>
+        <div id="wygList"></div>
+        <button class="small" id="addWyg">+ Add row</button>
+      </fieldset>
+
+      <fieldset><legend>CTA banner</legend>
+        <label>Heading</label><input type="text" id="f_ctaH" />
+        <label>Subtext</label><input type="text" id="f_ctaP" />
+      </fieldset>
+
+      <fieldset><legend>FAQ</legend>
+        <div id="faqList"></div>
+        <button class="small" id="addFaq">+ Add question</button>
+      </fieldset>
+
+      <fieldset><legend>Links</legend>
+        <label>Calendly URL (FAQ footer)</label><input type="text" id="f_calendly" />
+        <label>Redirect URL (success button)</label><input type="text" id="f_redirect" />
+      </fieldset>
+    </div>
+
+    <div class="preview-pane">
+      <div class="preview-bar">
+        <strong>Live preview</strong>
+        <span>updates as you type — exact same renderer as the deployed pages</span>
+        <button type="button" id="pvMobile" class="pv-toggle" title="Toggle mobile preview (390px)">&#128241;</button>
+      </div>
+      <iframe id="preview" sandbox="allow-same-origin"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>/*__RENDER_JS__*/</script>
 <script>
 (function () {
-  'use strict';
-  function $(id) { return document.getElementById(id); }
+  var TEMPLATE = "__TEMPLATE__";
+  var TESTIMONIALS = "__TESTIMONIALS__";
+  var LOGOS = "__LOGOS__";
+  var LOGO_SOURCES = "__LOGO_SOURCES__"; // filename -> 'logo.dev' (provenance for footer attribution)
+  if (typeof LOGO_SOURCES === 'string') LOGO_SOURCES = {}; // pre-injection fallback
+
+  var pages = [];       // all configs from /api/pages
+  var current = null;   // working copy
+  var isNew = false;
   var pw = sessionStorage.getItem('lp_pw') || '';
-  var pages = [], BASE_URL = '';
+  var BASE_URL = '';
 
-  function stripHtml(s) {
-    var d = document.createElement('div');
-    d.innerHTML = String(s || '').replace(/<br\s*\/?>/gi, ' ');
-    return (d.textContent || '').replace(/\s+/g, ' ').trim();
-  }
-  function pageUrl(slug) { return (BASE_URL || location.origin) + '/' + slug + '/'; }
+  var $ = function (id) { return document.getElementById(id); };
 
-  function fetchPages(p) {
+  /* ---------- auth ---------- */
+  function tryLogin(p) {
     return fetch('/api/pages', { headers: { 'x-admin-password': p } })
-      .then(function (r) { if (!r.ok) throw new Error('auth'); return r.json(); });
-  }
-
-  function render() {
-    var tb = $('rows');
-    tb.innerHTML = pages.map(function (p) {
-      var url = pageUrl(p.slug);
-      return '<tr><td class="pl">' + esc(p.pageLabel || p.slug) + '</td>' +
-             '<td class="hl">' + esc(stripHtml(p.hero && p.hero.h1)) + '</td>' +
-             '<td><a href="' + url + '" target="_blank">' + esc(url.replace(/^https?:\/\//, '')) + '</a></td>' +
-             '<td><button class="genBtn" data-slug="' + esc(p.slug) + '" title="Generate ad creative">&#128444;</button></td></tr>';
-    }).join('');
-    $('count').textContent = pages.length + ' page' + (pages.length === 1 ? '' : 's');
-  }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-
-  $('csvBtn').addEventListener('click', function () {
-    var q = function (v) { return '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"'; };
-    var lines = ['slug,page_label,headline,url'];
-    pages.forEach(function (p) {
-      lines.push([q(p.slug), q(p.pageLabel || ''), q(stripHtml(p.hero && p.hero.h1)), q(pageUrl(p.slug))].join(','));
-    });
-    var blob = new Blob(['\uFEFF' + lines.join('\r\n') + '\r\n'], { type: 'text/csv;charset=utf-8' });
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'coconut-pages.csv';
-    document.body.appendChild(a); a.click(); a.remove();
-    URL.revokeObjectURL(a.href);
-  });
-
-  function boot(d) {
-    pages = d.pages || []; BASE_URL = d.baseUrl || '';
-    window.__lpPages = pages;
-    $('login').className = 'login hidden';
-    $('app').className = 'wrap';
-    render();
+      .then(function (r) { if (!r.ok) throw new Error('auth'); return r.json(); })
+      .then(function (d) { BASE_URL = d.baseUrl || ''; return d; });
   }
   $('loginBtn').addEventListener('click', function () {
     var p = $('pw').value;
-    fetchPages(p).then(function (d) {
+    tryLogin(p).then(function (data) {
       pw = p; sessionStorage.setItem('lp_pw', p);
-      boot(d);
-    }).catch(function () { $('loginErr').textContent = 'Wrong password.'; });
+      boot(data.pages);
+    }).catch(function () { var e = $('loginErr'); e.textContent = 'Wrong password.'; e.className = 'status err'; });
   });
   $('pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('loginBtn').click(); });
+  if (pw) tryLogin(pw).then(function (d) { boot(d.pages); }).catch(function () { sessionStorage.removeItem('lp_pw'); });
 
-  if (pw) {
-    fetchPages(pw).then(boot).catch(function () {
-      sessionStorage.removeItem('lp_pw');
-      $('login').className = 'login';
+  function boot(list) {
+    pages = list;
+    $('login').classList.add('hidden');
+    $('app').classList.remove('hidden');
+    var sel = $('pageSelect');
+    sel.innerHTML = pages.map(function (p) { return '<option value="' + p.slug + '">' + p.slug + '</option>'; }).join('');
+    sel.addEventListener('change', function () { load(sel.value); });
+    load(pages[0].slug);
+  }
+
+  /* ---------- load / duplicate ---------- */
+  function updateViewLink() {
+    var l = $('viewPageLink');
+    if (!current) { l.style.display = 'none'; return; }
+    l.style.display = '';
+    if (isNew) {
+      l.style.opacity = '.4'; l.style.pointerEvents = 'none';
+      l.title = 'Not published yet \u2014 Publish first, then the live link activates here.';
+      l.removeAttribute('href');
+    } else {
+      l.style.opacity = '1'; l.style.pointerEvents = 'auto';
+      l.title = 'Open the live page in a new tab';
+      l.href = (BASE_URL || location.origin) + '/' + current.slug + '/';
+    }
+  }
+  function load(slug) {
+    var src = pages.find(function (p) { return p.slug === slug; });
+    current = JSON.parse(JSON.stringify(src));
+    isNew = false;
+    resetPreviewScroll();
+    $('f_slug').disabled = true;
+    fillForm();
+    renderPreview();
+    updateViewLink();
+  }
+  $('dupBtn').addEventListener('click', function () {
+    var name = prompt('New page slug (lowercase-with-dashes, e.g. trades-dispatcher):');
+    if (!name) return;
+    name = name.trim().toLowerCase();
+    if (!/^[a-z0-9-]{3,60}$/.test(name)) return alert('Invalid slug.');
+    if (pages.some(function (p) { return p.slug === name; })) return alert('That slug already exists.');
+    current = JSON.parse(JSON.stringify(current));
+    current.slug = name; current.variant = name; current.subdomain = '';
+    isNew = true;
+    setTimeout(updateViewLink, 0);
+    $('f_slug').disabled = false;
+    fillForm();
+    setStatus('ok', 'Duplicated. Edit the copy, then Publish to create pages/' + name + '.json.');
+    renderPreview();
+  });
+
+  /* ---------- import JSON (Tyler's Claude workflow) ---------- */
+  var REQUIRED_PATHS = ['slug','adsName','pageLabel','meta.title','meta.description','meta.ogDescription',
+    'hero.eyebrow','hero.h1','hero.accent','hero.lead','form.step1Button','form.step2Sub','form.needLabel',
+    'form.needOptions','form.successText','form.browseUrl','roles','tools.items','wyg',
+    'ctaBanner.heading','ctaBanner.sub','faq','testimonialOrder','calendlyUrl','redirectUrl'];
+  function getPath(o, p) { return p.split('.').reduce(function (acc, k) { return acc == null ? acc : acc[k]; }, o); }
+  $('importBtn').addEventListener('click', function () { $('importFile').click(); });
+  $('importFile').addEventListener('change', function (e) {
+    var f = e.target.files[0]; e.target.value = '';
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      var cfg;
+      try { cfg = JSON.parse(r.result); } catch (err) { return setStatus('err', 'Import failed — not valid JSON: ' + err.message); }
+      var missing = REQUIRED_PATHS.filter(function (p) {
+        var v = getPath(cfg, p);
+        return v === undefined || v === null || v === '' || (Array.isArray(v) && !v.length);
+      });
+      if (missing.length) return setStatus('err', 'Import failed — missing or empty: ' + missing.join(', '));
+      if (!/^[a-z0-9-]{3,60}$/.test(cfg.slug)) return setStatus('err', 'Import failed — bad slug: "' + cfg.slug + '" (lowercase-with-dashes)');
+      cfg.variant = cfg.slug;
+      cfg.subdomain = cfg.subdomain || '';
+      // sizing defaults so a copy-only JSON from Claude renders without the numeric knobs
+      cfg.tools.chipHeight = cfg.tools.chipHeight || 80;
+      cfg.tools.imgHeight = cfg.tools.imgHeight || 80;
+      cfg.tools.imgMaxWidth = cfg.tools.imgMaxWidth || 130;
+      cfg.tools.wrapMaxWidth = cfg.tools.wrapMaxWidth || 760;
+      var exists = pages.some(function (p) { return p.slug === cfg.slug; });
+      current = cfg; isNew = !exists;
+      resetPreviewScroll();
+      updateViewLink();
+      $('f_slug').disabled = exists;
+      try { fillForm(); renderPreview(); } catch (err) { return setStatus('err', 'Import failed — ' + err.message); }
+      setStatus('ok', exists
+        ? 'Imported over existing "' + cfg.slug + '". Review the preview, then Publish to update the live page.'
+        : 'Imported as NEW page "' + cfg.slug + '". Review the preview, then Publish to create it.');
+    };
+    r.readAsText(f);
+  });
+
+  /* ---------- export JSON (feeds Tyler's Claude workflow) ---------- */
+  $('exportBtn').addEventListener('click', function () {
+    harvest(); // export what's on screen, including unsaved edits
+    var blob = new Blob([JSON.stringify(current, null, 2) + '\n'], { type: 'application/json' });
+    var aEl = document.createElement('a');
+    aEl.href = URL.createObjectURL(blob);
+    aEl.download = current.slug + '.json';
+    document.body.appendChild(aEl); aEl.click(); aEl.remove();
+    URL.revokeObjectURL(aEl.href);
+    setStatus('ok', 'Downloaded ' + current.slug + '.json — attach it to your Claude Project, iterate the copy there, then bring the result back via Import JSON.');
+  });
+
+  /* ---------- form <-> config ---------- */
+  function fillForm() {
+    $('f_slug').value = current.slug;
+    $('f_adsName').value = current.adsName;
+    $('f_pageLabel').value = current.pageLabel;
+    $('f_subdomain').value = current.subdomain || '';
+    $('f_title').value = current.meta.title;
+    $('f_desc').value = current.meta.description;
+    $('f_ogdesc').value = current.meta.ogDescription;
+    $('f_eyebrow').value = current.hero.eyebrow;
+    $('f_h1').value = current.hero.h1;
+    $('f_accent').value = current.hero.accent;
+    $('f_lead').value = current.hero.lead;
+    $('f_step1btn').value = current.form.step1Button;
+    $('f_step2sub').value = current.form.step2Sub;
+    $('f_needLabel').value = current.form.needLabel;
+    $('f_needOptions').value = current.form.needOptions.join('\n');
+    $('f_hoursLabel').value = (current.form.hours && current.form.hours.label) || '';
+    $('f_hoursOptions').value = (current.form.hours && current.form.hours.options || []).join('\n');
+    $('f_successText').value = current.form.successText;
+    $('f_browseUrl').value = current.form.browseUrl;
+    $('f_roles').value = current.roles.join('\n');
+    $('f_ctaH').value = current.ctaBanner.heading;
+    $('f_ctaP').value = current.ctaBanner.sub;
+    $('f_calendly').value = current.calendlyUrl;
+    $('f_redirect').value = current.redirectUrl;
+    buildLogoGrid();
+    renderTestimonials();
+    buildWyg();
+    buildFaq();
+  }
+
+  function harvest() {
+    current.slug = $('f_slug').value.trim();
+    current.variant = current.slug;
+    current.adsName = $('f_adsName').value.trim();
+    current.pageLabel = $('f_pageLabel').value.trim();
+    current.subdomain = $('f_subdomain').value.trim();
+    current.meta.title = $('f_title').value;
+    current.meta.description = $('f_desc').value;
+    current.meta.ogDescription = $('f_ogdesc').value;
+    current.hero.eyebrow = $('f_eyebrow').value;
+    current.hero.h1 = $('f_h1').value;
+    current.hero.accent = $('f_accent').value;
+    current.hero.lead = $('f_lead').value;
+    current.form.step1Button = $('f_step1btn').value;
+    current.form.step2Sub = $('f_step2sub').value;
+    current.form.needLabel = $('f_needLabel').value;
+    current.form.needOptions = lines($('f_needOptions').value);
+    var hl = $('f_hoursLabel').value.trim(), ho = lines($('f_hoursOptions').value);
+    if (hl && ho.length) current.form.hours = { label: hl, options: ho }; else delete current.form.hours;
+    current.form.successText = $('f_successText').value;
+    current.form.browseUrl = $('f_browseUrl').value.trim();
+    current.roles = lines($('f_roles').value);
+    current.ctaBanner.heading = $('f_ctaH').value;
+    current.ctaBanner.sub = $('f_ctaP').value;
+    current.calendlyUrl = $('f_calendly').value.trim();
+    current.redirectUrl = $('f_redirect').value.trim();
+    // tools from grid
+    var checked = Array.prototype.slice.call(document.querySelectorAll('#logoGrid input:checked'))
+      .map(function (cb) { return { file: cb.value, alt: cb.dataset.alt }; });
+    var prevOrder = current.tools.items.map(function (t) { return t.file; });
+    checked.sort(function (x, y) {
+      var ix = prevOrder.indexOf(x.file), iy = prevOrder.indexOf(y.file);
+      if (ix === -1 && iy === -1) return 0;   // both newly added: keep grid order
+      if (ix === -1) return 1;                // new logos go after existing ones
+      if (iy === -1) return -1;
+      return ix - iy;                         // existing logos keep the page's original order
     });
-  } else {
-    $('login').className = 'login';
+    current.tools.items = checked;
+    // wyg + faq harvested live by their own handlers (arrays mutated in place)
+  }
+  function lines(v) { return v.split('\n').map(function (s) { return s.trim(); }).filter(Boolean); }
+
+  /* ---------- tools grid ---------- */
+  var ALT_NAMES = { 'servicetitan.png':'ServiceTitan','jobber.png':'Jobber','housecallpro.png':'Housecall Pro','buildertrend.png':'Buildertrend','companycam.png':'CompanyCam','quickbooks.png':'QuickBooks','xero.png':'Xero','billcom.png':'Bill.com' };
+  var pendingLogos = {};   // filename -> dataURL, for logos committed but not yet deployed
+  function prettyAlt(file) {
+    var base = file.replace(/\.(png|webp)$/, '');
+    return ALT_NAMES[file] || base.replace(/[-_]/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+  }
+  function logoSrc(file) { return pendingLogos[file] || ('/public/logos/' + file); }
+  function buildLogoGrid() {
+    var g = $('logoGrid'); g.innerHTML = '';
+    LOGOS.forEach(function (file) {
+      var alt = prettyAlt(file);
+      var on = current.tools.items.some(function (t) { return t.file === file; });
+      var l = document.createElement('label');
+      l.className = on ? 'on' : '';
+      l.innerHTML = '<input type="checkbox" value="' + file + '" data-alt="' + alt + '"' + (on ? ' checked' : '') + ' style="display:none">' +
+                    '<img src="' + logoSrc(file) + '" alt=""><span>' + alt + '</span>' +
+                    '<button type="button" class="logo-del" title="Delete from library">✕</button>';
+      l.querySelector('input').addEventListener('change', function (e) {
+        l.className = e.target.checked ? 'on' : '';
+        onChange();
+      });
+      l.querySelector('.logo-del').addEventListener('click', function (ev) {
+        ev.preventDefault(); ev.stopPropagation();
+        deleteLogo(file);
+      });
+      g.appendChild(l);
+    });
+  }
+
+  /* ---------- testimonials manager ---------- */
+  var pendingTst = {}; // filename -> dataURL until the deploy serves it
+  function tstSrc(f) { return pendingTst[f] || ('/public/testimonials/' + f); }
+  function tstCompany(name) { var e = TESTIMONIALS[name]; return (e && e.logoAlt) || ''; }
+  function renderTestimonials() {
+    var order = current.testimonialOrder || [];
+    var list = $('tstList');
+    list.innerHTML = order.map(function (n, i) {
+      var e = TESTIMONIALS[n] || {};
+      return '<div class="tst-chip">' +
+        (e.photoFile ? '<img src="' + tstSrc(e.photoFile) + '" alt="">' : '') +
+        '<span class="tst-name">' + n + '</span><span class="tst-co">' + tstCompany(n) + '</span><span class="grow"></span>' +
+        '<button type="button" data-i="' + i + '" data-act="up" title="Move up">&uarr;</button>' +
+        '<button type="button" data-i="' + i + '" data-act="down" title="Move down">&darr;</button>' +
+        '<button type="button" class="tst-x" data-i="' + i + '" data-act="rm" title="Remove from this page">&#10005;</button></div>';
+    }).join('');
+    var free = Object.keys(TESTIMONIALS).filter(function (n) { return order.indexOf(n) === -1; }).sort();
+    $('tstAddSel').innerHTML = free.length
+      ? free.map(function (n) { return '<option value="' + n.replace(/"/g, '&quot;') + '">' + n + ' \u2014 ' + tstCompany(n) + '</option>'; }).join('')
+      : '<option value="">(all library testimonials are on this page)</option>';
+    $('tstAddBtn').disabled = !free.length;
+    var c = $('tstCount');
+    if (order.length < 4) { c.className = 'tst-count bad'; c.textContent = order.length + ' selected \u2014 minimum is 4 (publish will refuse).'; }
+    else if (order.length > 10) { c.className = 'tst-count bad'; c.textContent = order.length + ' selected \u2014 maximum is 10 (publish will refuse).'; }
+    else { c.className = 'tst-count good'; c.textContent = order.length + ' of 4\u201310 selected. Order here = order on the page.'; }
+  }
+  $('tstList').addEventListener('click', function (ev) {
+    var b = ev.target.closest('button'); if (!b) return;
+    var i = parseInt(b.dataset.i, 10), act = b.dataset.act, o = current.testimonialOrder;
+    if (act === 'up' && i > 0) { var t = o[i - 1]; o[i - 1] = o[i]; o[i] = t; }
+    if (act === 'down' && i < o.length - 1) { var t2 = o[i + 1]; o[i + 1] = o[i]; o[i] = t2; }
+    if (act === 'rm') o.splice(i, 1);
+    renderTestimonials(); renderPreview();
+  });
+  $('tstAddBtn').addEventListener('click', function (e) {
+    e.preventDefault();
+    var n = $('tstAddSel').value; if (!n) return;
+    current.testimonialOrder.push(n);
+    renderTestimonials(); renderPreview();
+  });
+  $('tstNewBtn').addEventListener('click', function (e) { e.preventDefault(); $('tstNew').style.display = ''; });
+  $('tn_cancel').addEventListener('click', function () { $('tstNew').style.display = 'none'; });
+
+  function slugify(s) { return s.toLowerCase().replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, ''); }
+  // photo: grayscale + max 400px; logo: max 120px tall, keeps color + alpha. Both -> webp.
+  function processImage(file, opts) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () {
+        var w = img.naturalWidth, h = img.naturalHeight, scale = 1;
+        if (opts.maxSide) scale = Math.min(1, opts.maxSide / Math.max(w, h));
+        if (opts.maxH) scale = Math.min(1, opts.maxH / h);
+        var cw = Math.max(1, Math.round(w * scale)), ch = Math.max(1, Math.round(h * scale));
+        var c = document.createElement('canvas'); c.width = cw; c.height = ch;
+        var ctx = c.getContext('2d');
+        ctx.drawImage(img, 0, 0, cw, ch);
+        if (opts.grayscale) {
+          // Pixel-loop desaturation: ctx.filter='grayscale(1)' is silently IGNORED in Safari,
+          // so photos authored there uploaded in color (the .png fallback files are the tell).
+          // Rec.709 luma, alpha preserved — identical result in every browser.
+          var id = ctx.getImageData(0, 0, cw, ch), d = id.data;
+          for (var i = 0; i < d.length; i += 4) {
+            var y = Math.round(0.2126 * d[i] + 0.7152 * d[i + 1] + 0.0722 * d[i + 2]);
+            d[i] = d[i + 1] = d[i + 2] = y;
+          }
+          ctx.putImageData(id, 0, 0);
+        }
+        var dataUrl = c.toDataURL('image/webp', 0.85);
+        if (dataUrl.indexOf('data:image/webp') !== 0) dataUrl = c.toDataURL('image/png');
+        URL.revokeObjectURL(img.src);
+        resolve(dataUrl);
+      };
+      img.onerror = function () { URL.revokeObjectURL(img.src); reject(new Error('unreadable image')); };
+      img.src = URL.createObjectURL(file);
+    });
+  }
+  $('tn_save').addEventListener('click', function (e) {
+    e.preventDefault();
+    var name = $('tn_name').value.trim(), text = $('tn_text').value.trim();
+    var role = $('tn_role').value.trim(), company = $('tn_company').value.trim();
+    var photoF = $('tn_photo').files[0], logoF = $('tn_logo').files[0];
+    if (!name || text.length < 10 || !role || !company) return setStatus('err', 'Fill name, quote (10+ chars), role and company.');
+    var exists = Boolean(TESTIMONIALS[name]);
+    if (!exists && (!photoF || !logoF)) return setStatus('err', 'New testimonials need both a photo and a company logo.');
+    if (exists && !confirm('"' + name + '" already exists in the library. Update it everywhere it appears?')) return;
+    var base = slugify(name);
+    Promise.all([
+      photoF ? processImage(photoF, { grayscale: true, maxSide: 400 }) : Promise.resolve(null),
+      logoF ? processImage(logoF, { maxH: 120 }) : Promise.resolve(null)
+    ]).then(function (r) {
+      var photoUrl = r[0], logoUrl = r[1];
+      var ext = function (u) { return u && u.indexOf('data:image/webp') === 0 ? 'webp' : 'png'; };
+      var payload = {
+        password: pw, name: name, text: text,
+        title: role + ' - <strong>' + company + '</strong>', logoAlt: company
+      };
+      if (photoUrl) { payload.photoFilename = base + '.' + ext(photoUrl); payload.photoBase64 = photoUrl.split(',')[1]; }
+      if (logoUrl) { payload.logoFilename = base + '-logo.' + ext(logoUrl); payload.logoBase64 = logoUrl.split(',')[1]; }
+      setStatus('ok', 'Saving ' + name + '\u2026');
+      return fetch('/api/testimonial', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) })
+        .then(function (rr) { return rr.json().catch(function () { return { ok: false, error: 'HTTP ' + rr.status + ' \u2014 is api/testimonial.js deployed?' }; }); })
+        .then(function (resp) {
+          if (!resp.ok) return setStatus('err', 'Save failed: ' + ghErrMsg(resp));
+          TESTIMONIALS[name] = resp.entry;
+          if (photoUrl) pendingTst[resp.entry.photoFile] = photoUrl;
+          if (logoUrl) pendingTst[resp.entry.logoFile] = logoUrl;
+          if (current.testimonialOrder.indexOf(name) === -1) current.testimonialOrder.push(name);
+          $('tstNew').style.display = 'none';
+          ['tn_name', 'tn_text', 'tn_role', 'tn_company'].forEach(function (id) { $(id).value = ''; });
+          $('tn_photo').value = ''; $('tn_logo').value = '';
+          renderTestimonials(); renderPreview();
+          setStatus('ok', (resp.replaced ? 'Updated ' : 'Added ') + name + ' in the shared library and on this page. Previewing already; assets go live with the next deploy (~2 min).');
+        });
+    }).catch(function () { setStatus('err', 'Could not read one of the images \u2014 try a different file.'); });
+  });
+
+  /* ---------- logo upload / delete ---------- */
+  $('logoUploadBtn').addEventListener('click', function (e) { e.preventDefault(); $('logoFile').click(); });
+  // shared tail: manual uploads and logo.dev fetches both commit through here,
+  // so preview mechanics and library state stay identical for the two paths.
+  function commitLogoToLibrary(filename, dataUrl, fromLogoDev) {
+    var b64 = String(dataUrl).split(',')[1];
+    setStatus('ok', 'Uploading ' + filename + '…');
+    fetch('/api/logo', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw, filename: filename, contentBase64: b64, source: fromLogoDev ? 'logo.dev' : 'upload' })
+    }).then(function (r) {
+      return r.json().catch(function () { return { ok: false, error: 'HTTP ' + r.status + ' \u2014 is api/logo.js deployed?' }; });
+    }).then(function (resp) {
+      if (!resp.ok) return setStatus('err', 'Upload failed: ' + ghErrMsg(resp));
+      pendingLogos[filename] = dataUrl;
+      if (fromLogoDev) LOGO_SOURCES[filename] = 'logo.dev'; // preview shows the attribution immediately
+      else delete LOGO_SOURCES[filename]; // manual re-upload clears provenance
+      if (LOGOS.indexOf(filename) === -1) LOGOS.push(filename);
+      LOGOS.sort();
+      buildLogoGrid();
+      renderPreview();
+      setStatus('ok', (resp.replaced ? 'Replaced ' : 'Added ') + filename + '. It\u2019s previewing here already; the file itself goes live with the next deploy (~2 min). Tick it to add the chip to this page.');
+    }).catch(function () { setStatus('err', 'Network error during upload.'); });
+  }
+
+  $('logoFile').addEventListener('change', function (e) {
+    var f = e.target.files[0]; e.target.value = '';
+    if (!f) return;
+    var ext = /\.webp$/i.test(f.name) ? 'webp' : /\.png$/i.test(f.name) ? 'png' : null;
+    if (!ext) return setStatus('err', 'Only PNG or WebP files.');
+    if (f.size > 512 * 1024) return setStatus('err', 'File is ' + Math.round(f.size / 1024) + ' KB — the limit is 512 KB. Compress it (tinypng.com works well).');
+    var filename = f.name.toLowerCase().replace(/\.(png|webp)$/i, '').replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '') + '.' + ext;
+    if (!/^[a-z0-9][a-z0-9-]{1,50}\.(png|webp)$/.test(filename)) return setStatus('err', 'Could not derive a clean filename from "' + f.name + '" — rename the file (letters, numbers, dashes) and retry.');
+    if (LOGOS.indexOf(filename) !== -1 && !confirm('"' + filename + '" already exists in the library. Replace it everywhere?')) return;
+    var reader = new FileReader();
+    reader.onload = function () { commitLogoToLibrary(filename, reader.result); };
+    reader.readAsDataURL(f);
+  });
+
+  // logo.dev fetch path: domain in, PNG out of /api/logo-fetch, then the shared commit tail.
+  function fetchFromLogoDev() {
+    var raw = $('logoDevDomain').value.trim();
+    if (!raw) return setStatus('err', 'Type a domain first — e.g. acme.com');
+    var domain = raw.toLowerCase().replace(/^https?:\/\//, '').replace(/^www\./, '').split(/[\/?#]/)[0];
+    if (!/^[a-z0-9][a-z0-9.-]{1,80}\.[a-z]{2,}$/.test(domain)) return setStatus('err', '\u201C' + raw + '\u201D doesn\u2019t look like a domain \u2014 try the acme.com form.');
+    setStatus('ok', 'Fetching logo for ' + domain + ' from logo.dev\u2026');
+    fetch('/api/logo-fetch?domain=' + encodeURIComponent(domain), { headers: { 'x-admin-password': pw } })
+      .then(function (r) { return r.json().catch(function () { return { ok: false, error: 'HTTP ' + r.status + ' \u2014 is api/logo-fetch.js deployed?' }; }); })
+      .then(function (resp) {
+        if (!resp.ok) {
+          if (resp.error === 'logo_not_found') return setStatus('err', 'logo.dev has no logo for ' + domain + ' \u2014 upload the file manually instead.');
+          if (resp.error === 'logo_dev_not_configured') return setStatus('err', 'LOGO_DEV_TOKEN is missing in Vercel.');
+          return setStatus('err', 'Fetch failed: ' + (resp.error || 'unknown'));
+        }
+        var filename = domain.replace(/\.(com|com\.br|io|co|net|org|ai|dev|app)$/, '').replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '');
+        filename = (filename || domain.replace(/[^a-z0-9-]+/g, '-')) + '.' + resp.ext;
+        if (!/^[a-z0-9][a-z0-9-]{1,50}\.(png|webp)$/.test(filename)) return setStatus('err', 'Could not derive a clean filename from ' + domain + '.');
+        if (LOGOS.indexOf(filename) !== -1 && !confirm('"' + filename + '" already exists in the library. Replace it everywhere?')) return;
+        $('logoDevDomain').value = '';
+        commitLogoToLibrary(filename, 'data:image/' + resp.ext + ';base64,' + resp.contentBase64, true);
+      })
+      .catch(function () { setStatus('err', 'Network error talking to /api/logo-fetch.'); });
+  }
+  $('logoDevBtn').addEventListener('click', function (e) { e.preventDefault(); fetchFromLogoDev(); });
+  $('logoDevDomain').addEventListener('keydown', function (e) { if (e.key === 'Enter') { e.preventDefault(); fetchFromLogoDev(); } });
+  function ghErrMsg(resp) {
+    var m = (resp.error || 'unknown') + (resp.detail ? ' (HTTP ' + resp.detail + ')' : '');
+    if (resp.detail === 401) m += ' \u2014 the GITHUB_TOKEN is invalid or was revoked. Update it in Vercel env vars and redeploy.';
+    if (resp.detail === 403) m += ' \u2014 the token lacks Contents read/write on this repo (or rate limit). Check the fine-grained token permissions.';
+    return m;
+  }
+  function deleteLogo(file) {
+    if (!confirm('Delete "' + file + '" from the shared library?\n\nThis affects every page. Pages currently using it will block the deletion.')) return;
+    fetch('/api/logo', {
+      method: 'DELETE', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw, filename: file })
+    }).then(function (r) {
+      return r.json().catch(function () { return { ok: false, error: 'HTTP ' + r.status + ' \u2014 is api/logo.js deployed?' }; });
+    }).then(function (resp) {
+      if (!resp.ok) {
+        if (resp.error === 'logo_in_use') return setStatus('err', 'Cannot delete ' + file + ' — still used by: ' + resp.pages.join(', ') + '. Untick it on those pages (and Publish them) first.');
+        return setStatus('err', 'Delete failed: ' + ghErrMsg(resp));
+      }
+      delete pendingLogos[file];
+      var i = LOGOS.indexOf(file); if (i !== -1) LOGOS.splice(i, 1);
+      current.tools.items = current.tools.items.filter(function (t) { return t.file !== file; });
+      buildLogoGrid();
+      renderPreview();
+      setStatus('ok', 'Deleted ' + file + ' from the library.');
+    }).catch(function () { setStatus('err', 'Network error during delete.'); });
+  }
+
+    /* ---------- WYG rows ---------- */
+  function buildWyg() {
+    var box = $('wygList'); box.innerHTML = '';
+    current.wyg.forEach(function (row, i) {
+      var d = document.createElement('div');
+      d.className = 'wyg-item';
+      d.innerHTML = '<div class="pill-row"><input type="text" value="" placeholder="Title"><span class="featured-toggle"><input type="checkbox"' + (row.featured ? ' checked' : '') + '> dark</span><button class="small">✕</button></div>' +
+                    '<textarea rows="2" placeholder="Text"></textarea>';
+      d.querySelector('input[type=text]').value = row.title;
+      d.querySelector('textarea').value = row.text;
+      d.querySelector('input[type=text]').addEventListener('input', function (e) { row.title = e.target.value; onChange(); });
+      d.querySelector('textarea').addEventListener('input', function (e) { row.text = e.target.value; onChange(); });
+      d.querySelector('input[type=checkbox]').addEventListener('change', function (e) { row.featured = e.target.checked; onChange(); });
+      d.querySelector('button').addEventListener('click', function () { current.wyg.splice(i, 1); buildWyg(); onChange(); });
+      box.appendChild(d);
+    });
+  }
+  $('addWyg').addEventListener('click', function () {
+    current.wyg.push({ featured: false, title: 'New benefit', text: 'Describe it.' });
+    buildWyg(); onChange();
+  });
+
+  /* ---------- FAQ ---------- */
+  function buildFaq() {
+    var box = $('faqList'); box.innerHTML = '';
+    current.faq.forEach(function (f, i) {
+      var d = document.createElement('div');
+      d.className = 'faq-item';
+      d.innerHTML = '<div class="pill-row"><input type="text" placeholder="Question"><button class="small">✕</button></div>' +
+                    '<textarea rows="2" placeholder="Answer (HTML allowed: <strong>, <a>)"></textarea>';
+      d.querySelector('input').value = f.q;
+      d.querySelector('textarea').value = f.a;
+      d.querySelector('input').addEventListener('input', function (e) { f.q = e.target.value; onChange(); });
+      d.querySelector('textarea').addEventListener('input', function (e) { f.a = e.target.value; onChange(); });
+      d.querySelector('button').addEventListener('click', function () { current.faq.splice(i, 1); buildFaq(); onChange(); });
+      box.appendChild(d);
+    });
+  }
+  $('addFaq').addEventListener('click', function () {
+    current.faq.push({ q: 'New question?', a: 'Answer.' });
+    buildFaq(); onChange();
+  });
+
+  /* ---------- preview ---------- */
+  var t;
+  function onChange() { clearTimeout(t); t = setTimeout(renderPreview, 250); }
+  Array.prototype.slice.call(document.querySelectorAll('#editor input:not([type=file]), #editor textarea')).forEach(function (el) {
+    el.addEventListener('input', onChange);
+  });
+  function resetPreviewScroll() { $('preview').dataset.ready = ''; }
+  function renderPreview() {
+    try {
+      harvest();
+      var html = LPRender.render(TEMPLATE, current, TESTIMONIALS, LOGO_SOURCES);
+      // Preview hygiene: strip third-party trackers. Without this the srcdoc path EXECUTES the
+      // Meta pixel + RB2B loaders (fake PageViews / visitor IDs on every preview), and the
+      // innerHTML live-update path turns the <noscript> pixel <img> into real DOM (a hit per
+      // keystroke, plus the markup leaking visibly at the end of the frame).
+      html = html.replace(/<noscript>[\s\S]*?<\/noscript>/gi, '');
+      html = html.replace(/<script>[\s\S]*?<\/script>/gi, function (blk) {
+        return /connect\.facebook\.net|b2bjsstore|googletagmanager\.com/.test(blk) ? '' : blk;
+      });
+      // base tag so /public/* resolves against this deployment inside the frame
+      html = html.replace('<head>', '<head><base href="/">');
+      for (var pf in pendingLogos) {
+        html = html.split('/public/logos/' + pf).join(pendingLogos[pf]);
+      }
+      for (var pt in pendingTst) {
+        html = html.split('/public/testimonials/' + pt).join(pendingTst[pt]);
+      }
+      var iframe = $('preview');
+      var doc = null;
+      try { doc = iframe.contentDocument; } catch (err) { doc = null; }
+      if (doc && doc.documentElement && iframe.dataset.ready === '1') {
+        // Live update: swap the document's markup in place — no reload, no flash,
+        // and the preview stays scrolled exactly where you are (e.g. at the logo strip).
+        var sx = 0, sy = 0;
+        try { sx = iframe.contentWindow.scrollX || 0; sy = iframe.contentWindow.scrollY || 0; } catch (err) {}
+        var inner = html.replace(/^\s*<!DOCTYPE html>\s*/i, '').replace(/^\s*<html[^>]*>/i, '').replace(/<\/html>\s*$/i, '');
+        doc.documentElement.innerHTML = inner;
+        try { iframe.contentWindow.scrollTo(sx, sy); } catch (err) {}
+      } else {
+        // First render (or page switch): full load, starting at the top.
+        iframe.onload = function () { iframe.dataset.ready = '1'; };
+        iframe.srcdoc = html;
+      }
+    } catch (e) {
+      setStatus('err', 'Preview error: ' + e.message);
+    }
+  }
+
+  /* ---------- publish ---------- */
+  $('publishBtn').addEventListener('click', function () {
+    harvest();
+    var btn = $('publishBtn');
+    btn.disabled = true; btn.textContent = 'Publishing…';
+    fetch('/api/publish', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw, slug: current.slug, config: current })
+    }).then(function (r) { return r.json(); }).then(function (res) {
+      btn.disabled = false; btn.textContent = 'Publish';
+      if (res.ok) {
+        setStatus('ok', (res.created ? 'Created ' : 'Updated ') + res.slug + '. Vercel is deploying (~2 min). Page: ' + res.pageUrl +
+          (current.subdomain ? ' — Daniel was emailed to wire ' + current.subdomain + '.' : ''));
+        if (isNew) { pages.push(JSON.parse(JSON.stringify(current))); isNew = false; boot(pages); } else { updateViewLink(); }
+      } else {
+        setStatus('err', 'Publish failed: ' + (res.error || 'unknown'));
+      }
+    }).catch(function () {
+      btn.disabled = false; btn.textContent = 'Publish';
+      setStatus('err', 'Network error.');
+    });
+  });
+
+  function setStatus(kind, msg) {
+    var s = $('status');
+    s.className = 'status' + (kind ? ' ' + kind : '');
+    s.textContent = msg;
+    // no scrollIntoView: the bar is position:sticky at the top of the editor,
+    // so it's always visible without yanking the sidebar scroll position.
   }
 })();
 </script>
-
-<!-- === Ad creative generator (additive; nothing above depends on this) === -->
-<div id="genStaging"></div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <script>
 (function () {
-  'use strict';
-  var FACES = null; // loaded lazily from /public/faces/manifest.json
-
-  function el(tag, cls, html) { var e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; }
-  function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
-
-  function loadFaces() {
-    if (FACES) return Promise.resolve(FACES);
-    return fetch('/public/faces/manifest.json')
-      .then(function (r) { return r.ok ? r.json() : []; })
-      .catch(function () { return []; })
-      .then(function (list) { FACES = list; return list; });
-  }
-
-  function openModal(page) {
-    loadFaces().then(function (faces) {
-      var bd = el('div', 'modal-backdrop');
-      var logoOpts = (page.tools && page.tools.items || []).map(function (t, i) {
-        return '<label class="opt"><input type="radio" name="genLogo" value="' + esc(t.file) + '"' + (i === 0 ? ' checked' : '') + '/>' +
-               '<img class="lg" src="/public/logos/' + esc(t.file) + '" alt=""/> ' + esc(t.alt || t.file) + '</label>';
-      }).join('') + '<label class="opt"><input type="radio" name="genLogo" value=""/>No logo</label>';
-      var faceOpts = faces.map(function (f) {
-        return '<label class="opt"><input type="radio" name="genFace" value="' + esc(f.file) + '"/>' +
-               '<img class="fc" src="/public/faces/' + esc(f.file) + '" alt=""/> ' + esc(f.name || f.file) + '</label>';
-      }).join('') + '<label class="opt"><input type="radio" name="genFace" value="" checked/>No face</label>';
-      if (!faces.length) faceOpts = '<p class="hint">No faces uploaded yet (shared/public/faces/).</p>';
-
-      bd.appendChild(el('div', 'modal',
-        '<h3>Generate ad creative</h3>' +
-        '<p class="hint">1080\u00d71080 PNG for Meta, using this page\u2019s hero copy. Pick a logo, a face, or one of each.</p>' +
-        '<div class="cols">' +
-          '<div class="col"><h4>Logo</h4>' + logoOpts + '</div>' +
-          '<div class="col"><h4>Face</h4>' + faceOpts + '</div>' +
-        '</div>' +
-        '<h4 style="margin:16px 0 6px">CTA pill</h4>' +
-        '<input type="text" id="genCta" maxlength="40" value="' + esc(page.hero && page.hero.accent || '') + '"' +
-        ' style="width:100%; padding:9px 12px; border:1px solid var(--border); border-radius:8px; font-family:inherit; font-size:13px;" />' +
-        '<p class="hint" style="margin:4px 0 0"><span id="genCtaCount"></span> \u2014 the green pill on the creative. Edit it freely (e.g. \u201CLearn more\u201D); leave empty for no pill. The landing page itself is not changed.</p>' +
-        '<div class="actions"><button id="genGo">Generate &amp; download</button>' +
-        '<button class="cancel" id="genCancel">Cancel</button><span class="status" id="genStatus"></span></div>' +
-        '<div class="preview" id="genPreview"></div>'));
-      document.body.appendChild(bd);
-      bd.addEventListener('click', function (e) { if (e.target === bd) bd.remove(); });
-      bd.querySelector('#genCancel').addEventListener('click', function () { bd.remove(); });
-      var ctaInput = bd.querySelector('#genCta'), ctaCount = bd.querySelector('#genCtaCount');
-      function syncCtaCount() { ctaCount.textContent = ctaInput.value.length + '/40'; }
-      ctaInput.addEventListener('input', syncCtaCount); syncCtaCount();
-      bd.querySelector('#genGo').addEventListener('click', function () {
-        var logo = (bd.querySelector('input[name="genLogo"]:checked') || {}).value || '';
-        var face = (bd.querySelector('input[name="genFace"]:checked') || {}).value || '';
-        if (!logo && !face) { bd.querySelector('#genStatus').textContent = 'Pick at least a logo or a face.'; return; }
-        generate(page, logo, face, ctaInput.value.trim(), bd);
-      });
-    });
-  }
-
-  function buildCard(page, logo, face, cta) {
-    var card = el('div', 'adc' + (face ? ' has-face' : '') + (logo ? '' : ' no-logo'));
-    card.innerHTML =
-      '<img class="brand" src="/public/coconut-logo-lg.png" alt=""/>' +
-      (page.hero && page.hero.eyebrow ? '<div class="eyebrow">' + esc(page.hero.eyebrow) + '</div>' : '') +
-      '<div class="copy">' +
-        '<h2 class="headline">' + String(page.hero && page.hero.h1 || '').replace(/<br\s*\/?>/gi, ' ') + '</h2>' +
-        (cta ? '<div class="offer">' + esc(cta) + '</div>' : '') +
-        '<div class="proof"><span><span class="stars">\u2605\u2605\u2605\u2605\u2605</span>4.9/5 rating</span>' +
-        '<span>600+ companies trust us</span></div>' +
-      '</div>' +
-      (logo ? '<div class="toolrow"><img id="genLogoImg" src="/public/logos/' + esc(logo) + '" alt=""/></div>' : '') +
-      (face ? '<img class="face" src="/public/faces/' + esc(face) + '" alt=""/>' : '');
-    return card;
-  }
-
-  function generate(page, logo, face, cta, bd) {
-    var status = bd.querySelector('#genStatus');
-    var go = bd.querySelector('#genGo');
-    go.disabled = true; status.textContent = 'Rendering\u2026';
-    var staging = document.getElementById('genStaging');
-    var card = buildCard(page, logo, face, cta);
-    staging.appendChild(card);
-
-    var imgs = Array.prototype.slice.call(card.querySelectorAll('img'));
-    Promise.all(imgs.map(function (im) {
-      return im.complete ? Promise.resolve() : new Promise(function (res) { im.onload = im.onerror = res; });
-    })).then(function () { return document.fonts.ready; }).then(function () {
-      // generic logo sizing: wide wordmarks capped by width, compact marks by height
-      var lg = card.querySelector('#genLogoImg');
-      if (lg && lg.naturalWidth) {
-        if (lg.naturalWidth / lg.naturalHeight > 2.5) lg.style.width = '430px';
-        else lg.style.height = '98px';
-      }
-      // pill fit guard: available width differs with/without face, so a fixed char cap
-      // alone can't guarantee fit — shrink the pill font (38 -> 26px) until it fits its lane
-      var pill = card.querySelector('.offer');
-      if (pill) {
-        var ps = 38, lane = card.querySelector('.copy').clientWidth;
-        pill.style.maxWidth = '100%';
-        while (pill.scrollWidth > lane && ps > 26) { ps -= 2; pill.style.fontSize = ps + 'px'; }
-        if (pill.scrollWidth > lane) pill.style.whiteSpace = 'normal'; // last resort: wrap to 2 lines
-      }
-      // overflow guard: shrink the headline until everything fits inside 1080px
-      var hl = card.querySelector('.headline');
-      var cp = card.querySelector('.copy');
-      var size = parseFloat(getComputedStyle(hl).fontSize);
-      while ((cp.scrollHeight > cp.clientHeight + 2 || card.scrollHeight > 1080) && size > 46) {
-        size -= 4;
-        hl.style.fontSize = size + 'px';
-      }
-      return html2canvas(card, { scale: 1, width: 1080, height: 1080, backgroundColor: null, logging: false });
-    }).then(function (canvas) {
-      var stem = function (f) { return String(f).replace(/\.[a-z0-9]+$/i, '').toLowerCase().replace(/[^a-z0-9-]+/g, '-'); };
-      var parts = ['coconut-ad-' + page.slug];
-      if (logo) parts.push('logo-' + stem(logo));
-      if (face) parts.push('face-' + stem(face));
-      var a = document.createElement('a');
-      a.download = parts.join('-') + '.png';
-      a.href = canvas.toDataURL('image/png');
-      a.click();
-      var pv = bd.querySelector('#genPreview');
-      pv.innerHTML = '';
-      var img = new Image(); img.src = a.href; pv.appendChild(img);
-      status.textContent = 'Downloaded.';
-    }).catch(function (e) {
-      status.textContent = 'Render failed: ' + (e && e.message || e);
-    }).then(function () {
-      go.disabled = false;
-      if (card.parentNode) card.parentNode.removeChild(card);
-    });
-  }
-
-  document.getElementById('rows').addEventListener('click', function (e) {
-    var btn = e.target.closest ? e.target.closest('.genBtn') : null;
-    if (!btn) return;
-    var slug = btn.getAttribute('data-slug');
-    var page = (window.__lpPages || []).filter(function (p) { return p.slug === slug; })[0];
-    if (page) openModal(page);
+  var btn = document.getElementById('pvMobile');
+  if (!btn) return;
+  btn.addEventListener('click', function () {
+    var pane = document.querySelector('.preview-pane');
+    var on = pane.classList.toggle('mobile');
+    btn.classList.toggle('on', on);
   });
 })();
 </script>
