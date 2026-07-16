@@ -929,6 +929,12 @@
         try { fbq('track', 'Lead', { content_name: '{{adsName}}' }, { eventID: res.eventId }); }
         catch (e) {}
       }
+      // Google Ads conversion, mirrored at the same capture point; transaction_id reuses the
+      // shared eventId so re-submits dedupe. Inert while GOOGLE_ADS_SEND_TO is unset at build.
+      if (res && res.ok && window.gtag && '{{GOOGLE_ADS_SEND_TO}}') {
+        try { gtag('event', 'conversion', { send_to: '{{GOOGLE_ADS_SEND_TO}}', transaction_id: res.eventId }); }
+        catch (e) {}
+      }
     });
     show(2);
     document.getElementById('f-company').focus();
@@ -1042,6 +1048,11 @@ window.addEventListener('load', function () {
   window.gtag = gtag;
   gtag('js', new Date());
   gtag('config', 'G-2ZD4NN6DKG');
+  // Google Ads: '{{GOOGLE_ADS_SEND_TO}}' is injected at build time from the GOOGLE_ADS_SEND_TO
+  // env var (format AW-XXXXXXXXXX/label). While the env var is unset this resolves to '' and
+  // the whole feature is inert — pages behave exactly as before.
+  var AW_SEND_TO = '{{GOOGLE_ADS_SEND_TO}}';
+  if (AW_SEND_TO) gtag('config', AW_SEND_TO.split('/')[0]);
 });
 </script>
 
