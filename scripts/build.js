@@ -8,6 +8,13 @@ const { render } = require('../lib/render.js');
 const ROOT = path.join(__dirname, '..');
 const DIST = path.join(ROOT, 'dist');
 const template = fs.readFileSync(path.join(ROOT, 'template/page.template.html'), 'utf8');
+// Google Ads conversion tag: injected from env so activation is a Vercel env change + redeploy,
+// never a code edit. Unset -> '' -> every Google Ads code path in the template is inert.
+const GOOGLE_ADS_SEND_TO = (process.env.GOOGLE_ADS_SEND_TO || '').trim();
+if (GOOGLE_ADS_SEND_TO && !/^AW-\d+\/[\w-]+$/.test(GOOGLE_ADS_SEND_TO)) {
+  throw new Error(`GOOGLE_ADS_SEND_TO is set but malformed ("${GOOGLE_ADS_SEND_TO}") — expected AW-XXXXXXXXXX/label. Failing the build beats deploying broken tracking.`);
+}
+const templateFinal = template.split('{{GOOGLE_ADS_SEND_TO}}').join(GOOGLE_ADS_SEND_TO);
 const testimonials = JSON.parse(fs.readFileSync(path.join(ROOT, 'lib/testimonials.json'), 'utf8'));
 
 fs.rmSync(DIST, { recursive: true, force: true });
@@ -37,7 +44,7 @@ for (const f of fs.readdirSync(path.join(ROOT, 'pages')).filter(f => f.endsWith(
   for (const t of cfg.tools.items) {
     if (!logoLibrary.has(t.file)) throw new Error(`Missing logo file: ${t.file} (page ${cfg.slug}) — not in shared/public/logos/`);
   }
-  const html = render(template, cfg, testimonials, logoSources);
+  const html = render(templateFinal, cfg, testimonials, logoSources);
   fs.mkdirSync(path.join(DIST, cfg.slug), { recursive: true });
   fs.writeFileSync(path.join(DIST, cfg.slug, 'index.html'), html);
   slugs.push({ slug: cfg.slug, title: cfg.meta.title, subdomain: cfg.subdomain || null });
@@ -56,7 +63,7 @@ const renderSrc = fs.readFileSync(path.join(ROOT, 'lib/render.js'), 'utf8');
 if (/<\/script/i.test(renderSrc)) throw new Error('lib/render.js must not contain "</script"');
 admin = admin
   .replace('/*__RENDER_JS__*/', () => renderSrc)
-  .replace('"__TEMPLATE__"', () => inlineJson(template))
+  .replace('"__TEMPLATE__"', () => inlineJson(templateFinal))
   .replace('"__TESTIMONIALS__"', () => inlineJson(testimonials))
   .replace('"__LOGOS__"', () => inlineJson(logos))
   .replace('"__LOGO_SOURCES__"', () => inlineJson(logoSources));
