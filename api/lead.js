@@ -51,11 +51,9 @@ export default async function handler(req, res) {
   // Attribution: default stays "Meta Ads — …" exactly as before. We flip to Google Ads ONLY
   // on explicit Google click signals in the landing URL (gclid/gbraid/wbraid or utm_source=google),
   // so existing Meta traffic and organic behavior are byte-for-byte unchanged.
-  if (page) {
-    const su = String((raw && raw.sourceUrl) || '');
-    if (/[?&](gclid|gbraid|wbraid)=/.test(su) || /[?&]utm_source=google(&|$|#)/i.test(su)) {
-      page.sourceInfo = page.sourceInfo.replace(/^Meta Ads/, 'Google Ads');
-    }
+  const attribution = parseAttribution((raw && raw.sourceUrl) || '');
+  if (page && attribution.isGoogle) {
+    page.sourceInfo = page.sourceInfo.replace(/^Meta Ads/, 'Google Ads');
   }
   if (!page) return res.status(400).json({ ok: false, error: 'unknown_variant' });
   const stage = STAGES.includes(raw && raw.stage) ? raw.stage : 'complete';
@@ -137,6 +135,39 @@ export default async function handler(req, res) {
         console.error('ads_name PATCH failed (column missing? run: ALTER TABLE public.contacts ADD COLUMN IF NOT EXISTS ads_name text;)', r.status, await r.text());
       }
     }, 'ads_name');
+  }
+
+  // 1c. Attribution stamp (Google Ads closed-loop). Click ids are FIRST-touch: never overwrite
+  // an existing one (the 63-day window runs from the first click). UTMs are last-touch.
+  // Non-fatal by design — a stamp failure must never block the lead.
+  if (contactId && attribution.hasAny) {
+    await safe(async () => {
+      const headers = {
+        apikey: supaKey,
+        Authorization: `Bearer ${supaKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal'
+      };
+      const patch = { ...attribution.utms };
+      const hasNewClickId = Object.keys(attribution.clickIds).length > 0;
+      if (hasNewClickId) {
+        // first-touch check: only write click ids if none is stored yet
+        const chk = await fetch(
+          `${supaUrl}/rest/v1/contacts?id=eq.${encodeURIComponent(contactId)}&select=gclid,gbraid,wbraid`,
+          { headers: { apikey: supaKey, Authorization: `Bearer ${supaKey}` } }
+        );
+        const rows = chk.ok ? await chk.json() : [];
+        const cur = (rows && rows[0]) || {};
+        if (!cur.gclid && !cur.gbraid && !cur.wbraid) {
+          Object.assign(patch, attribution.clickIds, { first_click_at: new Date().toISOString() });
+        }
+      }
+      if (Object.keys(patch).length === 0) return;
+      const r = await fetch(`${supaUrl}/rest/v1/contacts?id=eq.${encodeURIComponent(contactId)}`, {
+        method: 'PATCH', headers, body: JSON.stringify(patch)
+      });
+      if (!r.ok) console.error('attribution PATCH failed', r.status, await r.text());
+    }, 'attribution');
   }
 
   const eventId = `lead_${contactId || Date.now()}`;
@@ -271,6 +302,26 @@ async function postSlack(payload, tag) {
 }
 
 /* ===================== HELPERS ===================== */
+
+// Parses ad-click identifiers + UTMs out of the landing URL for the Google Ads
+// closed-loop pipeline (marketing.v_google_ads_conversions reads them off contacts).
+function parseAttribution(sourceUrl) {
+  const out = { clickIds: {}, utms: {}, isGoogle: false, hasAny: false };
+  let u;
+  try { u = new URL(String(sourceUrl)); } catch { return out; }
+  const p = u.searchParams;
+  for (const k of ['gclid', 'gbraid', 'wbraid']) {
+    const v = (p.get(k) || '').trim();
+    if (v) { out.clickIds[k] = v.slice(0, 200); out.hasAny = true; }
+  }
+  for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']) {
+    const v = (p.get(k) || '').trim();
+    if (v) { out.utms[k] = v.slice(0, 200); out.hasAny = true; }
+  }
+  out.isGoogle = Boolean(out.clickIds.gclid || out.clickIds.gbraid || out.clickIds.wbraid) ||
+    /^google$/i.test(p.get('utm_source') || '');
+  return out;
+}
 
 function clean(v, max) { return (typeof v === 'string' ? v : '').trim().slice(0, max); }
 function isEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
