@@ -48,6 +48,15 @@ export default async function handler(req, res) {
 
   const raw = await readJson(req);
   const page = await loadPageConfig(raw && raw.variant);
+  // Attribution: default stays "Meta Ads — …" exactly as before. We flip to Google Ads ONLY
+  // on explicit Google click signals in the landing URL (gclid/gbraid/wbraid or utm_source=google),
+  // so existing Meta traffic and organic behavior are byte-for-byte unchanged.
+  if (page) {
+    const su = String((raw && raw.sourceUrl) || '');
+    if (/[?&](gclid|gbraid|wbraid)=/.test(su) || /[?&]utm_source=google(&|$|#)/i.test(su)) {
+      page.sourceInfo = page.sourceInfo.replace(/^Meta Ads/, 'Google Ads');
+    }
+  }
   if (!page) return res.status(400).json({ ok: false, error: 'unknown_variant' });
   const stage = STAGES.includes(raw && raw.stage) ? raw.stage : 'complete';
   const name = clean(raw && raw.name, 120);
